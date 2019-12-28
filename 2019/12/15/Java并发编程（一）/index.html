@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="并发编程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="并发是什么？ 并发是什么？顾名思义，同时发生，一起行动。单纯从Java上讲，并发是个一个thread类，它通过集成这个类，获得对应的api，提高程序的运行效率。不过这里暂时不讲和代码有关的事物，我们先为什么会诞生并发开始讲。 这里会引入一个新的词叫摩尔定律，“每隔18个月到24个月，计算机的性能会翻一倍”。这条定律持续了半个世纪之久，在此期间，计算机的能力也正如定律所描述的一样，不断的倍增。但是在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程（一）并发的概念">
+<meta property="og:url" content="http://antarctica.gitee.io/hexo_blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="小世界">
+<meta property="og:description" content="并发是什么？ 并发是什么？顾名思义，同时发生，一起行动。单纯从Java上讲，并发是个一个thread类，它通过集成这个类，获得对应的api，提高程序的运行效率。不过这里暂时不讲和代码有关的事物，我们先为什么会诞生并发开始讲。 这里会引入一个新的词叫摩尔定律，“每隔18个月到24个月，计算机的性能会翻一倍”。这条定律持续了半个世纪之久，在此期间，计算机的能力也正如定律所描述的一样，不断的倍增。但是在">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/kjx.jpg">
+<meta property="article:published_time" content="2019-12-15T12:31:20.000Z">
+<meta property="article:modified_time" content="2019-12-23T06:33:21.700Z">
+<meta property="article:author" content="攀">
+<meta property="article:tag" content="并发编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/kjx.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://antarctica.gitee.io/hexo_blog/2019/12/15/Java并发编程（一）/"/>
+
+
+
+
+
+  <title>Java并发编程（一）并发的概念 | 小世界</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/hexo_blog/blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发编程（一）并发的概念</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-15T20:31:20+08:00">
+                2019-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="并发是什么？"><a href="#并发是什么？" class="headerlink" title="并发是什么？"></a>并发是什么？</h3><hr>
+<h4 id="并发是什么？-1"><a href="#并发是什么？-1" class="headerlink" title="并发是什么？"></a>并发是什么？</h4><p>顾名思义，同时发生，一起行动。单纯从Java上讲，并发是个一个thread类，它通过集成这个类，获得对应的api，提高程序的运行效率。不过这里暂时不讲和代码有关的事物，我们先为什么会诞生并发开始讲。</p>
+<p>这里会引入一个新的词叫<strong>摩尔定律</strong>，“每隔18个月到24个月，计算机的性能会翻一倍”。这条定律持续了半个世纪之久，在此期间，计算机的能力也正如定律所描述的一样，不断的倍增。但是在几十年前，这条定律有点不管用了。你可以很简单的看作为，我们不再能够制造出性能更好的芯片，单核的能力已经很难再往上升了，所以在21世纪初，人们开始把多个芯片集成起来，企图用数量的增长去代替质量的不足，thread类，也正因此走进了程序员的视野。复杂的并发远远比单核的串行困难的多，所以，程序员的噩梦来了。</p>
+<h4 id="并发一定优于串行吗？"><a href="#并发一定优于串行吗？" class="headerlink" title="并发一定优于串行吗？"></a>并发一定优于串行吗？</h4><p>这里可以很直接的告诉大家，<strong>并发在大多数的情况下都优于串行。</strong></p>
+<p>举一个例子：</p>
+<p>小明被告知明天要上台演讲，而小明今晚开始到明天要做的事情为</p>
+<p>吃饭（半小时）—&gt;洗澡（半小时）—&gt;构思并撰写演讲稿（1.5+1.5=3小时）—&gt;睡觉（8小时）</p>
+<p>我们可以通过面向对象的编程写出代码，其预计的执行时间为12小时，而引入的并行这个方式，让小明可以边吃饭边思考，边洗澡边思考，让其撰写演讲稿的时间减少一小时</p>
+<p>这样最后的执行时间就变成了11小时，但是呢，无论增加多少线程，都只能让小明的构思时间减少1.5小时，其吃饭洗澡睡觉的时间是无法被改变的，也就是说，极限时间为10.5小时。</p>
+<p>从上面的例子可以得出，并行在绝大多数的情况下都优于串行。少数情况下和串行是没有区别的。这里先不谈特殊情况下出现的并行比串行更差劲的事例，因为这并没有太多意义。要记住，我们是<strong>面向对象编程</strong>。 </p>
+<h4 id="三大特性"><a href="#三大特性" class="headerlink" title="三大特性"></a>三大特性</h4><h5 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h5><p>顾名思义，具有原子的特性，无法被分割。在程序中可以看作为，这个操作不可被中断，各个线程想要执行这个操作也得一个一个来。</p>
+<h5 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h5><p>可见性的意思就是，我们所执行的操作，是可见的。就像我们写一段代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="number">1</span>;</span><br><span class="line">a=<span class="number">2</span>;</span><br><span class="line">b=a;</span><br></pre></td></tr></table></figure>
+
+<p>程序就会把a赋值为1，b赋值为2。这看上去貌似很寻常，因为在串行的情况下运行时，可以永远保持可见性。</p>
+<p>而在并行情况下运行时，却不一定可见，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程1</span></span><br><span class="line">i = <span class="number">0</span>;</span><br><span class="line">i = <span class="number">2</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//线程2</span></span><br><span class="line">j = i;</span><br></pre></td></tr></table></figure>
+
+<p>在线程1和线程2一起运行之时，你并不能确定，此时的j到底取值是多少，因为此时的i是在两个线程之间共享的，它可以是0，也可以是2，这样对我们并不可见。但我们也可以深挖其中的原理。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/kjx.jpg" alt="可见性"></p>
+<p>先看图示，我们的在定义了值为0之后，就会被写入到主内存，而我们在多个线程取i的值的时候，首先会把i加入到本地的缓存当中，读取值就从缓存中读取，因为这样多个线程就不会总从主内存读取，从而提高读取的效率，但是我们在更改了i的值的时候因为有一个线程嗅探的机制，一旦改了i的值，比如a线程修改了i的值后，就会向所有的线程发出一个警告，告诉所有线程i的值已经被更改了，需要重新从主内存中读取。但是呢，发出这样一个信息也是需要时间的，线程b也会因为时间差的关系导致了不能及时获得最新的值。</p>
+<h5 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h5><p>这里会讲到一个新的概念，叫<strong>指令重排</strong>，意思就是程序在实际运行的时候，代码段运行的顺序会和你写的顺序不一样。</p>
+<p>像下面这段代码，可能会出现一个问题，那就是先执行a=3再去执行a=1，这样会造成了最终结果不太一样，不过没关系，这种情况在串行条件下不会发生。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="number">1</span>;</span><br><span class="line">b=<span class="number">2</span>;</span><br><span class="line">a=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是，在并行条件下，指令重排是怎么发生的呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程一</span></span><br><span class="line">i=<span class="number">1</span>;</span><br><span class="line">j=i;</span><br><span class="line">k=i;</span><br><span class="line"><span class="comment">//线程二</span></span><br><span class="line">j=<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>像这样，两边线程看似互不干扰，各自有各自的工作，但是我们看到了j和k都在读取同一个变量i，而i在这种情况下会被读取两次，而此时如果发生了指令重排，结果就会变成为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程一</span></span><br><span class="line">i=<span class="number">1</span>;</span><br><span class="line">j=i;</span><br><span class="line">k=j;</span><br><span class="line"><span class="comment">//线程二</span></span><br><span class="line">j=<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>而如果线程二发生在j=i之后的话，会出现这样一个状况，线程二修改了j的值，然后线程一再读取了j的值，这样导致最后的结果k=2。你可以看到，其实如果一直按照它本来的写法，这段代码是不可能出问题了，而一旦指令重排出现了这样的问题，谁又能在几十万行代码中找出来呢？</p>
+<p>你说为什么会出现指令重排呢？不发生重排不就没有这样的问题了吗？其实设计者的初衷很简单，<strong>一切都是为了提高效率</strong>。</p>
+<p>为什么这样能够提高效率？这里就要涉及到汇编语言的问题了。简而言之就是，读取和修改一个值需要分很多个步骤，如果将多个步骤一起进行的话会提高效率，从而导致的指令重排，汇编的机制这里暂且不讲。</p>
+<p>那怎样才能解决呢，最简单的方法就是声明volatile关键字，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> i;</span><br></pre></td></tr></table></figure>
+
+<p>这样谁都不能够对i进行指令重排了，后面会讲到其他的办法，比如synchronized等。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="Java并发编程（二）线程的基本认知">
+                Java并发编程（二）线程的基本认知 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
+                alt="攀" />
+            
+              <p class="site-author-name" itemprop="name">攀</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/%7C%7C%20archives">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#并发是什么？"><span class="nav-number">1.</span> <span class="nav-text">并发是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#并发是什么？-1"><span class="nav-number">1.1.</span> <span class="nav-text">并发是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#并发一定优于串行吗？"><span class="nav-number">1.2.</span> <span class="nav-text">并发一定优于串行吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三大特性"><span class="nav-number">1.3.</span> <span class="nav-text">三大特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原子性"><span class="nav-number">1.3.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可见性"><span class="nav-number">1.3.2.</span> <span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#有序性"><span class="nav-number">1.3.3.</span> <span class="nav-text">有序性</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">攀</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

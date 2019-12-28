@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="并发编程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="隐蔽的错误在编程当中遇到错误，可能会让你头疼，但能提示出是哪里出现了某某错误，也许只是一两分钟就能解决的问题，最可怕的是，程序出错了，却没有任何提示，得自己慢慢的去找，在几十万行代码的工程当中，可能分分钟就猝死了。所以，写任何代码时，都要想一想各种会出现的问题，最简单的不可见错误如下： 1234int v1&#x3D;1073741827;int v2&#x3D;1431655768;int a&#x3D;v1+v2;Syst">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程（六）隐蔽的错误">
+<meta property="og:url" content="http://antarctica.gitee.io/hexo_blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89/index.html">
+<meta property="og:site_name" content="小世界">
+<meta property="og:description" content="隐蔽的错误在编程当中遇到错误，可能会让你头疼，但能提示出是哪里出现了某某错误，也许只是一两分钟就能解决的问题，最可怕的是，程序出错了，却没有任何提示，得自己慢慢的去找，在几十万行代码的工程当中，可能分分钟就猝死了。所以，写任何代码时，都要想一想各种会出现的问题，最简单的不可见错误如下： 1234int v1&#x3D;1073741827;int v2&#x3D;1431655768;int a&#x3D;v1+v2;Syst">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/hashmap.png">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/hashcode.png">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/hashmapdead.jpg">
+<meta property="article:published_time" content="2019-12-22T06:22:42.000Z">
+<meta property="article:modified_time" content="2019-12-23T06:36:35.898Z">
+<meta property="article:author" content="攀">
+<meta property="article:tag" content="并发编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/hashmap.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://antarctica.gitee.io/hexo_blog/2019/12/22/Java并发编程（六）/"/>
+
+
+
+
+
+  <title>Java并发编程（六）隐蔽的错误 | 小世界</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/hexo_blog/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发编程（六）隐蔽的错误</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-22T14:22:42+08:00">
+                2019-12-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="隐蔽的错误"><a href="#隐蔽的错误" class="headerlink" title="隐蔽的错误"></a>隐蔽的错误</h3><p>在编程当中遇到错误，可能会让你头疼，但能提示出是哪里出现了某某错误，也许只是一两分钟就能解决的问题，最可怕的是，程序出错了，却没有任何提示，得自己慢慢的去找，在几十万行代码的工程当中，可能分分钟就猝死了。所以，写任何代码时，都要想一想各种会出现的问题，最简单的不可见错误如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> v1=<span class="number">1073741827</span>;</span><br><span class="line"><span class="keyword">int</span> v2=<span class="number">1431655768</span>;</span><br><span class="line"><span class="keyword">int</span> a=v1+v2;</span><br><span class="line">System.out.println(a);</span><br></pre></td></tr></table></figure>
+
+<p>程序不会提示出你的代码错误，甚至可以说，从逻辑上而言完全没有错误，但隐藏的错误就是，值溢出了，这会使最后的结果出现了错误。</p>
+<p>并且，在并行开发中，这样的隐藏错误还会有更多更多。</p>
+<h4 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h4><p>ArrayList在java中是一个经常被使用的容器。它的就相当于一个可以存放任何类型的、自动扩容的数组。我们看看下面这段代码，看它为什么线程不安全。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> ArrayList&lt;Integer&gt; a=<span class="keyword">new</span> ArrayList&lt;Integer&gt;(<span class="number">10</span>);</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(<span class="keyword">new</span> test());</span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(<span class="keyword">new</span> test());</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(a.size());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            a.add(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Exception in thread <span class="string">"Thread-1"</span> java.lang.ArrayIndexOutOfBoundsException: <span class="number">10</span></span><br><span class="line">	at java.util.ArrayList.add(ArrayList.java:<span class="number">463</span>)</span><br><span class="line">	at test.run(test.java:<span class="number">19</span>)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:<span class="number">748</span>)</span><br><span class="line"><span class="number">100009</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>第一种情况，就是如上所述，数组越界的错误，我们看看为什么会数组越界，首先这个越界发生在add这个方法中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>此时，t1线程和t2线程同时对ArrayList进行扩容：<br>t1发现list为10，不够存放，需要扩容到11，调用ensureCapacityInterna进行判断</li>
+<li>t2发现list为10，不够存放，需要扩容到11，也调用ensureCapacityInterna进行判断</li>
+<li>t1发现扩容后大小为11，可以容纳，不再扩容，返回</li>
+<li>t2也发现扩容后大小为11，可以容纳，直接返回（这里的t2的判断容量的过程恰好在t1刚扩容完后）</li>
+<li>t1开始进行设置值操作， elementData[size++] = e 操作。此时size变为11</li>
+<li>t2也开始进行设置值操作，它尝试设置elementData[11] = e，而elementData没有进行过扩容，它的下标最大为10。于是此时会报出一个数组越界的异常ArrayIndexOutOfBoundsException</li>
+</ol>
+<p>于是乎，错误就这么诞生了，所以ArrayList线程不安全，可以使用vector代替，而vector之所以线程安全，那是因为它在扩容过程中使用了synchronize进行加锁，ArrayList代表效率，vector代表安全，看各种情况去使用它们。</p>
+<p>第二种情况，它运气极好，没有发生冲突，恰好为200000。</p>
+<p>第三种情况，183274，这种情况是一种非常隐蔽的错误，它既没有显式的表达出错误，也没有计算正确，这是因为两个线程同时对i进行赋值，导致的错误，这种错误不是属于逻辑上的错误，所以不会直接的表达，而是直接的被略过。</p>
+<h4 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h4><h5 id="HashMap的原理"><a href="#HashMap的原理" class="headerlink" title="HashMap的原理"></a>HashMap的原理</h5><p>HashMap是一个非常之重要的容器，几乎每一个互联网公司的面试都会问及HashMap的实现和原理，hashmap首先是一个可扩容的数组，然后每个数组底下可以存放多个内容，被存放的内容就像链表一样，一个接着一个，在一个数组存放的链表大于8个的时候，链表就会转化为红黑树的数据结构,这里先简要概述HashMap的原理</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/hashmap.png" alt="hashmap"></p>
+<p>hashmap的设计可以说非常的及精妙，它结合了数组和链表的特点，数组是寻址容易，修改和插入困难，而链表反之，hashmap不仅仅寻址容易，插入和删除也容易。所以，hashmap可以看成是一个带有链表的数组，它的使用方法和图一样，一个key值，一个value值。</p>
+<p>我们先看看hashmap的构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.loadFactor = DEFAULT_LOAD_FACTOR; <span class="comment">// all other fields defaulted</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//看看DEFAULT_LOAD_FACTOR</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里写出了，hashmap的构造和扩容的机制，在构造的时候设置了负载因子0.75，以用来在hashmap的元素在达到其四分之三的时候，便会自发的发生扩容，为什么必须是0.75的时候呢，在这里，设计者给出了一个解释 nodes in bins follows a Poisson distribution。什么是poisson分布呢，用通俗的语言来说，世界上的概率都是可以通过计算得来的，比如硬币的概率是二分之一，但是若要涉及的各种各样的因素，比如风力，重力，地球的自转，或许就会与实际相差那么一点点，于是可以把概率分成有大数据支持的概率（正态分布），没大数据支持的概率（二项式分布），现实生活中的概率（poisson分布）。使用poisson分布在hashmap中，是为了减少hash冲突（又称碰撞）。</p>
+<p>什么是哈希冲突？哈希冲突是指哈希码被放入到hashmap的时候发生的重叠，也可以看作为：两个不同的输入值，根据同一散列函数计算出的散列值相同的现象叫做碰撞。如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">t.put(<span class="number">17</span>,<span class="string">"you"</span>);</span><br><span class="line"><span class="comment">//将key和value加入map，下面看看put的内容</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//put加入的值，除了本身之外，还有一个hash的函数，这个就是hash码了，我们看看是怎么将key值转为hash码的</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h;</span><br><span class="line">        <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//可以看到如果key值不为空，就将key值赋给一个int型变量h，h再与h右移16位(二进制位移)进行异或操作，该方法主要是将Object转换成一个整型。</span></span><br><span class="line"><span class="comment">//通过hashCode()的高16位异或低16位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度、功效、质量来考虑的。以上方法得到的int的hash值，然后再通过h &amp; (table.length -1)来得到该对象在数据中保存的位置。</span></span><br><span class="line"><span class="comment">//&gt;&gt;&gt;    :     无符号右移，忽略符号位，空位都以0补齐</span></span><br></pre></td></tr></table></figure>
+
+<p>再回来看看put函数返回的putval函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;</span><br><span class="line">        <span class="comment">// 如果存储元素的table为空，则进行必要字段的初始化</span></span><br><span class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">            n = (tab = resize()).length;    <span class="comment">// 获取长度（16）</span></span><br><span class="line">        <span class="comment">// 如果根据hash值获取的结点为空，则新建一个结点</span></span><br><span class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)      <span class="comment">// 此处 &amp; 代替了 % （除法散列法进行散列）</span></span><br><span class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">        <span class="comment">// 这里的p结点是根据hash值算出来对应在数组中的元素</span></span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            Node&lt;K,V&gt; e; K k;</span><br><span class="line">            <span class="comment">// 如果新插入的结点和table中p结点的hash值，key值相同的话</span></span><br><span class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp;</span><br><span class="line">                ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                e = p;</span><br><span class="line">            <span class="comment">// 如果是红黑树结点的话，进行红黑树插入</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</span><br><span class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                    <span class="comment">// 代表这个单链表只有一个头部结点，则直接新建一个结点即可</span></span><br><span class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                        <span class="comment">// 链表长度大于8时，将链表转红黑树</span></span><br><span class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></span><br><span class="line">                            treeifyBin(tab, hash);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                        ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="comment">// 及时更新p</span></span><br><span class="line">                    p = e;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 如果存在这个映射就覆盖</span></span><br><span class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// existing mapping for key</span></span><br><span class="line">                V oldValue = e.value;</span><br><span class="line">                <span class="comment">// 判断是否允许覆盖，并且value是否为空</span></span><br><span class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</span><br><span class="line">                    e.value = value;</span><br><span class="line">                afterNodeAccess(e);     <span class="comment">// 回调以允许LinkedHashMap后置操作</span></span><br><span class="line">                <span class="keyword">return</span> oldValue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ++modCount;     <span class="comment">// 更改操作次数</span></span><br><span class="line">        <span class="keyword">if</span> (++size &gt; threshold)     <span class="comment">// 大于临界值</span></span><br><span class="line">            <span class="comment">// 将数组大小设置为原来的2倍，并将原先的数组中的元素放到新数组中</span></span><br><span class="line">            <span class="comment">// 因为有链表，红黑树之类，因此还要调整他们</span></span><br><span class="line">            resize();  </span><br><span class="line">        <span class="comment">// 回调以允许LinkedHashMap后置操作</span></span><br><span class="line">        afterNodeInsertion(evict);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>总结为是通过hash(key)%len的方式，将hashcode其存放在hashmap当中，于是put里的key值17就变成了hashcode：1</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/hashcode.png" alt="hashcode"></p>
+<p>而且，hashmap虽然在构造的时候,可以传入任意参数但其实，无论传入什么参数，最后都会变成2的次幂。</p>
+<p>长度16或者其他2的幂，Length-1的值是所有二进制位全为1，这种情况下，index的结果等同于hashcode后几位的值。只要输入的hashcode本身分布均匀，Hash算法的结果就是均匀的。所以，hashmap中的&amp;位必须为奇数（Length - 1）</p>
+<p>因为2的次幂可以很好的去减少hash碰撞,并且呢，虽然我们说hashcode其实是对容量取余获得的，但是由于取余这个方法在计算中并不是那么有效率，所以实际上还是通过位运算的方式去取得余，不过我们可以概念性的看作为取余，方便运算，并且位运算还有一个好处就是，可以解决负数的问题。</p>
+<p>为什么可以使用位运算(&amp;)来实现取模运算(%)呢？这实现的原理如下：</p>
+<ul>
+<li>X % 2^n = X &amp; (2^n – 1)</li>
+<li>2^n表示2的n次方，也就是说，一个数对2^n取模 == 一个数和(2^n – 1)做按位与运算 。</li>
+<li>假设n为3，则2^3 = 8，表示成2进制就是1000。2^3 -1 = 7 ，即0111。</li>
+<li>此时X &amp; (2^3 – 1) 就相当于取X的2进制的最后三位数。</li>
+<li>从2进制角度来看，X / 8相当于 X &gt;&gt; 3，即把X右移3位，此时得到了X / 8的商，而被移掉的部分(后三位)，则是X % 8，也就是余数。</li>
+</ul>
+<p>而通常解决hash碰撞有这几种方法：</p>
+<ul>
+<li>开放定址法：<ul>
+<li>开放定址法就是一旦发生了冲突，就去寻找下一个空的散列地址，只要散列表足够大，空的散列地址总能找到，并将记录存入。</li>
+</ul>
+</li>
+<li>链地址法<ul>
+<li>将哈希表的每个单元作为链表的头结点，所有哈希地址为i的元素构成一个同义词链表。即发生冲突时就把该关键字链在以该单元为头结点的链表的尾部。</li>
+</ul>
+</li>
+<li>再哈希法<ul>
+<li>当哈希地址发生冲突用其他的函数计算另一个哈希函数地址，直到冲突不再产生为止。</li>
+</ul>
+</li>
+<li>建立公共溢出区<ul>
+<li>将哈希表分为基本表和溢出表两部分，发生冲突的元素都放入溢出表中。</li>
+</ul>
+</li>
+</ul>
+<h5 id="为什么HashMap线程不安全"><a href="#为什么HashMap线程不安全" class="headerlink" title="为什么HashMap线程不安全"></a>为什么HashMap线程不安全</h5><p>我们先来看一段代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Map&lt;String,String&gt; map=<span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">addthread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> start=<span class="number">0</span>;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="title">addthread</span><span class="params">(<span class="keyword">int</span> object)</span></span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.start=object;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;<span class="number">100000</span> ; i+=<span class="number">2</span>) &#123;</span><br><span class="line">                map.put(Integer.toString(i),Integer.toBinaryString(i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(<span class="keyword">new</span> addthread(<span class="number">0</span>));</span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(<span class="keyword">new</span> addthread(<span class="number">1</span>));</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(map.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码和ArrayList非常类似，也会出现三种情况</p>
+<p>第一种情况就是运行结果为100000，也就是运气极佳，完美运行，但这种情况很少</p>
+<p>第二种情况就是有结果，但结果少于100000，这是因为访问时出现了数据的不一致</p>
+<p>但更多的是第三种情况，出现了程序一直在运行，无限循环的情况，为什么会出现这种情况呢，想必大家第一时间能想的到是因为put方法，对，没错，不同ArrayList的数组越界错误，hashmap出现了死循环</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/hashmapdead.jpg" alt="死循环"></p>
+<p>hashmap扩容的时候，会出现链表互为对方的next的情况，从而导致一个死循环</p>
+<p>不过jdk1.8之后，已经不存在这个问题了（jdk1.7及以下仍然存在），即使这样，hashmap在多线程中也要谨慎使用，最好的方法是使用concurrenthashmap去代替hashmap</p>
+<h4 id="错误的加锁"><a href="#错误的加锁" class="headerlink" title="错误的加锁"></a>错误的加锁</h4><p>这里要提到一个新的观点，被synchronize包围的对象，就一定能保持原子性吗？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Integer i=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> test instance=<span class="keyword">new</span> test();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread t1= <span class="keyword">new</span> Thread(instance);</span><br><span class="line">        Thread t2= <span class="keyword">new</span> Thread(instance);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;<span class="number">100000</span> ; j++) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (i)&#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上代码所示，这是一个比较简单的事例，一个计数器，最后算出结果，我们从表面上看，这个列子完全没有问题，所用的对象i也完全被包围，那么我们看一下结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">153039</span></span><br></pre></td></tr></table></figure>
+
+<p>这并不等于200000。很可能是在读写的过程中发生了数据不一致的错误。这是为什么呢？我们来看看Integer的实现。</p>
+<p>我们发现了Integer的增长过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，valueof实际上是一个工厂方法，它会返回一个指定数值的Integer实例，因此这里的i++本质上是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i=Integer.valueOf(i.intValue()+<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>因为在多个线程之间，i在不断地变动，所以我们锁住的Integer都是过去的Integer，想要修正这个问题，也很简单，只要把synchronize那一部分变成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (instance)&#123;</span><br><span class="line">                i++; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样锁住的部分就变成了该线程本身。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/12/21/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89/" rel="next" title="Java并发编程（五）线程的管理">
+                <i class="fa fa-chevron-left"></i> Java并发编程（五）线程的管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/" rel="prev" title="Java并发编程（七）volatile关键字">
+                Java并发编程（七）volatile关键字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
+                alt="攀" />
+            
+              <p class="site-author-name" itemprop="name">攀</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/%7C%7C%20archives">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#隐蔽的错误"><span class="nav-number">1.</span> <span class="nav-text">隐蔽的错误</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.1.</span> <span class="nav-text">ArrayList</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HashMap"><span class="nav-number">1.2.</span> <span class="nav-text">HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HashMap的原理"><span class="nav-number">1.2.1.</span> <span class="nav-text">HashMap的原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#为什么HashMap线程不安全"><span class="nav-number">1.2.2.</span> <span class="nav-text">为什么HashMap线程不安全</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#错误的加锁"><span class="nav-number">1.3.</span> <span class="nav-text">错误的加锁</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">攀</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
