@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="并发编程,网络," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="NIO什么是NIONIO，即new io，一个可以代替Java io的一个新的机制。这个机制极大的区别的传统的io，让程序在多线程上拥有更好的效率。我们先来看看它和传统的io有什么区别。  它在类型上和io不同，nio主要是一个面向缓冲区操作的，我们传统的io，都是使用着stream流的方式去读写信息，而nio则是先接收任何的值，进入到缓冲队列，再将其通过通道的方式，传递给服务器，如图。 因为在b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程（二是）NIO">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/01/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B20/index.html">
+<meta property="og:site_name" content="小世界">
+<meta property="og:description" content="NIO什么是NIONIO，即new io，一个可以代替Java io的一个新的机制。这个机制极大的区别的传统的io，让程序在多线程上拥有更好的效率。我们先来看看它和传统的io有什么区别。  它在类型上和io不同，nio主要是一个面向缓冲区操作的，我们传统的io，都是使用着stream流的方式去读写信息，而nio则是先接收任何的值，进入到缓冲队列，再将其通过通道的方式，传递给服务器，如图。 因为在b">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio2.png">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio.png">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio6.png">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio3.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio4.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio5.gif">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio7.png">
+<meta property="article:published_time" content="2020-01-01T08:09:31.000Z">
+<meta property="article:modified_time" content="2020-01-01T13:25:07.480Z">
+<meta property="article:author" content="攀">
+<meta property="article:tag" content="并发编程">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2020/01/01/Java并发编程20/"/>
+
+
+
+
+
+  <title>Java并发编程（二是）NIO | 小世界</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/01/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发编程（二是）NIO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-01T16:09:31+08:00">
+                2020-01-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h3><h4 id="什么是NIO"><a href="#什么是NIO" class="headerlink" title="什么是NIO"></a>什么是NIO</h4><p>NIO，即new io，一个可以代替Java io的一个新的机制。这个机制极大的区别的传统的io，让程序在多线程上拥有更好的效率。我们先来看看它和传统的io有什么区别。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio2.png" alt="nioandio"></p>
+<p>它在类型上和io不同，nio主要是一个面向缓冲区操作的，我们传统的io，都是使用着stream流的方式去读写信息，而nio则是先接收任何的值，进入到缓冲队列，再将其通过通道的方式，传递给服务器，如图。<img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio.png" alt="nioofshape"></p>
+<p>因为在buffer中，有一个叫做byteBuffer的类，能够容乃任意类型的值而不改变，能将一个buffer加入到通道中进行传输。回过头来看，传统的io对于处理客户传进来的一个信息，会分出一个线程去进行io操作。而nio不一样，这就要关系到选择器了，nio只使用一个线程去管理客户传进来的信息，每当客户有信息传入时，选择器会给这个信息先分一个类，分成需要进行io操作的一类，和不需要进行io操作的一类。这样会使需要io操作的一类才进行io函数去处理，这在宏观上，有什么区别呢？举一个例子，你在逛淘宝店铺，当你点击进去一个店铺的时候，就向服务器传达了一个信息，表示客户您在线，而传统的io则直接分给你一个线程，你的所有购买商品的操作，都会在这个线程中完成，而我们的nio呢，则不会直接分发线程给你，而是接收你的所有操作，并把需要io和不需要的io的操作分开来，这样，就不会长时间的去占用系统资源。而我们的通道（channel），则在这个时候起到了极大的作用：<img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio6.png" alt="channel"></p>
+<p>因为每一次启动io连接，都需要cpu去处理和调度，但是反反复复的使用cpu去开启和关闭io连接，无疑是一个极大的浪费，所以便使用了通道这一个技术，将io的数据使用buffer缓冲保存起来，并且通过通道去发送缓冲，这样效率便有了提升。</p>
+<p>说到nio，也一下socket，是操作系统提供给通信层的一组抽象API接口。因为socket的存在，才能让两个进程实现通信。<img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio3.jpg" alt="socket"></p>
+<p>socket在计算机网络中，起到至关重要的地步，正是因为socket的存在，才使得数据连接起来，我们来看看socket是如何在客户端和服务器之间通信的。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio4.jpg" alt="socket2"></p>
+<p>服务端首先初始化socket()，然后与端口绑定bind()，再对端口进行监听<code>listen()</code>，接着调用accept()堵塞等待客户端连接。此时，若有一个客户端初始化了一个Socket，然后连接服务端connect()。若连接成功，此时客户端与服务端的连接就建立了。客户端发送请求write()，服务端接收请求并处理read()，然后将回应发送给客户端write()，客户端读取数据read()，最后关闭连接close()，一次交互结束。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio5.gif" alt="socket3"></p>
+<p>在这之后，我们使用socket来制作一个简单的echo服务器吧。echo服务器很简单，它在客户单读取的所有数据，都会原封不动的传输给服务端。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/nio/nio7.png" alt="echo"></p>
+<p>参考资料：</p>
+<p><a href="https://www.cnblogs.com/pony1223/p/8138233.html" target="_blank" rel="noopener">https://www.cnblogs.com/pony1223/p/8138233.html</a></p>
+<p><a href="https://www.jianshu.com/p/01b9a454de5a" target="_blank" rel="noopener">https://www.jianshu.com/p/01b9a454de5a</a></p>
+<p><a href="https://blog.csdn.net/weibo1230123/article/details/81951731" target="_blank" rel="noopener">https://blog.csdn.net/weibo1230123/article/details/81951731</a></p>
+<h4 id="基于Socket的echo服务器"><a href="#基于Socket的echo服务器" class="headerlink" title="基于Socket的echo服务器"></a>基于Socket的echo服务器</h4><p>这个服务器逻辑较为简单，就是从客户端接收到什么，就再次向客户端发送什么，这次先使用普通的io流进行编程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintWriter;</span><br><span class="line"><span class="keyword">import</span> java.net.ServerSocket;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">echo</span>服务器 </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ExecutorService es= Executors.newCachedThreadPool();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ServerSocket echo=<span class="keyword">null</span>;</span><br><span class="line">        Socket client=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            echo=<span class="keyword">new</span> ServerSocket(<span class="number">8000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                client=echo.accept();</span><br><span class="line">                <span class="comment">//接收服务器获得的信息</span></span><br><span class="line">                System.out.println(<span class="string">"客户端地址："</span>+client.getRemoteSocketAddress()+<span class="string">" 发起了连接"</span>);</span><br><span class="line">                es.execute(<span class="keyword">new</span> HandleMsg(client));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                System.out.println(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HandleMsg</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">        Socket clientSocket;</span><br><span class="line">        <span class="comment">//建立一个客户端的socket</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">HandleMsg</span><span class="params">(Socket socket)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.clientSocket = socket;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            BufferedReader is=<span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">//缓冲区的读</span></span><br><span class="line">            PrintWriter os=<span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">//打印流</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                is =<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(clientSocket.getInputStream()));</span><br><span class="line">                os=<span class="keyword">new</span> PrintWriter(clientSocket.getOutputStream(),<span class="keyword">true</span>);</span><br><span class="line">                <span class="comment">//先将两个值进行初始化，使其指向Socket对象，避免空指针异常</span></span><br><span class="line">                <span class="comment">//从客户端读取信息</span></span><br><span class="line">                String input=<span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">long</span> start=System.currentTimeMillis();</span><br><span class="line">                <span class="keyword">while</span> ((input=is.readLine())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    os.println(input);</span><br><span class="line">                    <span class="comment">//使其读取的数据输出回客户端</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">long</span> end=System.currentTimeMillis();</span><br><span class="line">                System.out.println(<span class="string">"花费时间："</span>+(end-start)+<span class="string">"ms"</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (is!=<span class="keyword">null</span>)is.close();</span><br><span class="line">                    <span class="keyword">if</span> (os!=<span class="keyword">null</span>)os.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//客户端地址：/127.0.0.1:50214 发起了连接</span></span><br><span class="line"><span class="comment">//花费时间：1ms</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintWriter;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 客户端<span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Socket client=<span class="keyword">null</span>;</span><br><span class="line">        PrintWriter writer=<span class="keyword">null</span>;</span><br><span class="line">        BufferedReader reader=<span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">//定义各个值</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client=<span class="keyword">new</span> Socket();</span><br><span class="line">            client.connect(<span class="keyword">new</span> InetSocketAddress(<span class="string">"localhost"</span>,<span class="number">8000</span>));</span><br><span class="line">            <span class="comment">//去连接这个服务器的地址</span></span><br><span class="line">            writer=<span class="keyword">new</span> PrintWriter(client.getOutputStream(),<span class="keyword">true</span>);</span><br><span class="line">            <span class="comment">//设置好输出流</span></span><br><span class="line">            writer.println(<span class="string">"hello!"</span>);</span><br><span class="line">            writer.flush();</span><br><span class="line">            reader=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(client.getInputStream()));</span><br><span class="line">            <span class="comment">//此时的i流正在读取从服务器发送回来的消息，寻址主要靠client的port端口</span></span><br><span class="line">            System.out.println(<span class="string">"来自于服务器："</span>+reader.readLine());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (writer!=<span class="keyword">null</span>)writer.close();</span><br><span class="line">            <span class="keyword">if</span> (reader!=<span class="keyword">null</span>)reader.close();</span><br><span class="line">            <span class="keyword">if</span> (client!=<span class="keyword">null</span>)client.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//来自于服务器：hello!</span></span><br></pre></td></tr></table></figure>
+
+<p>如此一来便完成了一个简单的服务器。但是，这样的io型服务器，在实际使用中，往往不尽人意，因为你可以从结构看到，它在对服务器有着硬性要求的条件下，对客户端的要求也不低，为什么这么说呢？因为每次的任务提交，都需要进行一段时间的阻塞，假如在我们的客户端网络状况及其不好，那么对服务端来说，也有着极大的影响。举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintWriter;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.LockSupport;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 客户端<span class="title">B</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ExecutorService es= Executors.newCachedThreadPool();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> sleeptime=<span class="number">1000</span>*<span class="number">1000</span>*<span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EchoClient</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Socket client=<span class="keyword">null</span>;</span><br><span class="line">            PrintWriter writer=<span class="keyword">null</span>;</span><br><span class="line">            BufferedReader reader=<span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                client =<span class="keyword">new</span> Socket();</span><br><span class="line">                client.connect(<span class="keyword">new</span> InetSocketAddress(<span class="string">"localhost"</span>,<span class="number">8000</span>));</span><br><span class="line">                <span class="comment">//设定连接服务器的地址</span></span><br><span class="line">                writer=<span class="keyword">new</span> PrintWriter(client.getOutputStream(),<span class="keyword">true</span>);</span><br><span class="line">                writer.print(<span class="string">"H"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                writer.print(<span class="string">"e"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                writer.print(<span class="string">"l"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                writer.print(<span class="string">"l"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                writer.print(<span class="string">"o"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                writer.print(<span class="string">"!"</span>);</span><br><span class="line">                LockSupport.parkNanos(sleeptime);</span><br><span class="line">                <span class="comment">//传达数据</span></span><br><span class="line">                writer.println();</span><br><span class="line">                writer.flush();</span><br><span class="line"></span><br><span class="line">                reader=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(client.getInputStream()));</span><br><span class="line">                <span class="comment">//初始化</span></span><br><span class="line">                System.out.println(<span class="string">"来自于服务器："</span>+reader.readLine());</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  <span class="keyword">if</span> (writer!=<span class="keyword">null</span>)writer.close();</span><br><span class="line">                  <span class="keyword">if</span> (reader!=<span class="keyword">null</span>)reader.close();</span><br><span class="line">                  <span class="keyword">if</span> (client!=<span class="keyword">null</span>)client.close();</span><br><span class="line">              &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                  e.printStackTrace();</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        EchoClient ec=<span class="keyword">new</span> EchoClient();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">10</span> ; i++) &#123;</span><br><span class="line">            es.execute(ec);</span><br><span class="line">        &#125;</span><br><span class="line">        es.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*注：一下输出结果均来自于服务器</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50254 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50256 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50255 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50257 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50258 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50259 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50260 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50261 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50262 发起了连接</span></span><br><span class="line"><span class="comment">客户端地址：/127.0.0.1:50263 发起了连接</span></span><br><span class="line"><span class="comment">花费时间：6002ms</span></span><br><span class="line"><span class="comment">花费时间：6002ms</span></span><br><span class="line"><span class="comment">花费时间：6002ms</span></span><br><span class="line"><span class="comment">花费时间：6001ms</span></span><br><span class="line"><span class="comment">花费时间：6002ms</span></span><br><span class="line"><span class="comment">花费时间：6001ms</span></span><br><span class="line"><span class="comment">花费时间：6001ms</span></span><br><span class="line"><span class="comment">花费时间：6003ms</span></span><br><span class="line"><span class="comment">花费时间：6002ms</span></span><br><span class="line"><span class="comment">花费时间：6003ms</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，当我们的客户端网络状态很差的时候，我们的服务器状态也变的很差，服务器在等待客户端传输完数据的这六秒之内，是不能够做任何事情的，换句话说，属于服务器的性能，都用于等待你网络传输完数据。这表示你的多核服务器，将会有极大的资源浪费在这里。因此，NIO顺应而生了，NIO就是为了解决这样的问题而来，通过缓冲和通道交换的形式，NIO的选择器能够将需要读写的线程标记出来，让服务器在等待的过程中，还能去计算其他的事务。</p>
+<h4 id="使用NIO进行网络编程"><a href="#使用NIO进行网络编程" class="headerlink" title="使用NIO进行网络编程"></a>使用NIO进行网络编程</h4><p>在NIO中，之前也提到过channel（通道），这个channel可以看作为socket。而向channel中传达buffer，就等于向socket中传达流，buffer和流不同的地方在于，buffer不会被阻塞，因为它仅是一个数据队列。而每一个channel中都有一个叫做selectablechannel，它被selector（选择器）所管理者。而selector可以被一个线程管理，也可以被多个线程管理，每当channel准备好数据时，selector就会得到通知，去处理这一些数据。那么，我们就来重新实现一下echo服务器吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+          
+            <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/12/31/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B19/" rel="next" title="Java并发编程（十九）并行算法">
+                <i class="fa fa-chevron-left"></i> Java并发编程（十九）并行算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
+                alt="攀" />
+            
+              <p class="site-author-name" itemprop="name">攀</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO"><span class="nav-number">1.</span> <span class="nav-text">NIO</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是NIO"><span class="nav-number">1.1.</span> <span class="nav-text">什么是NIO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于Socket的echo服务器"><span class="nav-number">1.2.</span> <span class="nav-text">基于Socket的echo服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用NIO进行网络编程"><span class="nav-number">1.3.</span> <span class="nav-text">使用NIO进行网络编程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">攀</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
