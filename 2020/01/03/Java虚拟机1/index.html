@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="并发编程,Synchronized," />
+  <meta name="keywords" content="Java虚拟机," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="synchronized原理">
+<meta name="description" content="Java的起源但是要说清楚Java虚拟机，我想从JDK开始说起。我们想要在一个计算机上使用Java，就必须在网上下载JDK和JRE，JDK是Java的开发工具，JRE是Java的运行环境，有了这个两个就能在计算机上使用Java。有人说可能还需要配置path路径，其实也未必，之所以要配置Java_home，不是因为它必须配置了才能用，只是因为配置了path路径后，就能够在全局中访问到它，如果你没有配">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发编程（八）synchronized原理">
-<meta property="og:url" content="http://antarctica.gitee.io/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/index.html">
+<meta property="og:title" content="Java虚拟机（一）Java虚拟机概念">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/03/Java%E8%99%9A%E6%8B%9F%E6%9C%BA1/index.html">
 <meta property="og:site_name" content="小世界">
-<meta property="og:description" content="synchronized原理">
-<meta property="article:published_time" content="2019-12-22T06:25:17.000Z">
-<meta property="article:modified_time" content="2019-12-29T14:26:28.582Z">
+<meta property="og:description" content="Java的起源但是要说清楚Java虚拟机，我想从JDK开始说起。我们想要在一个计算机上使用Java，就必须在网上下载JDK和JRE，JDK是Java的开发工具，JRE是Java的运行环境，有了这个两个就能在计算机上使用Java。有人说可能还需要配置path路径，其实也未必，之所以要配置Java_home，不是因为它必须配置了才能用，只是因为配置了path路径后，就能够在全局中访问到它，如果你没有配">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm2.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm.jpg">
+<meta property="article:published_time" content="2020-01-03T11:16:16.000Z">
+<meta property="article:modified_time" content="2020-01-05T06:00:43.262Z">
 <meta property="article:author" content="攀">
-<meta property="article:tag" content="并发编程">
-<meta property="article:tag" content="Synchronized">
+<meta property="article:tag" content="Java虚拟机">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm2.jpg">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://antarctica.gitee.io/blog/2019/12/22/Java并发编程（八）/"/>
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2020/01/03/Java虚拟机1/"/>
 
 
 
 
 
-  <title>Java并发编程（八）synchronized原理 | 小世界</title>
+  <title>Java虚拟机（一）Java虚拟机概念 | 小世界</title>
   
 
 
@@ -243,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/03/Java%E8%99%9A%E6%8B%9F%E6%9C%BA1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="攀">
@@ -260,7 +262,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发编程（八）synchronized原理</h1>
+          <h1 class="post-title" itemprop="name headline">Java虚拟机（一）Java虚拟机概念</h1>
         
 
         <div class="post-meta">
@@ -272,8 +274,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-22T14:25:17+08:00">
-                2019-12-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T19:16:16+08:00">
+                2020-01-03
               </time>
             
 
@@ -310,7 +312,22 @@
       
 
       
-        <h3 id="synchronized原理"><a href="#synchronized原理" class="headerlink" title="synchronized原理"></a>synchronized原理</h3>
+        <h3 id="Java的起源"><a href="#Java的起源" class="headerlink" title="Java的起源"></a>Java的起源</h3><p>但是要说清楚Java虚拟机，我想从JDK开始说起。我们想要在一个计算机上使用Java，就必须在网上下载JDK和JRE，JDK是Java的开发工具，JRE是Java的运行环境，有了这个两个就能在计算机上使用Java。有人说可能还需要配置path路径，其实也未必，之所以要配置Java_home，不是因为它必须配置了才能用，只是因为配置了path路径后，就能够在全局中访问到它，如果你没有配置，其实在使用idea的时候，也没有多大影响。</p>
+<p>JDK起源于sun公司，这是一个B2B企业，专门为其他企业提供软件服务，但是如今的Java已经不属于sun公司了，sun被Oracle收购了，Java已经属于Oracle了，并且，这家公司还把JDK和JRE结合到了一起，下载的时候直接下载JDK就行了，而在命名上，也有了变化，以后没有1.7和1.8这样的说法了，统称JDk7和JDk8这样的命名，如今的Jdk，貌似出到了JDk14了。</p>
+<h3 id="什么是Java虚拟机"><a href="#什么是Java虚拟机" class="headerlink" title="什么是Java虚拟机"></a>什么是Java虚拟机</h3><p>先简述一下：Java虚拟机把java代码，根据所在平台的不同，会自动编译成相应的字节码，在任何平台上运行。这么讲似乎有点抽象，那我们做一个比喻，比如c语言，它只能在自己的平台上运行，比如Windows，你把c语言代码拿去Linux下运行，那是行不通的，必须安装相应的运行环境，而Java虚拟机的优势在于，你只要写了Java代码，有这个虚拟机，就能在任意平台上运行，这就是所谓的跨平台性。</p>
+<p>但是Java虚拟机并不是一个个体，而是一个种类，自Java的发展史以来，Java虚拟机有很多，而现今在使用的Java虚拟机叫做HotSpot，具体可以在cmd（命令行）中，使用Java -version进行查看。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm2.jpg" alt="jvm2"></p>
+<h3 id="Java虚拟机运行时的数据区域"><a href="#Java虚拟机运行时的数据区域" class="headerlink" title="Java虚拟机运行时的数据区域"></a>Java虚拟机运行时的数据区域</h3><p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm.jpg" alt="jvm"></p>
+<p>如图所示，共分为这么几个区域：</p>
+<p>1.程序计数器：内存空间小，线程私有。字节码解释器工作是就是通过改变这个计数器的值来选取下一条需要执行指令的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖计数器完成。这个计数器记录的是正在执行的虚拟机字节码指令的地址；如果正在执行的是 Native 方法，这个计数器的值则为 (Undefined)。</p>
+<p>2.Java 虚拟机栈：线程私有，生命周期和线程一致。描述的是 Java 方法执行的内存模型：每个方法在执行时都会床创建一个栈帧(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行结束，就对应着一个栈帧从虚拟机栈中入栈到出栈的过程。Java虚拟机栈。即是Java中的栈内存。</p>
+<p>局部变量表：存放了编译期可知的各种基本类型(boolean、byte、char、short、int、float、long、double)、对象引用(reference 类型)和 returnAddress 类型(指向了一条字节码指令的地址)</p>
+<p>3.本地方法栈：区别于 Java 虚拟机栈的是，Java 虚拟机栈为虚拟机执行 Java 方法(也就是字节码)服务，而本地方法栈则为虚拟机使用到的 Native 方法服务。而所谓的Native方法，就是指使用非Java语言的方法，比如C++等，整个Java虚拟机的内部实现都是由C++构成的。</p>
+<p>4..Java 堆：对于绝大多数应用来说，这块区域是 JVM 所管理的内存中最大的一块。线程共享，主要是存放对象实例和数组。内部会划分出多个线程私有的分配缓冲区。可以位于物理上不连续的空间，但是逻辑上要连续。即是所谓的堆内存的存放地点，在Java中经常会用到。</p>
+<p>5.方法区：方法区在GC中，曾经也被称之为永久代，也可以从逻辑上推导，方法在虚拟机中一般不会被GC回收。属于共享内存区域，存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+<p>6.运行时常量池：属于方法区一部分，用于存放编译期生成的各种字面量和符号引用。编译器和运行期(String 的 intern() )都可以将常量放入池中。内存有限，无法申请时抛出 OutOfMemoryError。</p>
+<p>7.直接内存：非虚拟机运行时数据区的部分。</p>
+
       
     </div>
     
@@ -327,9 +344,7 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
-          
-            <a href="/blog/tags/Synchronized/" rel="tag"># Synchronized</a>
+            <a href="/blog/tags/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Java虚拟机</a>
           
         </div>
       
@@ -342,8 +357,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/" rel="next" title="Java并发编程（七）volatile关键字">
-                <i class="fa fa-chevron-left"></i> Java并发编程（七）volatile关键字
+              <a href="/blog/2020/01/02/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B21/" rel="next" title="Java并发编程（二十一）AIO">
+                <i class="fa fa-chevron-left"></i> Java并发编程（二十一）AIO
               </a>
             
           </div>
@@ -352,8 +367,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2019/12/23/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B9%9D%EF%BC%89/" rel="prev" title="Java并发编程（九）同步控制">
-                Java并发编程（九）同步控制 <i class="fa fa-chevron-right"></i>
+              <a href="/blog/2020/01/04/Java%E8%99%9A%E6%8B%9F%E6%9C%BA2/" rel="prev" title="Java虚拟机（二）HotSpot虚拟机对象探秘">
+                Java虚拟机（二）HotSpot虚拟机对象探秘 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -491,7 +506,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized原理"><span class="nav-number">1.</span> <span class="nav-text">synchronized原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java的起源"><span class="nav-number">1.</span> <span class="nav-text">Java的起源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Java虚拟机"><span class="nav-number">2.</span> <span class="nav-text">什么是Java虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机运行时的数据区域"><span class="nav-number">3.</span> <span class="nav-text">Java虚拟机运行时的数据区域</span></a></li></ol></div>
             
 
           </div>
