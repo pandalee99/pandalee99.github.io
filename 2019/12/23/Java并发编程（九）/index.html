@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,21 +48,21 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -82,11 +82,11 @@
 <meta name="description" content="多线程的团队协作重入锁（ReentrantLock）什么是重入锁重入锁和synchronized非常的相似，我们知道synchronized的锁区域是用大括号所包围起来的，而ReentrantLock则是可以自己决定加锁的位置和解锁的位置的 12L.lock();L.unloock();  123456789101112131415161718192021222324252627282930313">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java并发编程（九）同步控制">
-<meta property="og:url" content="https://github.com/Antarctica000/antarctica000.github.io/2019/12/23/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B9%9D%EF%BC%89/index.html">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2019/12/23/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B9%9D%EF%BC%89/index.html">
 <meta property="og:site_name" content="小世界">
 <meta property="og:description" content="多线程的团队协作重入锁（ReentrantLock）什么是重入锁重入锁和synchronized非常的相似，我们知道synchronized的锁区域是用大括号所包围起来的，而ReentrantLock则是可以自己决定加锁的位置和解锁的位置的 12L.lock();L.unloock();  123456789101112131415161718192021222324252627282930313">
 <meta property="article:published_time" content="2019-12-23T06:25:29.000Z">
-<meta property="article:modified_time" content="2019-12-24T06:51:18.825Z">
+<meta property="article:modified_time" content="2020-01-09T12:05:59.648Z">
 <meta property="article:author" content="攀">
 <meta property="article:tag" content="并发编程">
 <meta name="twitter:card" content="summary">
@@ -96,7 +96,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/',
+    root: '/blog/',
     scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
@@ -119,7 +119,7 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/23/Java并发编程（九）/"/>
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2019/12/23/Java并发编程（九）/"/>
 
 
 
@@ -153,7 +153,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/blog/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">小世界</span>
         <span class="logo-line-after"><i></i></span>
@@ -181,7 +181,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/blog/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -191,7 +191,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
+          <a href="/blog/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -201,7 +201,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/blog/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/23/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B9%9D%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/23/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B9%9D%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="攀">
@@ -385,7 +385,7 @@
 <h4 id="ReadWriteLock读写锁"><a href="#ReadWriteLock读写锁" class="headerlink" title="ReadWriteLock读写锁"></a>ReadWriteLock读写锁</h4><p>我们在对一个对象进行操作的时候，无论是读取还是写入，为了保持原子性，都用以synchronized包围，但是，在很多实际应用中，读取操作都是要远大于写入操作的，但是却全都用synchronized去上锁，这无疑降低了某些方面的效率，于是乎，设计者根据这种情况，设计了一个叫做读写锁的类，将读取操作与写入操作分离，使两个线程在读取同一个对象的时候，不阻塞。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantReadWriteLock;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Lock lock=<span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ReentrantReadWriteLock reentrantReadWriteLock=<span class="keyword">new</span> ReentrantReadWriteLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Lock read=reentrantReadWriteLock.readLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> test demo=<span class="keyword">new</span> test();</span><br><span class="line">        Runnable readrunnable=<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    demo.handleRead(read);</span><br><span class="line">                    <span class="comment">//demo.handleRead(lock);</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">18</span> ; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(readrunnable).start();<span class="comment">//开启线程</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">handleRead</span><span class="params">(Lock lock)</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);<span class="comment">//线程休眠</span></span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>当这个方法开启的时候，在休眠一秒后加了锁，按道理来说，18个线程至少要等18秒才能运行完成，但是对于锁类型是读写锁的线程而言，可以被多个线程重复进入，读写锁和重入锁的区别在于，一个是对于本线程的行为可以被重复进入而 不加锁，读写锁则是对于多个不进行修改操作的线程，都可以重入进入。</p>
+<p>当这个方法开启的时候，在休眠一秒后加了锁，按道理来说，18个线程至少要等18秒才能运行完成，但是对于锁类型是读写锁的线程而言，可以被多个线程重复进入，重入锁和读写锁的区别在于，重入锁是对于本线程的行为可以被重复进入而不加锁，读写锁则是对于多个不进行修改操作的线程，都可以进入而不加锁。</p>
 
       
     </div>
@@ -403,7 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
           
         </div>
       
@@ -416,7 +416,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/" rel="next" title="Java并发编程（八）synchronized原理">
+              <a href="/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/" rel="next" title="Java并发编程（八）synchronized原理">
                 <i class="fa fa-chevron-left"></i> Java并发编程（八）synchronized原理
               </a>
             
@@ -426,7 +426,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/12/24/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%8D%81%EF%BC%89/" rel="prev" title="Java并发编程（十）线程池">
+              <a href="/blog/2019/12/24/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%8D%81%EF%BC%89/" rel="prev" title="Java并发编程（十）线程池">
                 Java并发编程（十）线程池 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -507,9 +507,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -521,8 +521,8 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -667,74 +667,74 @@
 
   
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 

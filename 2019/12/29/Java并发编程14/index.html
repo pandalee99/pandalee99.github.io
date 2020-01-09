@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,21 +48,21 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -82,11 +82,11 @@
 <meta name="description" content="无锁加锁是保证线程安全的常用手法，但是被加锁之后，往往会产生一些效率的问题，那不使用锁，也能保证线程安全吗？当然可以，并且，使用无锁的方法去实现的线程安全，不仅仅在效率上占优，而且，还不会产生死锁的问题哦。 无锁的策略：CAS(Compare And Swap)经常被使用的无锁方法，叫做CAS，就是比较和交换。它不是一个固定的类或者方法，而是一个常用的策略，是一个算法。CAS通常包括着三个参数（V">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java并发编程（十四）无锁状态">
-<meta property="og:url" content="https://github.com/Antarctica000/antarctica000.github.io/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B14/index.html">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B14/index.html">
 <meta property="og:site_name" content="小世界">
 <meta property="og:description" content="无锁加锁是保证线程安全的常用手法，但是被加锁之后，往往会产生一些效率的问题，那不使用锁，也能保证线程安全吗？当然可以，并且，使用无锁的方法去实现的线程安全，不仅仅在效率上占优，而且，还不会产生死锁的问题哦。 无锁的策略：CAS(Compare And Swap)经常被使用的无锁方法，叫做CAS，就是比较和交换。它不是一个固定的类或者方法，而是一个常用的策略，是一个算法。CAS通常包括着三个参数（V">
 <meta property="article:published_time" content="2019-12-29T05:29:27.000Z">
-<meta property="article:modified_time" content="2020-01-04T07:52:51.971Z">
+<meta property="article:modified_time" content="2020-01-09T12:56:58.162Z">
 <meta property="article:author" content="攀">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="CAS">
@@ -97,7 +97,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/',
+    root: '/blog/',
     scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
@@ -120,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/29/Java并发编程14/"/>
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2019/12/29/Java并发编程14/"/>
 
 
 
@@ -154,7 +154,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/blog/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">小世界</span>
         <span class="logo-line-after"><i></i></span>
@@ -182,7 +182,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/blog/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -192,7 +192,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
+          <a href="/blog/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -202,7 +202,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/blog/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B14/">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B14/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="攀">
@@ -311,7 +311,7 @@
 
       
         <h3 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h3><p>加锁是保证线程安全的常用手法，但是被加锁之后，往往会产生一些效率的问题，那不使用锁，也能保证线程安全吗？当然可以，并且，使用无锁的方法去实现的线程安全，不仅仅在效率上占优，而且，还不会产生死锁的问题哦。</p>
-<h4 id="无锁的策略：CAS-Compare-And-Swap"><a href="#无锁的策略：CAS-Compare-And-Swap" class="headerlink" title="无锁的策略：CAS(Compare And Swap)"></a>无锁的策略：CAS(Compare And Swap)</h4><p>经常被使用的无锁方法，叫做CAS，就是比较和交换。它不是一个固定的类或者方法，而是一个常用的策略，是一个算法。CAS通常包括着三个参数（V,E,N）V代表着即将要被更新的变量，E代表着预期的值，N代表着新的值，只有当且仅当V=E的时候，才会把V更新为N。这表示着如果有多个线程企图使用CAS操作去更新一个值的时候，只有一个会更新成功，并且把更新成功后其他线程的E变换为更新过后的值，导致了其他线程的V！=E 从而使得其他线程的更新操作失败，不过，这并不会直接导致他们取消这次操作，而是让他们再次去尝试进行CAS操作。</p>
+<h4 id="无锁的策略：CAS-Compare-And-Swap"><a href="#无锁的策略：CAS-Compare-And-Swap" class="headerlink" title="无锁的策略：CAS(Compare And Swap)"></a>无锁的策略：CAS(Compare And Swap)</h4><p>经常被使用的无锁方法，叫做CAS，就是比较和交换。它不是一个固定的类或者方法，而是一个常用的策略，是一个算法。CAS通常包括着三个参数（V,E,N）V代表着即将要被更新的变量，E代表着预期的值，N代表着新的值，只有当且仅当V=E的时候，才会把V更新为N。这表示着如果有多个线程企图使用CAS操作去更新一个值的时候，只有一个会更新成功，并且把更新成功后其他线程的E变换为更新过后的值，导致了其他线程的V！=E 从而使得其他线程的更新操作失败，不过，这并不会直接导致他们取消这次操作，而是让他们再次开始<strong>自旋</strong>去尝试进行CAS操作。</p>
 <h4 id="AtomicInteger：无锁的线程安全整数"><a href="#AtomicInteger：无锁的线程安全整数" class="headerlink" title="AtomicInteger：无锁的线程安全整数"></a>AtomicInteger：无锁的线程安全整数</h4><p>AtomicInteger是一个使用CAS操作去实现的类，它是一个无锁的、线程安全的整体，它的任何类似于i++之类的操作，即使没有被加上锁，依然是线程安全的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> AtomicInteger a=<span class="keyword">new</span> AtomicInteger();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(<span class="keyword">new</span> test());</span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(<span class="keyword">new</span> test());</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(<span class="string">"a="</span>+a);</span><br><span class="line">        ExecutorService es= Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">10</span> ; i++) &#123;</span><br><span class="line">            es.submit(<span class="keyword">new</span> test());</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        es.shutdown();</span><br><span class="line">        System.out.println(<span class="string">"a="</span>+a);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">100000</span>; i++) &#123;</span><br><span class="line">            a.incrementAndGet();<span class="comment">//a++操作</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a=<span class="number">200000</span></span><br><span class="line">a=<span class="number">1200000</span></span><br></pre></td></tr></table></figure>
 
@@ -338,7 +338,7 @@
 <p>但是需要补充的是，它们都涉及到了一个问题：对象的值被修改回原值，到底算不算修改。比如有三个线程ABC，A把i=1修改成i=2，B把i=2，再修改成i=1,那么对于C线程来说，i在进行CAS比较的时候，到底是被修改了还是没有被修改呢？但从代码上而言，对于C线程来说，i没有被修改，应该继续去执行CAS操作，而不是看做为被修改，从而再次循环。这或许在思维和逻辑上表示正确，但是现实生活中，却不应该是这样子，比如家里人给你1000块钱生活费，你一到账就用3秒时间全部还了花呗，你不能说在1分钟后，家里人问你到账没有，你说没有。实际上你确确实实花了那一部分钱，但这个在CAS操作中并没有被记录而已。接下来我们使用代码去还原当时的场景。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicReference;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> AtomicReference&lt;Integer&gt; money=<span class="keyword">new</span> AtomicReference&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        money.set(<span class="number">900</span>);</span><br><span class="line">        <span class="comment">//你有900块</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">3</span> ; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                        Integer m=money.get();</span><br><span class="line">                        <span class="keyword">if</span>(m&lt;<span class="number">1000</span>)&#123;<span class="comment">//生活费不足</span></span><br><span class="line">                            <span class="keyword">if</span>(money.compareAndSet(m,m+<span class="number">1000</span>))&#123;</span><br><span class="line">                                System.out.println(<span class="string">"不足1000元，已打钱，余额："</span>+money.get());</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="comment">//System.out.println("还不需要");</span></span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;.start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">100</span> ; i++) &#123;</span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                        Integer m=money.get();</span><br><span class="line">                        <span class="keyword">if</span>(m&gt;<span class="number">500</span>)&#123;<span class="comment">//还花呗</span></span><br><span class="line">                            System.out.println(<span class="string">"大于500块"</span>);</span><br><span class="line">                            <span class="keyword">if</span> (money.compareAndSet(m,m-<span class="number">500</span>))&#123;</span><br><span class="line">                                System.out.println(<span class="string">"成功还款500，余额："</span>+money.get());</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                            System.out.println(<span class="string">"没有足够金额"</span>);</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">不足<span class="number">1000</span>元，已打钱，余额：<span class="number">1900</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">1400</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">900</span></span><br><span class="line">不足<span class="number">1000</span>元，已打钱，余额：<span class="number">1900</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">1400</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">900</span></span><br><span class="line">不足<span class="number">1000</span>元，已打钱，余额：<span class="number">1900</span></span><br></pre></td></tr></table></figure>
 
-<p>这种几率非常非常的小，但是还是有可能发生的，为了解决这样的问题，就诞生了AtomicStampedReference。</p>
+<p>这种几率非常非常的小，但是还是有可能发生的，为了解决这样的问题，就诞生了AtomicStampedReference。当然，也可以使用带版本号的方式去辨别。</p>
 <h4 id="AtomicStampedReference：带有时间戳的对象引用"><a href="#AtomicStampedReference：带有时间戳的对象引用" class="headerlink" title="AtomicStampedReference：带有时间戳的对象引用"></a>AtomicStampedReference：带有时间戳的对象引用</h4><p>它会产生一个时间戳单位，并且在进行CAS的时候，会多传入两个参数，使其同时进行CAS操作，让它的时间戳+1，这样，修改了时间戳之后，代表了执行成功，就不会再次执行这样的操作了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//源码  </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(V   expectedReference,</span></span></span><br><span class="line"><span class="function"><span class="params">                                 V   newReference,</span></span></span><br><span class="line"><span class="function"><span class="params">                                 <span class="keyword">int</span> expectedStamp,</span></span></span><br><span class="line"><span class="function"><span class="params">                                 <span class="keyword">int</span> newStamp)</span> </span>&#123;</span><br><span class="line">        Pair&lt;V&gt; current = pair;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">            expectedReference == current.reference &amp;&amp;</span><br><span class="line">            expectedStamp == current.stamp &amp;&amp;</span><br><span class="line">            ((newReference == current.reference &amp;&amp;</span><br><span class="line">              newStamp == current.stamp) ||</span><br><span class="line">             casPair(current, Pair.of(newReference, newStamp)));</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//修改后</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicReference;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicStampedReference;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> AtomicStampedReference&lt;Integer&gt; money=<span class="keyword">new</span> AtomicStampedReference&lt;Integer&gt;(<span class="number">900</span>,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">3</span> ; i++) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> time=money.getStamp();<span class="comment">//获取了时间戳</span></span><br><span class="line">            <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                        Integer m=money.getReference();</span><br><span class="line">                        <span class="keyword">if</span>(m&lt;<span class="number">1000</span>)&#123;<span class="comment">//生活费不足</span></span><br><span class="line">                            <span class="keyword">if</span>(money.compareAndSet(m,m+<span class="number">1000</span>,time,time+<span class="number">1</span>))&#123;<span class="comment">//多传入了两个参数</span></span><br><span class="line">                                System.out.println(<span class="string">"不足1000元，已打钱，余额："</span>+money.getReference());</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="comment">//System.out.println("还不需要");</span></span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;.start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">100</span> ; i++) &#123;</span><br><span class="line">                    <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                        <span class="keyword">int</span> time=money.getStamp();</span><br><span class="line">                        Integer m=money.getReference();</span><br><span class="line">                        <span class="keyword">if</span>(m&gt;<span class="number">500</span>)&#123;<span class="comment">//还花呗</span></span><br><span class="line">                            System.out.println(<span class="string">"大于500块"</span>);</span><br><span class="line">                            <span class="keyword">if</span> (money.compareAndSet(m,m-<span class="number">500</span>,time,time+<span class="number">1</span>))&#123;</span><br><span class="line">                                System.out.println(<span class="string">"成功还款500，余额："</span>+money.getReference());</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                            System.out.println(<span class="string">"没有足够金额"</span>);</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">不足<span class="number">1000</span>元，已打钱，余额：<span class="number">1900</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">1400</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">900</span></span><br><span class="line">大于<span class="number">500</span>块</span><br><span class="line">成功还款<span class="number">500</span>，余额：<span class="number">400</span></span><br><span class="line">没有足够金额</span><br><span class="line">没有足够金额</span><br><span class="line">没有足够金额</span><br></pre></td></tr></table></figure>
 
@@ -379,9 +379,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
           
-            <a href="/tags/CAS/" rel="tag"># CAS</a>
+            <a href="/blog/tags/CAS/" rel="tag"># CAS</a>
           
         </div>
       
@@ -394,7 +394,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B13/" rel="next" title="Java并发编程（十三）ThreadLocal">
+              <a href="/blog/2019/12/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B13/" rel="next" title="Java并发编程（十三）ThreadLocal">
                 <i class="fa fa-chevron-left"></i> Java并发编程（十三）ThreadLocal
               </a>
             
@@ -404,7 +404,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B15/" rel="prev" title="Java并发编程（十五）线程互助的SynchronousQueue">
+              <a href="/blog/2019/12/29/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B15/" rel="prev" title="Java并发编程（十五）线程互助的SynchronousQueue">
                 Java并发编程（十五）线程互助的SynchronousQueue <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -485,9 +485,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -499,8 +499,8 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -645,74 +645,74 @@
 
   
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 

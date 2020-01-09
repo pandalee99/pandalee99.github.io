@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,29 +48,27 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
 
 
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
 
 
 
-  <meta name="keywords" content="并发编程,Synchronized," />
 
 
+  <meta name="keywords" content="并发编程,Volatile," />
 
 
 
@@ -79,18 +77,20 @@
 
 
 
-<meta name="description" content="volatile关键字通常在进行并发编程的时候， 123456789101112131415161718192021222324252627public class test &amp;#123;    static int count &#x3D; 0;    static int i&#x3D;0;    public static class  test1 implements Runnable &amp;#123;">
+
+
+<meta name="description" content="volatile关键字是什么？一个例子通常在进行并发编程的时候，我们总会遇到一些数据不一致的问题，接下，就这一问题开始讨论和解决。如一个例子： 123456789101112131415161718192021222324252627public class test &amp;#123;    static int count &#x3D; 0;    static int i&#x3D;0;    public stat">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java并发编程（七）volatile关键字">
-<meta property="og:url" content="https://github.com/Antarctica000/antarctica000.github.io/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/index.html">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/index.html">
 <meta property="og:site_name" content="小世界">
-<meta property="og:description" content="volatile关键字通常在进行并发编程的时候， 123456789101112131415161718192021222324252627public class test &amp;#123;    static int count &#x3D; 0;    static int i&#x3D;0;    public static class  test1 implements Runnable &amp;#123;">
+<meta property="og:description" content="volatile关键字是什么？一个例子通常在进行并发编程的时候，我们总会遇到一些数据不一致的问题，接下，就这一问题开始讨论和解决。如一个例子： 123456789101112131415161718192021222324252627public class test &amp;#123;    static int count &#x3D; 0;    static int i&#x3D;0;    public stat">
 <meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/volatileyuanli.png">
 <meta property="article:published_time" content="2019-12-22T06:23:01.000Z">
-<meta property="article:modified_time" content="2019-12-29T14:27:45.848Z">
+<meta property="article:modified_time" content="2020-01-09T12:51:04.655Z">
 <meta property="article:author" content="攀">
 <meta property="article:tag" content="并发编程">
-<meta property="article:tag" content="Synchronized">
+<meta property="article:tag" content="Volatile">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/volatileyuanli.png">
 
@@ -99,7 +99,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/',
+    root: '/blog/',
     scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
@@ -122,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/22/Java并发编程（七）/"/>
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2019/12/22/Java并发编程（七）/"/>
 
 
 
@@ -156,7 +156,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/blog/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">小世界</span>
         <span class="logo-line-after"><i></i></span>
@@ -184,7 +184,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/blog/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -194,7 +194,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
+          <a href="/blog/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -204,7 +204,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/blog/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
@@ -245,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Antarctica000/antarctica000.github.io/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%83%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="攀">
@@ -312,7 +312,7 @@
       
 
       
-        <h3 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h3><p>通常在进行并发编程的时候，</p>
+        <h3 id="volatile关键字是什么？"><a href="#volatile关键字是什么？" class="headerlink" title="volatile关键字是什么？"></a>volatile关键字是什么？</h3><h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>通常在进行并发编程的时候，我们总会遇到一些数据不一致的问题，接下，就这一问题开始讨论和解决。如一个例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">test1</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"="</span> + count);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//第一次</span></span><br><span class="line">=<span class="number">13118</span></span><br><span class="line">=<span class="number">13921</span></span><br><span class="line"><span class="comment">//第二次</span></span><br><span class="line">=<span class="number">10937</span></span><br><span class="line">=<span class="number">10937</span></span><br></pre></td></tr></table></figure>
 
 <p>我们发现无论怎么运行都差不多是这两种情况，要么两个数字都不一样，要么两个数字一样但都不是20000，这是什么情况呢？我想，第一种是因为两个线程在不断的使用i的过程中，某一个线程先完成了计算，还有一个线程仍在继续着循环，导致两次数字不一样，且第一次数字都小于第二次，第二种情况是两个线程交替执行，导致最后虽然同时完成，但是仍然损失了很多数字。</p>
@@ -323,10 +323,24 @@
 <p>最后在设置为synchronize试试</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;<span class="comment">//此时volatile可加可不加</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> i=<span class="number">0</span>;<span class="comment">//此时volatile可加可不加</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">test1</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> test instance=<span class="keyword">new</span> test();</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (instance) &#123;</span><br><span class="line">                <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"="</span> + count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line">=<span class="number">10000</span></span><br><span class="line">=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
 
-<p>看，设置成了synchronize之后就没有了数据的损失，完全就变成了一个接着一个运行的机制，这样就输出了正确的数值。但是，我想要两个都为20000，这样怎么改造呢?想到线程之间协同关系，当然是要用之前讲过的wait（）方法和notify（）方法啦，这里先不说，大家想一想把。</p>
-<p>接下来，可能会有人觉得奇怪，为什么声明了volatile还是会出现损失呢？，volatile的原理是什么呢？之前有简单的讲过，这里着重讲一下。</p>
+<p>看，设置成了synchronize之后就没有了数据的损失，完全就变成了一个接着一个运行的机制，这样就输出了正确的数值。但是，我想要两个都为20000，这样怎么改造呢?想到线程之间协同关系，当然是要用之前讲过的wait()方法和notify()方法啦，这里先不说，大家想一想把。</p>
+<p>接下来，可能会有人觉得奇怪，为什么声明了volatile还是会出现损失呢？，volatile的原理是什么呢？这里先简单讲一下，为什么这个例子没有保证它的原子性。那是因为，Volatile并不能保证count++的原子性，count++在执行的时候，实际上是完成了：读取—修改—写入。这三个操作，在多个线程进行读取和修改的时候，可能会遇到这种状况：</p>
+<ol>
+<li>线程A读取到count=1；</li>
+<li>线程B读取到count=1；</li>
+<li>线程A复制一个副本修改i的值为2；</li>
+<li>线程B复制一个副本修改i的值为2；</li>
+<li>线程A写回i；</li>
+<li>线程B发现i的值已经为2，放弃写入；</li>
+</ol>
+<p>其实当我们进行到步骤2的时候，Volatile就已经无法保证i的原子性了，可以看到，如果线程A和线程B几乎同时读取到i的值为1，而不是线程A先于线程B读取修改并写入count的话，那么就已经无法保证i的原子性了，因为Volatile关键字并没有对count进行加锁，虽然声明了Volatile，会让count只会被一个单位所修改，但是在读取这个操作中，其实是不加以限制的。</p>
 <p>volatile具有可见性和有序性，并不具备原子性，volatile只能确保一个线程修改了数据之后，另一个线程能够看到这个改动，当两个线程同时修改一个数据时，仍然会产生冲突。</p>
+<h3 id="Volatile的实现原理"><a href="#Volatile的实现原理" class="headerlink" title="Volatile的实现原理"></a>Volatile的实现原理</h3><h4 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h4><p>我们的所有的代码，实际运行的空间其实是在Java虚拟机当中，而Java虚拟机中的Java堆，使用的就是计算的内存。CPU在读取一个值的时候，初次是需要从主内存中读取，读取到缓存中来，之后只要每次读取都会从缓存当中读取值，直到缓存时间过期或者是缓存地址被修改，才会重新去主存中读取值。</p>
+<p>volatile声明了一个对象后，将那个对象转为汇编代码，可以发现那个对象的已经加了lock前缀去处理。它会在主存和CPU之间中使用缓存一致性协议，此刻的主存会在CPU的每一个缓存中使用嗅探器去嗅探自己的缓存是否过期了，当发现自己的缓存被修改了，就会使在缓存的对象无效化，让在缓存中的对象重新去主存读取新的值。</p>
+<p>下面就以一张图去表述吧：</p>
 <p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/volatileyuanli.png" alt="volatile"></p>
+<p>而在修改了被声明为volatile的对象后，该缓存就会通过嗅探器得知，然后去通知其他的缓存，lock#信号就会锁住其他的缓存，不让它被读取，然后将该CPU的缓存中所修改的值，写回主存中去，其他缓存需要从主存中获取到新值后才能解锁。讲到这里，为什么还是不能保证原子性呢？我们再次拿出上面讲的例子来：当 i=1 的时候A,B两个线程同时读入了 i 的值， 然后A线程执行了 temp = i + 1的操作， 要注意，此时的 i 的值还没有变化，然后B线程也执行了 temp = i + 1的操作，注意，此时A，B两个线程保存的 i 的值都是1，temp 的值都是2， 然后A线程执行了 i = temp （2）的操作，此时i的值会立即刷新到主存并通知其他线程保存的 i 值失效， 此时B线程需要重新读取 i 的值那么此时B线程保存的 i 就是2，同时B线程保存的 temp 还仍然是2， 然后B线程执行 i=temp （2），然后B线程就以为自己已经成功读取到了新的值，这样下来，就损失了一个1。</p>
+<h4 id="锁缓存还是锁总线"><a href="#锁缓存还是锁总线" class="headerlink" title="锁缓存还是锁总线"></a>锁缓存还是锁总线</h4><p>前面讲到，volatile会锁住全部缓存，使得它们必须更新新的值。除此之外，volatile还可以选择锁住总线，让该cpu暂时独占整个内存，完成所需操作。但是一般都不会去使用锁总线的方式，因为锁总线的开销实在是太大了，但有时候却不得不去锁总线，一是当前操作的数据跨越了多个缓存行，只能使用总线锁，二是设备不支持(现在很少)。默认情况下，Lock前缀都是通过锁缓存来保证一致性的。</p>
 
       
     </div>
@@ -344,9 +358,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
+            <a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag"># 并发编程</a>
           
-            <a href="/tags/Synchronized/" rel="tag"># Synchronized</a>
+            <a href="/blog/tags/Volatile/" rel="tag"># Volatile</a>
           
         </div>
       
@@ -359,7 +373,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89/" rel="next" title="Java并发编程（六）隐蔽的错误">
+              <a href="/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89/" rel="next" title="Java并发编程（六）隐蔽的错误">
                 <i class="fa fa-chevron-left"></i> Java并发编程（六）隐蔽的错误
               </a>
             
@@ -369,7 +383,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/" rel="prev" title="Java并发编程（八）synchronized原理">
+              <a href="/blog/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/" rel="prev" title="Java并发编程（八）synchronized原理">
                 Java并发编程（八）synchronized原理 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -450,9 +464,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -464,8 +478,8 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -508,7 +522,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile关键字"><span class="nav-number">1.</span> <span class="nav-text">volatile关键字</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile关键字是什么？"><span class="nav-number">1.</span> <span class="nav-text">volatile关键字是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一个例子"><span class="nav-number">1.1.</span> <span class="nav-text">一个例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volatile的实现原理"><span class="nav-number">2.</span> <span class="nav-text">Volatile的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存一致性协议"><span class="nav-number">2.1.</span> <span class="nav-text">缓存一致性协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁缓存还是锁总线"><span class="nav-number">2.2.</span> <span class="nav-text">锁缓存还是锁总线</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -610,74 +624,74 @@
 
   
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
