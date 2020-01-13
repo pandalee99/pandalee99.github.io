@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java虚拟机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="垃圾收集器垃圾收集算法，都是一个原理，这些算法的实现的最终结果，就是垃圾收集器。每个垃圾收集器虽然算法上类似，但是各个都有着自己的优势。如图：  这七个就是是如今比较流行的垃圾收集器。它们都是在分代收集算法的策略下运行的。 Serial收集器这是一个最古老的垃圾收集器，现在几乎不被使用了。它的原理非常简单，就是在进行垃圾收集的时候暂停所有的线程。  正如图所示，这是一个单核的垃圾收集器，会在新生代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机（五）经典的垃圾收集器">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA5/index.html">
+<meta property="og:site_name" content="小世界">
+<meta property="og:description" content="垃圾收集器垃圾收集算法，都是一个原理，这些算法的实现的最终结果，就是垃圾收集器。每个垃圾收集器虽然算法上类似，但是各个都有着自己的优势。如图：  这七个就是是如今比较流行的垃圾收集器。它们都是在分代收集算法的策略下运行的。 Serial收集器这是一个最古老的垃圾收集器，现在几乎不被使用了。它的原理非常简单，就是在进行垃圾收集的时候暂停所有的线程。  正如图所示，这是一个单核的垃圾收集器，会在新生代">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm7.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm8.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm9.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm11.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm12.jpg">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm13.jpg">
+<meta property="article:published_time" content="2020-01-12T06:25:01.000Z">
+<meta property="article:modified_time" content="2020-01-13T04:58:41.224Z">
+<meta property="article:author" content="攀">
+<meta property="article:tag" content="Java虚拟机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm7.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2020/01/12/Java虚拟机5/"/>
+
+
+
+
+
+  <title>Java虚拟机（五）经典的垃圾收集器 | 小世界</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java虚拟机（五）经典的垃圾收集器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-12T14:25:01+08:00">
+                2020-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>垃圾收集算法，都是一个原理，这些算法的实现的最终结果，就是垃圾收集器。每个垃圾收集器虽然算法上类似，但是各个都有着自己的优势。如图：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm7.jpg" alt="jvm7"></p>
+<p>这七个就是是如今比较流行的垃圾收集器。它们都是在分代收集算法的策略下运行的。</p>
+<h4 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h4><p>这是一个最古老的垃圾收集器，现在几乎不被使用了。它的原理非常简单，就是在进行垃圾收集的时候暂停所有的线程。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm8.jpg" alt=""></p>
+<p>正如图所示，这是一个单核的垃圾收集器，会在新生代使用复制算法，在老年代执行整理算法。一般在收集几十兆的新生代，所暂停的时间也仅仅在十几毫秒以内，对于运行在客户端模式下的虚拟机而言，也是可以接受的。</p>
+<h4 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h4><p>Serial Old收集器是Serial收集器的老年版本。它经常被用来与其他收集器搭配使用。一般的搭档是 Parallel Scavenge收集器，还有一个就是作为CMS收集器发生失败时的后备预案。</p>
+<h4 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h4><p>ParNew收集器是Serial收集器的多线程版本。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm9.jpg" alt=""></p>
+<p>遗憾的是ParNew收集器仅仅只有复制算法实现了多线程，在标记整理当中，还是需要Serial Old收集器，暂停所有的线程来进行回收内存。但垃圾收集器并不是只能使用一种类型，ParNew收集器还能和CMS收集器结合在一起，实现完全的多线程垃圾收集。</p>
+<h4 id="Parallel-Scabenge和Parallel-Old收集器"><a href="#Parallel-Scabenge和Parallel-Old收集器" class="headerlink" title="Parallel Scabenge和Parallel Old收集器"></a>Parallel Scabenge和Parallel Old收集器</h4><p>Parallel Scabenge和Parallel Old并不是同一时期的产物，是先有了Parallel Scabenge收集器，然后在JDK6的时候才提供了Parallel Old收集器，之后我们可以统称为Parallel收集器。运行效果如图：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm11.jpg" alt=""></p>
+<p>Parallel收集器的特点和其他的收集都有着很大的不同，这个收集器不把目光局限于缩短线程停顿的时间，而是引入了一个新的名词：<strong>吞吐量</strong>。</p>
+<p>吞吐量(Throughput = 运行用户代码时间 / (运行用户代码时间 + 垃圾收集时间))。</p>
+<p>如果虚拟机完成某个任务，用户代码加上垃圾收集总共耗费了100分钟，其中垃圾收集花掉了一分钟，那么吞吐量就是99%。</p>
+<p>可以通过 -XX：MaxGCPauseMills 参数设置内存回收花费最大时间， -XX:GCTimeRatio 设置垃圾收集时间占总时间的比率。-XX:+UseAdaptiveSizePolicy开启自动吞吐量控制。</p>
+<p>作为一个吞吐量优先的收集器，虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整停顿时间。这就是 GC 的自适应调整策略(GC Ergonomics)。</p>
+<p><strong>JDK8用的正是这种模式的收集器</strong>。</p>
+<h4 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h4><p>CMS收集器是一个基于标记清除算法的，能并发收集，低停顿的收集器。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm12.jpg" alt=""></p>
+<p>这个收集器的运行过程更为复杂，整个过程分为四个阶段：</p>
+<ol>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>重新标记</li>
+<li>并发清除</li>
+</ol>
+<p>可惜的是这个收集器无法处理“浮动垃圾”，并且也可能会产生内存碎片过多的问题，目前并未广泛的投入使用。</p>
+<h4 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h4><p>G1收集器是在垃圾收集器技术发展史上的一个里程碑式的成果。G1的进行回收的标准不再是它属于哪个分代，而是哪块内存中存放的垃圾数量最大，回收收益最大，这就是G1的Mixed GC模式。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm13.jpg" alt=""></p>
+<p>这个收集器开创了面向局部收集的设计思路和基于Region的内存布局形式，同样有着四个阶段：</p>
+<ol>
+<li>初始标记：仅仅只是标记一下GC Roots能直接关联到的对象。</li>
+<li>并发标记：开始进行可达性分析。</li>
+<li>最终标记：处理并发阶段遗留的SATB记录。</li>
+<li>筛选回收：对各个Region的价值和回收成本进行排序，然后回收。</li>
+</ol>
+<p><strong>就目前从JDK9到最新的JDK13而言，使用的正是G1收集器。</strong>这也是收集器未来的发展趋势。</p>
+<h4 id="shenandoah收集器"><a href="#shenandoah收集器" class="headerlink" title="shenandoah收集器"></a>shenandoah收集器</h4><p>拥有九个阶段的、及其复杂的收集器，是基于G1的思想研发出来，目前处于试验状态。</p>
+<h4 id="ZGC收集器"><a href="#ZGC收集器" class="headerlink" title="ZGC收集器"></a>ZGC收集器</h4><p>引入的染色指针的概念，也是基于G1的思想，而且对并发整理算法有着特别的改进，是一个新的低延迟收集器，目前也处于试验状态。</p>
+<h4 id="Epsilon收集器"><a href="#Epsilon收集器" class="headerlink" title="Epsilon收集器"></a>Epsilon收集器</h4><p>拥有自动内存管理子系统的收集器。不以垃圾回收为关注点，而是集中在内存管理方面，是一个在只需要运行数分钟就关闭的应用上，有着极其低延迟的收集器。</p>
+<h3 id="如何查看GC日志"><a href="#如何查看GC日志" class="headerlink" title="如何查看GC日志"></a>如何查看GC日志</h3><p>我们在进行调优的时候，往往需要根据GC情况来进行，但是我们该怎么得知GC信息呢？</p>
+<h4 id="查看GC详细信息"><a href="#查看GC详细信息" class="headerlink" title="查看GC详细信息"></a>查看GC详细信息</h4><p>在JDK9之前使用-XX:+PrintGCDetails查看GC日志</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//JDK8</span></span><br><span class="line"><span class="comment">//-XX:+PrintGCDetails</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这个成员属性的唯一意义就是占点内存，以便在能在GC日志中看清楚是否有回收过</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        test objA = <span class="keyword">new</span> test();</span><br><span class="line">        test objB = <span class="keyword">new</span> test();</span><br><span class="line">        objA.instance = objB;</span><br><span class="line">        objB.instance = objA;</span><br><span class="line"></span><br><span class="line">        objA = <span class="keyword">null</span>;</span><br><span class="line">        objB = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 假设在这行发生GC，objA和objB是否能被回收？</span></span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[GC (System.gc()) [PSYoungGen: 6425K-&gt;760K(33280K)] 6425K-&gt;768K(110080K), 0.0019406 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">[Full GC (System.gc()) [PSYoungGen: 760K-&gt;0K(33280K)] [ParOldGen: 8K-&gt;581K(76800K)] 768K-&gt;581K(110080K), [Metaspace: 3099K-&gt;3099K(1056768K)], 0.0054005 secs] [Times: user=0.11 sys=0.00, real=0.01 secs] </span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> PSYoungGen      total 33280K, used 860K [0x00000000daf80000, 0x00000000dd480000, 0x0000000100000000)</span></span><br><span class="line"><span class="comment">  eden space 28672K, 3% used [0x00000000daf80000,0x00000000db057230,0x00000000dcb80000)</span></span><br><span class="line"><span class="comment">  from space 4608K, 0% used [0x00000000dcb80000,0x00000000dcb80000,0x00000000dd000000)</span></span><br><span class="line"><span class="comment">  to   space 4608K, 0% used [0x00000000dd000000,0x00000000dd000000,0x00000000dd480000)</span></span><br><span class="line"><span class="comment"> ParOldGen       total 76800K, used 581K [0x0000000090e00000, 0x0000000095900000, 0x00000000daf80000)</span></span><br><span class="line"><span class="comment">  object space 76800K, 0% used [0x0000000090e00000,0x0000000090e917e0,0x0000000095900000)</span></span><br><span class="line"><span class="comment"> Metaspace       used 3121K, capacity 4496K, committed 4864K, reserved 1056768K</span></span><br><span class="line"><span class="comment">  class space    used 340K, capacity 388K, committed 512K, reserved 1048576K</span></span><br></pre></td></tr></table></figure>
+
+<p>在JDK9以及之后使用-Xlog:gc*查看GC日志</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//-Xlog:gc*</span></span><br><span class="line"><span class="comment">//JDK13</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这个成员属性的唯一意义就是占点内存，以便在能在GC日志中看清楚是否有回收过</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        test objA = <span class="keyword">new</span> test();</span><br><span class="line">        test objB = <span class="keyword">new</span> test();</span><br><span class="line">        objA.instance = objB;</span><br><span class="line">        objB.instance = objA;</span><br><span class="line"></span><br><span class="line">        objA = <span class="keyword">null</span>;</span><br><span class="line">        objB = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 假设在这行发生GC，objA和objB是否能被回收？</span></span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[0.014s][info][gc,heap] Heap region size: 1M</span></span><br><span class="line"><span class="comment">[0.017s][info][gc     ] Using G1</span></span><br><span class="line"><span class="comment">[0.017s][info][gc,heap,coops] Heap address: 0x0000000090e00000, size: 1778 MB, Compressed Oops mode: 32-bit</span></span><br><span class="line"><span class="comment">[0.039s][info][gc           ] Periodic GC disabled</span></span><br><span class="line"><span class="comment">[0.088s][info][gc,task      ] GC(0) Using 2 workers of 8 for full compaction</span></span><br><span class="line"><span class="comment">[0.088s][info][gc,start     ] GC(0) Pause Full (System.gc())</span></span><br><span class="line"><span class="comment">[0.089s][info][gc,phases,start] GC(0) Phase 1: Mark live objects</span></span><br><span class="line"><span class="comment">[0.090s][info][gc,phases      ] GC(0) Phase 1: Mark live objects 1.420ms</span></span><br><span class="line"><span class="comment">[0.090s][info][gc,phases,start] GC(0) Phase 2: Prepare for compaction</span></span><br><span class="line"><span class="comment">[0.090s][info][gc,phases      ] GC(0) Phase 2: Prepare for compaction 0.351ms</span></span><br><span class="line"><span class="comment">[0.090s][info][gc,phases,start] GC(0) Phase 3: Adjust pointers</span></span><br><span class="line"><span class="comment">[0.091s][info][gc,phases      ] GC(0) Phase 3: Adjust pointers 0.674ms</span></span><br><span class="line"><span class="comment">[0.091s][info][gc,phases,start] GC(0) Phase 4: Compact heap</span></span><br><span class="line"><span class="comment">[0.092s][info][gc,phases      ] GC(0) Phase 4: Compact heap 0.484ms</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,heap        ] GC(0) Eden regions: 2-&gt;0(2)</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,heap        ] GC(0) Survivor regions: 0-&gt;0(0)</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,heap        ] GC(0) Old regions: 0-&gt;2</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,heap        ] GC(0) Archive regions: 0-&gt;0</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,heap        ] GC(0) Humongous regions: 6-&gt;0</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,metaspace   ] GC(0) Metaspace: 339K-&gt;339K(1056768K)</span></span><br><span class="line"><span class="comment">[0.093s][info][gc             ] GC(0) Pause Full (System.gc()) 7M-&gt;0M(8M) 4.329ms</span></span><br><span class="line"><span class="comment">[0.093s][info][gc,cpu         ] GC(0) User=0.00s Sys=0.00s Real=0.01s</span></span><br><span class="line"><span class="comment">[0.094s][info][gc,heap,exit   ] Heap</span></span><br><span class="line"><span class="comment">[0.094s][info][gc,heap,exit   ]  garbage-first heap   total 8192K, used 751K [0x0000000090e00000, 0x0000000100000000)</span></span><br><span class="line"><span class="comment">[0.094s][info][gc,heap,exit   ]   region size 1024K, 1 young (1024K), 0 survivors (0K)</span></span><br><span class="line"><span class="comment">[0.094s][info][gc,heap,exit   ]  Metaspace       used 343K, capacity 4494K, committed 4864K, reserved 1056768K</span></span><br><span class="line"><span class="comment">[0.094s][info][gc,heap,exit   ]   class space    used 22K, capacity 386K, committed 512K, reserved 1048576K</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看GC前后堆"><a href="#查看GC前后堆" class="headerlink" title="查看GC前后堆"></a>查看GC前后堆</h4><p>JDK9之前使用-XX:+PrintHeapAtGC</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&#123;Heap before GC invocations=<span class="number">1</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total <span class="number">33280</span>K, used <span class="number">6425</span>K [<span class="number">0x00000000daf80000</span>, <span class="number">0x00000000dd480000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space <span class="number">28672</span>K, <span class="number">22</span>% used [<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000db5c6570</span>,<span class="number">0x00000000dcb80000</span>)</span><br><span class="line">  from space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd480000</span>)</span><br><span class="line">  to   space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dd000000</span>)</span><br><span class="line"> ParOldGen       total <span class="number">76800</span>K, used <span class="number">0</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000095900000</span>, <span class="number">0x00000000daf80000</span>)</span><br><span class="line">  object space <span class="number">76800</span>K, <span class="number">0</span>% used [<span class="number">0x0000000090e00000</span>,<span class="number">0x0000000090e00000</span>,<span class="number">0x0000000095900000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3204</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 347<span class="title">K</span>, <span class="title">capacity</span> 388<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">1</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total <span class="number">33280</span>K, used <span class="number">824</span>K [<span class="number">0x00000000daf80000</span>, <span class="number">0x00000000dd480000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space <span class="number">28672</span>K, <span class="number">0</span>% used [<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000dcb80000</span>)</span><br><span class="line">  from space <span class="number">4608</span>K, <span class="number">17</span>% used [<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dcc4e030</span>,<span class="number">0x00000000dd000000</span>)</span><br><span class="line">  to   space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd480000</span>)</span><br><span class="line"> ParOldGen       total <span class="number">76800</span>K, used <span class="number">8</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000095900000</span>, <span class="number">0x00000000daf80000</span>)</span><br><span class="line">  object space <span class="number">76800</span>K, <span class="number">0</span>% used [<span class="number">0x0000000090e00000</span>,<span class="number">0x0000000090e02000</span>,<span class="number">0x0000000095900000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3204</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 347<span class="title">K</span>, <span class="title">capacity</span> 388<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"></span>&#123;Heap before GC invocations=<span class="number">2</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total <span class="number">33280</span>K, used <span class="number">824</span>K [<span class="number">0x00000000daf80000</span>, <span class="number">0x00000000dd480000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space <span class="number">28672</span>K, <span class="number">0</span>% used [<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000dcb80000</span>)</span><br><span class="line">  from space <span class="number">4608</span>K, <span class="number">17</span>% used [<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dcc4e030</span>,<span class="number">0x00000000dd000000</span>)</span><br><span class="line">  to   space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd480000</span>)</span><br><span class="line"> ParOldGen       total <span class="number">76800</span>K, used <span class="number">8</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000095900000</span>, <span class="number">0x00000000daf80000</span>)</span><br><span class="line">  object space <span class="number">76800</span>K, <span class="number">0</span>% used [<span class="number">0x0000000090e00000</span>,<span class="number">0x0000000090e02000</span>,<span class="number">0x0000000095900000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3204</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 347<span class="title">K</span>, <span class="title">capacity</span> 388<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">2</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total <span class="number">33280</span>K, used <span class="number">0</span>K [<span class="number">0x00000000daf80000</span>, <span class="number">0x00000000dd480000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space <span class="number">28672</span>K, <span class="number">0</span>% used [<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000daf80000</span>,<span class="number">0x00000000dcb80000</span>)</span><br><span class="line">  from space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dcb80000</span>,<span class="number">0x00000000dd000000</span>)</span><br><span class="line">  to   space <span class="number">4608</span>K, <span class="number">0</span>% used [<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd000000</span>,<span class="number">0x00000000dd480000</span>)</span><br><span class="line"> ParOldGen       total <span class="number">76800</span>K, used <span class="number">614</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000095900000</span>, <span class="number">0x00000000daf80000</span>)</span><br><span class="line">  object space <span class="number">76800</span>K, <span class="number">0</span>% used [<span class="number">0x0000000090e00000</span>,<span class="number">0x0000000090e99838</span>,<span class="number">0x0000000095900000</span>)</span><br><span class="line"> Metaspace       used <span class="number">3204</span>K, capacity <span class="number">4496</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 347<span class="title">K</span>, <span class="title">capacity</span> 388<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在JDK9之后使用 -Xlog:gc+heap=debug</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0.017</span>s][info][gc,heap] Heap region size: <span class="number">1</span>M</span><br><span class="line">[<span class="number">0.017</span>s][debug][gc,heap] Minimum heap <span class="number">8388608</span>  Initial heap <span class="number">117440512</span>  Maximum heap <span class="number">1864368128</span></span><br><span class="line">[<span class="number">0.091</span>s][debug][gc,heap] GC(<span class="number">0</span>) Heap before GC invocations=<span class="number">0</span> (full <span class="number">0</span>): garbage-first heap   total <span class="number">114688</span>K, used <span class="number">7168</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">[<span class="number">0.091</span>s][debug][gc,heap] GC(<span class="number">0</span>)   region size <span class="number">1024</span>K, <span class="number">2</span> young (<span class="number">2048</span>K), <span class="number">0</span> survivors (<span class="number">0</span>K)</span><br><span class="line">[<span class="number">0.091</span>s][debug][gc,heap] GC(<span class="number">0</span>)  Metaspace       used <span class="number">334</span>K, capacity <span class="number">4494</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">[<span class="number">0.091</span>s][debug][gc,heap] GC(<span class="number">0</span>)   <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 21<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line">[0.095s][info ][gc,heap] GC(0) Eden regions: 2-&gt;0(2)</span><br><span class="line">[<span class="number">0.095</span>s][info ][gc,heap] GC(<span class="number">0</span>) Survivor regions: <span class="number">0</span>-&gt;<span class="number">0</span>(<span class="number">0</span>)</span><br><span class="line">[<span class="number">0.095</span>s][info ][gc,heap] GC(<span class="number">0</span>) Old regions: <span class="number">0</span>-&gt;<span class="number">2</span></span><br><span class="line">[<span class="number">0.095</span>s][info ][gc,heap] GC(<span class="number">0</span>) Archive regions: <span class="number">0</span>-&gt;<span class="number">0</span></span><br><span class="line">[<span class="number">0.095</span>s][info ][gc,heap] GC(<span class="number">0</span>) Humongous regions: <span class="number">6</span>-&gt;<span class="number">0</span></span><br><span class="line">[<span class="number">0.095</span>s][debug][gc,heap] GC(<span class="number">0</span>) Heap after GC invocations=<span class="number">1</span> (full <span class="number">1</span>): garbage-first heap   total <span class="number">8192</span>K, used <span class="number">745</span>K [<span class="number">0x0000000090e00000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">[<span class="number">0.095</span>s][debug][gc,heap] GC(<span class="number">0</span>)   region size <span class="number">1024</span>K, <span class="number">0</span> young (<span class="number">0</span>K), <span class="number">0</span> survivors (<span class="number">0</span>K)</span><br><span class="line">[<span class="number">0.095</span>s][debug][gc,heap] GC(<span class="number">0</span>)  Metaspace       used <span class="number">334</span>K, capacity <span class="number">4494</span>K, committed <span class="number">4864</span>K, reserved <span class="number">1056768</span>K</span><br><span class="line">[<span class="number">0.095</span>s][debug][gc,heap] GC(<span class="number">0</span>)   <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 21<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看并发时间以及停顿时间"><a href="#查看并发时间以及停顿时间" class="headerlink" title="查看并发时间以及停顿时间"></a>查看并发时间以及停顿时间</h4><p>JDK9之前使用 -XX:+PrintGCApplicationConcurrentTime 或-XX:+PrintGCApplicationStoppedTime</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Application time: <span class="number">0.0037062</span> seconds</span><br><span class="line">Application time: <span class="number">0.0004107</span> seconds</span><br></pre></td></tr></table></figure>
+
+<p>JDK9以及之后使用 -Xlog:safepoint</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0.069</span>s][info][safepoint] Safepoint <span class="string">"EnableBiasedLocking"</span>, Time since last: <span class="number">42245400</span> ns, Reaching safepoint: <span class="number">71800</span> ns, At safepoint: <span class="number">47700</span> ns, Total: <span class="number">119500</span> ns</span><br><span class="line">[<span class="number">0.076</span>s][info][safepoint] Safepoint <span class="string">"RevokeBias"</span>, Time since last: <span class="number">6808300</span> ns, Reaching safepoint: <span class="number">71400</span> ns, At safepoint: <span class="number">85600</span> ns, Total: <span class="number">157000</span> ns</span><br><span class="line">[<span class="number">0.084</span>s][info][safepoint] Safepoint <span class="string">"Deoptimize"</span>, Time since last: <span class="number">7844900</span> ns, Reaching safepoint: <span class="number">57900</span> ns, At safepoint: <span class="number">28000</span> ns, Total: <span class="number">85900</span> ns</span><br><span class="line">[<span class="number">0.096</span>s][info][safepoint] Safepoint <span class="string">"G1CollectFull"</span>, Time since last: <span class="number">7976700</span> ns, Reaching safepoint: <span class="number">48500</span> ns, At safepoint: <span class="number">4234200</span> ns, Total: <span class="number">4282700</span> ns</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Java虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2020/01/11/ConcurrentHashMap%E5%8E%9F%E7%90%86/" rel="next" title="ConcurrentHashMap原理">
+                <i class="fa fa-chevron-left"></i> ConcurrentHashMap原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/" rel="prev" title="Java虚拟机（六）内存分配与回收策略">
+                Java虚拟机（六）内存分配与回收策略 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
+                alt="攀" />
+            
+              <p class="site-author-name" itemprop="name">攀</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">1.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial收集器"><span class="nav-number">1.1.</span> <span class="nav-text">Serial收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial-Old收集器"><span class="nav-number">1.2.</span> <span class="nav-text">Serial Old收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ParNew收集器"><span class="nav-number">1.3.</span> <span class="nav-text">ParNew收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Scabenge和Parallel-Old收集器"><span class="nav-number">1.4.</span> <span class="nav-text">Parallel Scabenge和Parallel Old收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS收集器"><span class="nav-number">1.5.</span> <span class="nav-text">CMS收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1收集器"><span class="nav-number">1.6.</span> <span class="nav-text">G1收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shenandoah收集器"><span class="nav-number">1.7.</span> <span class="nav-text">shenandoah收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZGC收集器"><span class="nav-number">1.8.</span> <span class="nav-text">ZGC收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Epsilon收集器"><span class="nav-number">1.9.</span> <span class="nav-text">Epsilon收集器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查看GC日志"><span class="nav-number">2.</span> <span class="nav-text">如何查看GC日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看GC详细信息"><span class="nav-number">2.1.</span> <span class="nav-text">查看GC详细信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看GC前后堆"><span class="nav-number">2.2.</span> <span class="nav-text">查看GC前后堆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看并发时间以及停顿时间"><span class="nav-number">2.3.</span> <span class="nav-text">查看并发时间以及停顿时间</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">攀</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

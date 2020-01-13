@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java虚拟机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。 注:本节使用JDK均为JDK6。 对象优先在Eden分配大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。 123456789101112131415161718192021222324252627282930&#x2F;&#x2F;Jdk6&#x2F;** * VM参数：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机（六）内存分配与回收策略">
+<meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/index.html">
+<meta property="og:site_name" content="小世界">
+<meta property="og:description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。 注:本节使用JDK均为JDK6。 对象优先在Eden分配大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。 123456789101112131415161718192021222324252627282930&#x2F;&#x2F;Jdk6&#x2F;** * VM参数：">
+<meta property="article:published_time" content="2020-01-13T05:06:40.000Z">
+<meta property="article:modified_time" content="2020-01-13T08:11:49.401Z">
+<meta property="article:author" content="攀">
+<meta property="article:tag" content="Java虚拟机">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://antarctica.gitee.io/blog/2020/01/13/Java虚拟机6/"/>
+
+
+
+
+
+  <title>Java虚拟机（六）内存分配与回收策略 | 小世界</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java虚拟机（六）内存分配与回收策略</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-13T13:06:40+08:00">
+                2020-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h3><p>这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。</p>
+<p>注:本节使用JDK均为JDK6。</p>
+<h4 id="对象优先在Eden分配"><a href="#对象优先在Eden分配" class="headerlink" title="对象优先在Eden分配"></a>对象优先在Eden分配</h4><p>大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Jdk6</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];  <span class="comment">// 出现一次Minor GC</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[GC [DefNew: 6825K-&gt;172K(9216K), 0.0045184 secs] 6825K-&gt;6316K(19456K), 0.0045424 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> def new generation   total 9216K, used 4598K [0x33050000, 0x33a50000, 0x33a50000)</span></span><br><span class="line"><span class="comment">  eden space 8192K,  54% used [0x33050000, 0x334a27a0, 0x33850000)</span></span><br><span class="line"><span class="comment">  from space 1024K,  16% used [0x33950000, 0x3397b060, 0x33a50000)</span></span><br><span class="line"><span class="comment">  to   space 1024K,   0% used [0x33850000, 0x33850000, 0x33950000)</span></span><br><span class="line"><span class="comment"> tenured generation   total 10240K, used 6144K [0x33a50000, 0x34450000, 0x34450000)</span></span><br><span class="line"><span class="comment">   the space 10240K,  60% used [0x33a50000, 0x34050030, 0x34050200, 0x34450000)</span></span><br><span class="line"><span class="comment"> compacting perm gen  total 12288K, used 424K [0x34450000, 0x35050000, 0x38450000)</span></span><br><span class="line"><span class="comment">   the space 12288K,   3% used [0x34450000, 0x344ba2f8, 0x344ba400, 0x35050000)</span></span><br><span class="line"><span class="comment">    ro space 10240K,  55% used [0x38450000, 0x389d3320, 0x389d3400, 0x38e50000)</span></span><br><span class="line"><span class="comment">    rw space 12288K,  55% used [0x38e50000, 0x394f6128, 0x394f6200, 0x39a50000)</span></span><br></pre></td></tr></table></figure>
+
+<p>-XX:SurvivorRatio=8</p>
+<p>这个程序分配了三个2MB大小和一个4MB大小的对象，执行分配allocation4时会发生一次MinorGC，这次回收的结果是新生代6825K-&gt;172K，总内存占用量几乎没有减少。产生垃圾回收的原因是allocation4不足以在新生代中存放了，而三个2MB的对象又无法放入Survivor空间（1MB），所以只能通过分配担保机制提前转移到老年代去。</p>
+<p>所以收集结束后，allocation4被分配到了Eden中，Survivor空闲，老年代被占用6MB。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def new generation   total 9216K, used 4598K</span><br><span class="line">	 tenured generation   total 10240K, used 6144K</span><br></pre></td></tr></table></figure>
+
+<h4 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h4><p>使得大对象直接进入老年代，就可以避免在Eden区和两个Survivor区之间来回复制，产生大量的内存复制操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span></span><br><span class="line"><span class="comment"> * -XX:PretenureSizeThreshold=3145728</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] allocation;</span><br><span class="line">        allocation = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];  <span class="comment">//直接分配在老年代中C</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> def new generation   total 9216K, used 845K [0x33050000, 0x33a50000, 0x33a50000)</span></span><br><span class="line"><span class="comment">  eden space 8192K,  10% used [0x33050000, 0x331234d0, 0x33850000)</span></span><br><span class="line"><span class="comment">  from space 1024K,   0% used [0x33850000, 0x33850000, 0x33950000)</span></span><br><span class="line"><span class="comment">  to   space 1024K,   0% used [0x33950000, 0x33950000, 0x33a50000)</span></span><br><span class="line"><span class="comment"> tenured generation   total 10240K, used 4096K [0x33a50000, 0x34450000, 0x34450000)</span></span><br><span class="line"><span class="comment">   the space 10240K,  40% used [0x33a50000, 0x33e50010, 0x33e50200, 0x34450000)</span></span><br><span class="line"><span class="comment"> compacting perm gen  total 12288K, used 424K [0x34450000, 0x35050000, 0x38450000)</span></span><br><span class="line"><span class="comment">   the space 12288K,   3% used [0x34450000, 0x344ba260, 0x344ba400, 0x35050000)</span></span><br><span class="line"><span class="comment">    ro space 10240K,  55% used [0x38450000, 0x389d3320, 0x389d3400, 0x38e50000)</span></span><br><span class="line"><span class="comment">    rw space 12288K,  55% used [0x38e50000, 0x394f6128, 0x394f6200, 0x39a50000)</span></span><br></pre></td></tr></table></figure>
+
+<p>可以从 <strong>total 10240K, used 4096K</strong> ，这一条得出，大对象直接进入到了老年代，不过不是默认进行的，需要使用：-XX:+PrintTenuringDistribution。进行设置。</p>
+<h4 id="长期存活的对象直接进入老年代"><a href="#长期存活的对象直接进入老年代" class="headerlink" title="长期存活的对象直接进入老年代"></a>长期存活的对象直接进入老年代</h4><p>在进行内存回收时，为了能够判断哪些存活对象是放在新生代还是老年代。有一个默认的评判机制，当<strong>在新生代经过了N次MinorGC后</strong>，仍然存活，便将其放入老年代。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=1</span></span><br><span class="line"><span class="comment"> * -XX:+PrintTenuringDistribution</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[_1MB / <span class="number">4</span>];  <span class="comment">// 什么时候进入老年代决定于XX:MaxTenuringThreshold设置</span></span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">null</span>;</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过将XX:MaxTenuringThreshold=1设置后，仅仅经过一次MinorGC，便放入老年代。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[GC [DefNew</span><br><span class="line">Desired survivor size <span class="number">524288</span> bytes, <span class="keyword">new</span> threshold <span class="number">1</span> (max <span class="number">1</span>)</span><br><span class="line">- age   <span class="number">1</span>:     <span class="number">438384</span> bytes,     <span class="number">438384</span> total</span><br><span class="line">: <span class="number">5033</span>K-&gt;<span class="number">428</span>K(<span class="number">9216</span>K), <span class="number">0.0044237</span> secs] <span class="number">5033</span>K-&gt;<span class="number">4524</span>K(<span class="number">19456</span>K), <span class="number">0.0044527</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">[GC [DefNew</span><br><span class="line">Desired survivor size <span class="number">524288</span> bytes, <span class="keyword">new</span> threshold <span class="number">1</span> (max <span class="number">1</span>)</span><br><span class="line">- age   <span class="number">1</span>:        <span class="number">224</span> bytes,        <span class="number">224</span> total</span><br><span class="line">: <span class="number">4772</span>K-&gt;<span class="number">0</span>K(<span class="number">9216</span>K), <span class="number">0.0009550</span> secs] <span class="number">8868</span>K-&gt;<span class="number">4524</span>K(<span class="number">19456</span>K), <span class="number">0.0009794</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> def <span class="keyword">new</span> generation   total <span class="number">9216</span>K, used <span class="number">4234</span>K [<span class="number">0x33050000</span>, <span class="number">0x33a50000</span>, <span class="number">0x33a50000</span>)</span><br><span class="line">  eden space <span class="number">8192</span>K,  <span class="number">51</span>% used [<span class="number">0x33050000</span>, <span class="number">0x334728b0</span>, <span class="number">0x33850000</span>)</span><br><span class="line">  from space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x33850000</span>, <span class="number">0x338500e0</span>, <span class="number">0x33950000</span>)</span><br><span class="line">  to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x33950000</span>, <span class="number">0x33950000</span>, <span class="number">0x33a50000</span>)</span><br><span class="line"> tenured generation   total <span class="number">10240</span>K, used <span class="number">4523</span>K [<span class="number">0x33a50000</span>, <span class="number">0x34450000</span>, <span class="number">0x34450000</span>)</span><br><span class="line">   the space <span class="number">10240</span>K,  <span class="number">44</span>% used [<span class="number">0x33a50000</span>, <span class="number">0x33ebafb0</span>, <span class="number">0x33ebb000</span>, <span class="number">0x34450000</span>)</span><br><span class="line"> compacting perm gen  total <span class="number">12288</span>K, used <span class="number">428</span>K [<span class="number">0x34450000</span>, <span class="number">0x35050000</span>, <span class="number">0x38450000</span>)</span><br><span class="line">   the space <span class="number">12288</span>K,   <span class="number">3</span>% used [<span class="number">0x34450000</span>, <span class="number">0x344bb298</span>, <span class="number">0x344bb400</span>, <span class="number">0x35050000</span>)</span><br><span class="line">    ro space <span class="number">10240</span>K,  <span class="number">55</span>% used [<span class="number">0x38450000</span>, <span class="number">0x389d3320</span>, <span class="number">0x389d3400</span>, <span class="number">0x38e50000</span>)</span><br><span class="line">    rw space <span class="number">12288</span>K,  <span class="number">55</span>% used [<span class="number">0x38e50000</span>, <span class="number">0x394f6128</span>, <span class="number">0x394f6200</span>, <span class="number">0x39a50000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>那么如果设置为默认值15呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[GC [DefNew</span><br><span class="line">Desired survivor size <span class="number">524288</span> bytes, <span class="keyword">new</span> threshold <span class="number">15</span> (max <span class="number">15</span>)</span><br><span class="line">- age   <span class="number">1</span>:     <span class="number">438384</span> bytes,     <span class="number">438384</span> total</span><br><span class="line">: <span class="number">5033</span>K-&gt;<span class="number">428</span>K(<span class="number">9216</span>K), <span class="number">0.0040562</span> secs] <span class="number">5033</span>K-&gt;<span class="number">4524</span>K(<span class="number">19456</span>K), <span class="number">0.0040857</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">[GC [DefNew</span><br><span class="line">Desired survivor size <span class="number">524288</span> bytes, <span class="keyword">new</span> threshold <span class="number">15</span> (max <span class="number">15</span>)</span><br><span class="line">- age   <span class="number">1</span>:        <span class="number">224</span> bytes,        <span class="number">224</span> total</span><br><span class="line">- age   <span class="number">2</span>:     <span class="number">438176</span> bytes,     <span class="number">438400</span> total</span><br><span class="line">: <span class="number">4772</span>K-&gt;<span class="number">428</span>K(<span class="number">9216</span>K), <span class="number">0.0008210</span> secs] <span class="number">8868</span>K-&gt;<span class="number">4524</span>K(<span class="number">19456</span>K), <span class="number">0.0008423</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> def <span class="keyword">new</span> generation   total <span class="number">9216</span>K, used <span class="number">4662</span>K [<span class="number">0x33050000</span>, <span class="number">0x33a50000</span>, <span class="number">0x33a50000</span>)</span><br><span class="line">  eden space <span class="number">8192</span>K,  <span class="number">51</span>% used [<span class="number">0x33050000</span>, <span class="number">0x334728b0</span>, <span class="number">0x33850000</span>)</span><br><span class="line">  from space <span class="number">1024</span>K,  <span class="number">41</span>% used [<span class="number">0x33850000</span>, <span class="number">0x338bb080</span>, <span class="number">0x33950000</span>)</span><br><span class="line">  to   space <span class="number">1024</span>K,   <span class="number">0</span>% used [<span class="number">0x33950000</span>, <span class="number">0x33950000</span>, <span class="number">0x33a50000</span>)</span><br><span class="line"> tenured generation   total <span class="number">10240</span>K, used <span class="number">4096</span>K [<span class="number">0x33a50000</span>, <span class="number">0x34450000</span>, <span class="number">0x34450000</span>)</span><br><span class="line">   the space <span class="number">10240</span>K,  <span class="number">40</span>% used [<span class="number">0x33a50000</span>, <span class="number">0x33e50010</span>, <span class="number">0x33e50200</span>, <span class="number">0x34450000</span>)</span><br><span class="line"> compacting perm gen  total <span class="number">12288</span>K, used <span class="number">426</span>K [<span class="number">0x34450000</span>, <span class="number">0x35050000</span>, <span class="number">0x38450000</span>)</span><br><span class="line">   the space <span class="number">12288</span>K,   <span class="number">3</span>% used [<span class="number">0x34450000</span>, <span class="number">0x344bb108</span>, <span class="number">0x344bb200</span>, <span class="number">0x35050000</span>)</span><br><span class="line">    ro space <span class="number">10240</span>K,  <span class="number">55</span>% used [<span class="number">0x38450000</span>, <span class="number">0x389d3320</span>, <span class="number">0x389d3400</span>, <span class="number">0x38e50000</span>)</span><br><span class="line">    rw space <span class="number">12288</span>K,  <span class="number">55</span>% used [<span class="number">0x38e50000</span>, <span class="number">0x394f6128</span>, <span class="number">0x394f6200</span>, <span class="number">0x39a50000</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="动态对象年龄判断"><a href="#动态对象年龄判断" class="headerlink" title="动态对象年龄判断"></a>动态对象年龄判断</h4><p>HotSpot虚拟机并不是永远要求对象的年龄必须达到指定值才能够晋升老年代，如果在Survivor空间中，相同年龄所有对象大小的综合大于Survivor空间的一半，年龄大于或等于该年龄的对象，也可以直接进入老年代。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15</span></span><br><span class="line"><span class="comment"> * -XX:+PrintTenuringDistribution</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[_1MB / <span class="number">4</span>];   <span class="comment">// allocation1+allocation2大于survivo空间一半</span></span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[_1MB / <span class="number">4</span>];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">null</span>;</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[GC [DefNew</span></span><br><span class="line"><span class="comment">Desired survivor size 524288 bytes, new threshold 1 (max 15)</span></span><br><span class="line"><span class="comment">- age   1:     700544 bytes,     700544 total</span></span><br><span class="line"><span class="comment">: 5289K-&gt;684K(9216K), 0.0044213 secs] 5289K-&gt;4780K(19456K), 0.0044653 secs] [Times: user=0.02 sys=0.02, real=0.00 secs] </span></span><br><span class="line"><span class="comment">[GC [DefNew</span></span><br><span class="line"><span class="comment">Desired survivor size 524288 bytes, new threshold 15 (max 15)</span></span><br><span class="line"><span class="comment">- age   1:        224 bytes,        224 total</span></span><br><span class="line"><span class="comment">: 5028K-&gt;0K(9216K), 0.0013033 secs] 9124K-&gt;4780K(19456K), 0.0013299 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> def new generation   total 9216K, used 4234K [0x33050000, 0x33a50000, 0x33a50000)</span></span><br><span class="line"><span class="comment">  eden space 8192K,  51% used [0x33050000, 0x33472858, 0x33850000)</span></span><br><span class="line"><span class="comment">  from space 1024K,   0% used [0x33850000, 0x338500e0, 0x33950000)</span></span><br><span class="line"><span class="comment">  to   space 1024K,   0% used [0x33950000, 0x33950000, 0x33a50000)</span></span><br><span class="line"><span class="comment"> tenured generation   total 10240K, used 4779K [0x33a50000, 0x34450000, 0x34450000)</span></span><br><span class="line"><span class="comment">   the space 10240K,  46% used [0x33a50000, 0x33efafc0, 0x33efb000, 0x34450000)</span></span><br><span class="line"><span class="comment"> compacting perm gen  total 12288K, used 428K [0x34450000, 0x35050000, 0x38450000)</span></span><br><span class="line"><span class="comment">   the space 12288K,   3% used [0x34450000, 0x344bb2c8, 0x344bb400, 0x35050000)</span></span><br><span class="line"><span class="comment">    ro space 10240K,  55% used [0x38450000, 0x389d3320, 0x389d3400, 0x38e50000)</span></span><br><span class="line"><span class="comment">    rw space 12288K,  55% used [0x38e50000, 0x394f6128, 0x394f6200, 0x39a50000)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="空间分配担保"><a href="#空间分配担保" class="headerlink" title="空间分配担保"></a>空间分配担保</h4><p>前面说到，当大量对象在经过MinorGC之后，仍然存活，但Survivor已经放不下这么多的对象了，那么便直接将对象送入到老年代。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4, allocation5, allocation6, allocation7;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation1 = <span class="keyword">null</span>;</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation5 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation6 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">null</span>;</span><br><span class="line">        allocation5 = <span class="keyword">null</span>;</span><br><span class="line">        allocation6 = <span class="keyword">null</span>;</span><br><span class="line">        allocation7 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[GC [DefNew: 6825K-&gt;172K(9216K), 0.0040796 secs] 6825K-&gt;4268K(19456K), 0.0041041 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">[GC [DefNew: 6651K-&gt;172K(9216K), 0.0009841 secs] 10747K-&gt;4268K(19456K), 0.0010203 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> def new generation   total 9216K, used 2357K [0x33050000, 0x33a50000, 0x33a50000)</span></span><br><span class="line"><span class="comment">  eden space 8192K,  26% used [0x33050000, 0x33272560, 0x33850000)</span></span><br><span class="line"><span class="comment">  from space 1024K,  16% used [0x33850000, 0x3387b070, 0x33950000)</span></span><br><span class="line"><span class="comment">  to   space 1024K,   0% used [0x33950000, 0x33950000, 0x33a50000)</span></span><br><span class="line"><span class="comment"> tenured generation   total 10240K, used 4096K [0x33a50000, 0x34450000, 0x34450000)</span></span><br><span class="line"><span class="comment">   the space 10240K,  40% used [0x33a50000, 0x33e50020, 0x33e50200, 0x34450000)</span></span><br><span class="line"><span class="comment"> compacting perm gen  total 12288K, used 428K [0x34450000, 0x35050000, 0x38450000)</span></span><br><span class="line"><span class="comment">   the space 12288K,   3% used [0x34450000, 0x344bb358, 0x344bb400, 0x35050000)</span></span><br><span class="line"><span class="comment">    ro space 10240K,  55% used [0x38450000, 0x389d3320, 0x389d3400, 0x38e50000)</span></span><br><span class="line"><span class="comment">    rw space 12288K,  55% used [0x38e50000, 0x394f6128, 0x394f6200, 0x39a50000)</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Java虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2020/01/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA5/" rel="next" title="Java虚拟机（五）经典的垃圾收集器">
+                <i class="fa fa-chevron-left"></i> Java虚拟机（五）经典的垃圾收集器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/" rel="prev" title="Java虚拟机（七）虚拟机性能监控、故障处理工具">
+                Java虚拟机（七）虚拟机性能监控、故障处理工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
+                alt="攀" />
+            
+              <p class="site-author-name" itemprop="name">攀</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配与回收策略"><span class="nav-number">1.</span> <span class="nav-text">内存分配与回收策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象优先在Eden分配"><span class="nav-number">1.1.</span> <span class="nav-text">对象优先在Eden分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#大对象直接进入老年代"><span class="nav-number">1.2.</span> <span class="nav-text">大对象直接进入老年代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#长期存活的对象直接进入老年代"><span class="nav-number">1.3.</span> <span class="nav-text">长期存活的对象直接进入老年代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态对象年龄判断"><span class="nav-number">1.4.</span> <span class="nav-text">动态对象年龄判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#空间分配担保"><span class="nav-number">1.5.</span> <span class="nav-text">空间分配担保</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">攀</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
