@@ -40,7 +40,7 @@
 
   
   
-  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,21 +48,21 @@
 
 
 
-<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -82,7 +82,7 @@
 <meta name="description" content="基础故障工具在JDK中，有很多工具可以进行对虚拟机的性能监控，或者是故障处理。 jps：虚拟机进程状况工具之前在讲多线程的时候也有用到了，在检查死锁问题的时候，使用jps查看是哪个线程。  jstat：虚拟机统计信息工具jstat可以用于对线程的监控和统计，如图：  对 15192线程查询GC的情况，一共查询20次，每250ms一次。 jinfo：Java配置工具jinfo可以用于查询和配置Jav">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机（七）虚拟机性能监控、故障处理工具">
-<meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/index.html">
+<meta property="og:url" content="https://github.com/Antarctica000/antarctica000.github.io/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/index.html">
 <meta property="og:site_name" content="小世界">
 <meta property="og:description" content="基础故障工具在JDK中，有很多工具可以进行对虚拟机的性能监控，或者是故障处理。 jps：虚拟机进程状况工具之前在讲多线程的时候也有用到了，在检查死锁问题的时候，使用jps查看是哪个线程。  jstat：虚拟机统计信息工具jstat可以用于对线程的监控和统计，如图：  对 15192线程查询GC的情况，一共查询20次，每250ms一次。 jinfo：Java配置工具jinfo可以用于查询和配置Jav">
 <meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jps.png">
@@ -114,7 +114,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/blog/',
+    root: '/',
     scheme: 'Gemini',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
@@ -137,7 +137,7 @@
 
 
 
-  <link rel="canonical" href="http://antarctica.gitee.io/blog/2020/01/13/Java虚拟机7/"/>
+  <link rel="canonical" href="https://github.com/Antarctica000/antarctica000.github.io/2020/01/13/Java虚拟机7/"/>
 
 
 
@@ -171,7 +171,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/blog/"  class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">小世界</span>
         <span class="logo-line-after"><i></i></span>
@@ -199,7 +199,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/blog/" rel="section">
+          <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -209,7 +209,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/blog/tags/" rel="section">
+          <a href="/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -219,7 +219,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/blog/archives/" rel="section">
+          <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
@@ -260,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Antarctica000/antarctica000.github.io/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="攀">
@@ -392,7 +392,7 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Java虚拟机</a>
+            <a href="/tags/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Java虚拟机</a>
           
         </div>
       
@@ -405,7 +405,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/" rel="next" title="Java虚拟机（六）内存分配与回收策略">
+              <a href="/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/" rel="next" title="Java虚拟机（六）内存分配与回收策略">
                 <i class="fa fa-chevron-left"></i> Java虚拟机（六）内存分配与回收策略
               </a>
             
@@ -415,7 +415,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2020/01/14/spring1/" rel="prev" title="SpringBoot整合MyBatis框架">
+              <a href="/2020/01/14/spring1/" rel="prev" title="SpringBoot整合MyBatis框架">
                 SpringBoot整合MyBatis框架 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -496,7 +496,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/blog/archives/">
+                <a href="/archives/">
               
                   <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
@@ -510,7 +510,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/blog/tags/index.html">
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -656,74 +656,74 @@
 
   
   
-    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/three/three.min.js"></script>
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/three/canvas_lines.min.js"></script>
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
