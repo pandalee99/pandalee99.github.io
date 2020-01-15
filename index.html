@@ -238,6 +238,133 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/14/spring1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/blog/2020/01/14/spring1/" itemprop="url">SpringBoot整合MyBatis框架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-14T16:58:07+08:00">
+                2020-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          SpringBoot整合MyBatis框架MyBatis讲到MyBatis，就先讲明这是什么吧。它是一个主流的ORM框架。那ORM又是什么呢？
+对象-关系映射（Object-Relational Mapping，简称ORM），面向对象的开发方法是当今企业级应用开发环境中的主流开发方法，关系数据库是企
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/blog/2020/01/14/spring1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -440,10 +567,10 @@ jstat：虚拟机统计信息工具jstat可以用于对线程的监控和统计�
       
         
           
-          内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。
-注:本节使用JDK均为JDK6。
-对象优先在Eden分配大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。
-123456789101112131
+          内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。首先看Java堆的分区：
+
+1.Eden区
+  Eden区位于Java堆的年轻代，是新对象分配内存的地方，由于堆是所有线程共享的，因此在堆上分配内存需要加锁。而Sun JDK为提升效率，会为每个新建的线程在
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1373,132 +1500,6 @@ Java堆溢出Java堆是在虚拟机中，所有线程共享的一个堆栈，我
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2020/01/03/Java%E8%99%9A%E6%8B%9F%E6%9C%BA1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="攀">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小世界">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/blog/2020/01/03/Java%E8%99%9A%E6%8B%9F%E6%9C%BA1/" itemprop="url">Java虚拟机（一）Java虚拟机概念</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T19:16:16+08:00">
-                2020-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Java的起源但是要说清楚Java虚拟机，我想从JDK开始说起。我们想要在一个计算机上使用Java，就必须在网上下载JDK和JRE，JDK是Java的开发工具，JRE是Java的运行环境，有了这个两个就能在计算机上使用Java。有人说可能还需要配置path路径，其实也未必，之所以要配置Java_ho
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2020/01/03/Java%E8%99%9A%E6%8B%9F%E6%9C%BA1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1553,7 +1554,7 @@ Java堆溢出Java堆是在虚拟机中，所有线程共享的一个堆栈，我
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1566,7 +1567,7 @@ Java堆溢出Java堆是在虚拟机中，所有线程共享的一个堆栈，我
               
               <div class="site-state-item site-state-tags">
                 <a href="/blog/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

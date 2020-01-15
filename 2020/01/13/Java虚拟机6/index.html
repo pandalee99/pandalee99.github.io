@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。 注:本节使用JDK均为JDK6。 对象优先在Eden分配大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。 123456789101112131415161718192021222324252627282930&#x2F;&#x2F;Jdk6&#x2F;** * VM参数：">
+<meta name="description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。首先看Java堆的分区：  1.Eden区   Eden区位于Java堆的年轻代，是新对象分配内存的地方，由于堆是所有线程共享的，因此在堆上分配内存需要加锁。而Sun JDK为提升效率，会为每个新建的线程在Eden上分配一块独立的空间由该线程独享，这块空间称为TLAB（Thread Local Alloc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机（六）内存分配与回收策略">
 <meta property="og:url" content="http://antarctica.gitee.io/blog/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA6/index.html">
 <meta property="og:site_name" content="小世界">
-<meta property="og:description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。 注:本节使用JDK均为JDK6。 对象优先在Eden分配大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。 123456789101112131415161718192021222324252627282930&#x2F;&#x2F;Jdk6&#x2F;** * VM参数：">
+<meta property="og:description" content="内存分配与回收策略这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。首先看Java堆的分区：  1.Eden区   Eden区位于Java堆的年轻代，是新对象分配内存的地方，由于堆是所有线程共享的，因此在堆上分配内存需要加锁。而Sun JDK为提升效率，会为每个新建的线程在Eden上分配一块独立的空间由该线程独享，这块空间称为TLAB（Thread Local Alloc">
+<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm14.jpg">
 <meta property="article:published_time" content="2020-01-13T05:06:40.000Z">
-<meta property="article:modified_time" content="2020-01-13T08:11:49.401Z">
+<meta property="article:modified_time" content="2020-01-13T11:24:41.971Z">
 <meta property="article:author" content="攀">
 <meta property="article:tag" content="Java虚拟机">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm14.jpg">
 
 
 
@@ -309,7 +311,14 @@
       
 
       
-        <h3 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h3><p>这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。</p>
+        <h3 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h3><p>这次，我们就是用最基本的收集器 Serial来查看内存是怎么分配和回收的吧。首先看Java堆的分区：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/jvm/jvm14.jpg" alt=""></p>
+<p><strong>1.Eden区</strong></p>
+<p>  Eden区位于Java堆的年轻代，是<strong>新对象</strong>分配内存的地方，由于堆是所有线程共享的，因此在堆上分配内存需要加锁。而Sun JDK为提升效率，会为每个新建的线程在Eden上分配一块独立的空间由该线程独享，这块空间称为TLAB（Thread Local Allocation Buffer）。在TLAB上分配内存不需要加锁，因此JVM在给线程中的对象分配内存时会尽量在TLAB上分配。如果对象过大或TLAB用完，则仍然在堆上进行分配。如果Eden区内存也用完了，则会进行一次Minor GC（young GC）。</p>
+<p><strong>2.Survival from to</strong></p>
+<p>  Survival区与Eden区相同都在Java堆的年轻代。Survival区有两块，一块称为from区，另一块为to区，这两个区是相对的，在发生一次Minor GC后，from区就会和to区互换。在发生Minor GC时，Eden区和Survivalfrom区会把一些仍然存活的对象复制进Survival to区，并清除内存。Survival to区会把一些存活得足够旧的对象移至年老代。</p>
+<p><strong>3.年老代</strong></p>
+<p>  年老代里存放的都是存活时间较久的，大小较大的对象，因此年老代使用标记整理算法。当年老代容量满的时候，会触发一次Major GC（full GC），回收年老代和年轻代中不再被使用的对象资源。</p>
 <p>注:本节使用JDK均为JDK6。</p>
 <h4 id="对象优先在Eden分配"><a href="#对象优先在Eden分配" class="headerlink" title="对象优先在Eden分配"></a>对象优先在Eden分配</h4><p>大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次MinorGC。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Jdk6</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];  <span class="comment">// 出现一次Minor GC</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[GC [DefNew: 6825K-&gt;172K(9216K), 0.0045184 secs] 6825K-&gt;6316K(19456K), 0.0045424 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span></span><br><span class="line"><span class="comment">Heap</span></span><br><span class="line"><span class="comment"> def new generation   total 9216K, used 4598K [0x33050000, 0x33a50000, 0x33a50000)</span></span><br><span class="line"><span class="comment">  eden space 8192K,  54% used [0x33050000, 0x334a27a0, 0x33850000)</span></span><br><span class="line"><span class="comment">  from space 1024K,  16% used [0x33950000, 0x3397b060, 0x33a50000)</span></span><br><span class="line"><span class="comment">  to   space 1024K,   0% used [0x33850000, 0x33850000, 0x33950000)</span></span><br><span class="line"><span class="comment"> tenured generation   total 10240K, used 6144K [0x33a50000, 0x34450000, 0x34450000)</span></span><br><span class="line"><span class="comment">   the space 10240K,  60% used [0x33a50000, 0x34050030, 0x34050200, 0x34450000)</span></span><br><span class="line"><span class="comment"> compacting perm gen  total 12288K, used 424K [0x34450000, 0x35050000, 0x38450000)</span></span><br><span class="line"><span class="comment">   the space 12288K,   3% used [0x34450000, 0x344ba2f8, 0x344ba400, 0x35050000)</span></span><br><span class="line"><span class="comment">    ro space 10240K,  55% used [0x38450000, 0x389d3320, 0x389d3400, 0x38e50000)</span></span><br><span class="line"><span class="comment">    rw space 12288K,  55% used [0x38e50000, 0x394f6128, 0x394f6200, 0x39a50000)</span></span><br></pre></td></tr></table></figure>
@@ -461,7 +470,7 @@
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -474,7 +483,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/blog/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

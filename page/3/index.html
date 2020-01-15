@@ -238,6 +238,133 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/27/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="攀">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/blog/2019/12/27/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B12/" itemprop="url">Java并发编程（十二）如何提高锁的性能</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-27T15:09:09+08:00">
+                2019-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          几种提高锁性能的方法减小锁持有的时间synchronized虽然可以保持原子性，但是大量的使用synchronized会使系统的整体性能下降，于是，我们可以只在需要上锁的时候上锁，对某些不改变系统数据的方法不上锁
+1234567891011121314151617181920212223242526
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/blog/2019/12/27/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B12/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/26/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B11/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1373,132 +1500,6 @@ ConcurrentLinkedQueue：线程安全的队列，它们两之间的差别在于�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://antarctica.gitee.io/blog/blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="攀">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小世界">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/" itemprop="url">Java并发编程（二）线程的基本认知</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-15T20:36:19+08:00">
-                2019-12-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          线程的各个术语线程和进程的区别进程可以比喻为一个app，淘宝，美团，微信都是一个进程，线程是属于进程的。就好似微信里面的群发就是多个线程在工作。也可以比喻为，进程是一户人家，家里有多个人（线程），每个人都有各自的职业，在大多数时候一起分工合作（提高效率），少数时候发生冲突，比如一起抢一个厕所（线程阻
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/2019/12/15/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1553,7 +1554,7 @@ ConcurrentLinkedQueue：线程安全的队列，它们两之间的差别在于�
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1566,7 +1567,7 @@ ConcurrentLinkedQueue：线程安全的队列，它们两之间的差别在于�
               
               <div class="site-state-item site-state-tags">
                 <a href="/blog/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
