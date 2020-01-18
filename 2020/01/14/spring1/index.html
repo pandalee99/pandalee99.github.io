@@ -1,326 +1,13 @@
-<!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="SpringBoot," />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="SpringBoot整合MyBatis框架MyBatis讲到MyBatis，就先讲明这是什么吧。它是一个主流的ORM框架。那ORM又是什么呢？ 对象-关系映射（Object-Relational Mapping，简称ORM），面向对象的开发方法是当今企业级应用开发环境中的主流开发方法，关系数据库是企业级应用环境中永久存放数据的主流数据存储系统。对象和关系数据是业务实体的两种表现形式，业务实体在内存">
-<meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot整合MyBatis框架">
-<meta property="og:url" content="https://github.com/Antarctica000/antarctica000.github.io/2020/01/14/spring1/index.html">
-<meta property="og:site_name" content="小世界">
-<meta property="og:description" content="SpringBoot整合MyBatis框架MyBatis讲到MyBatis，就先讲明这是什么吧。它是一个主流的ORM框架。那ORM又是什么呢？ 对象-关系映射（Object-Relational Mapping，简称ORM），面向对象的开发方法是当今企业级应用开发环境中的主流开发方法，关系数据库是企业级应用环境中永久存放数据的主流数据存储系统。对象和关系数据是业务实体的两种表现形式，业务实体在内存">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/orm.jpg">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/mybatis.jpg">
-<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lXYEse.png">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/1.png">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/2.png">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/3.png">
-<meta property="og:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/4.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lXtUne.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lXtW7j.png">
-<meta property="og:image" content="https://imgsa.baidu.com/forum/w%3D580/sign=0c4373343ad12f2ece05ae687fc3d5ff/44130ae93901213fcfa15c3f58e736d12e2e9542.jpg">
-<meta property="article:published_time" content="2020-01-14T08:58:07.000Z">
-<meta property="article:modified_time" content="2020-01-15T12:05:17.412Z">
-<meta property="article:author" content="攀">
-<meta property="article:tag" content="SpringBoot">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/orm.jpg">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="https://github.com/Antarctica000/antarctica000.github.io/2020/01/14/spring1/"/>
-
-
-
-
-
-  <title>SpringBoot整合MyBatis框架 | 小世界</title>
-  
-
-
-
-
-
-
-
-
-<meta name="generator" content="Hexo 4.2.0"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta custom-logo">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">小世界</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Antarctica000/antarctica000.github.io/2020/01/14/spring1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="攀">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小世界">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">SpringBoot整合MyBatis框架</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-14T16:58:07+08:00">
-                2020-01-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="SpringBoot整合MyBatis框架"><a href="#SpringBoot整合MyBatis框架" class="headerlink" title="SpringBoot整合MyBatis框架"></a>SpringBoot整合MyBatis框架</h2><h3 id="MyBatis"><a href="#MyBatis" class="headerlink" title="MyBatis"></a>MyBatis</h3><p>讲到MyBatis，就先讲明这是什么吧。它是一个主流的ORM框架。那ORM又是什么呢？</p>
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="SpringBoot整合MyBatis框架"><meta name="keywords" content="SpringBoot"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>SpringBoot整合MyBatis框架 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SpringBoot整合MyBatis框架"><span class="toc-number">1.</span> <span class="toc-text">SpringBoot整合MyBatis框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MyBatis"><span class="toc-number">1.1.</span> <span class="toc-text">MyBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#最原始的MyBatis"><span class="toc-number">1.1.1.</span> <span class="toc-text">最原始的MyBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#先加入pom依赖"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">先加入pom依赖</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#配置文件"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实体类："><span class="toc-number">1.1.1.3.</span> <span class="toc-text">实体类：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SQL的实现"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">SQL的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#服务层"><span class="toc-number">1.1.1.5.</span> <span class="toc-text">服务层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制层"><span class="toc-number">1.1.1.6.</span> <span class="toc-text">控制层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动器"><span class="toc-number">1.1.1.7.</span> <span class="toc-text">启动器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XML型MyBatis"><span class="toc-number">1.1.2.</span> <span class="toc-text">XML型MyBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#实体类"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mapper类"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">mapper类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#业务层和控制层"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">业务层和控制层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#测试"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高级偷懒法：MyBatis-Puls"><span class="toc-number">1.2.</span> <span class="toc-text">高级偷懒法：MyBatis-Puls</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#在pom文件中加入MyBatis-Puls依赖：："><span class="toc-number">1.2.0.1.</span> <span class="toc-text">在pom文件中加入MyBatis-Puls依赖：：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#application-yml"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">application.yml:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#config的配置："><span class="toc-number">1.2.0.3.</span> <span class="toc-text">config的配置：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#UserMapper"><span class="toc-number">1.2.0.4.</span> <span class="toc-text">UserMapper</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#建立数据库"><span class="toc-number">1.2.0.5.</span> <span class="toc-text">建立数据库</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#业务编写"><span class="toc-number">1.2.1.</span> <span class="toc-text">业务编写</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#实体类-1"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Mapper类"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Mapper类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Service接口"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">Service接口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现Service层"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">实现Service层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Controller层"><span class="toc-number">1.2.1.5.</span> <span class="toc-text">Controller层</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#究极偷懒法：Mybatis-Generator"><span class="toc-number">1.3.</span> <span class="toc-text">究极偷懒法：Mybatis-Generator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#引入依赖"><span class="toc-number">1.3.1.</span> <span class="toc-text">引入依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-number">1.3.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#运行"><span class="toc-number">1.3.3.</span> <span class="toc-text">运行</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000" target="_blank" rel="noopener">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">33</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">12</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">SpringBoot整合MyBatis框架</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-01-14</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="SpringBoot整合MyBatis框架"><a href="#SpringBoot整合MyBatis框架" class="headerlink" title="SpringBoot整合MyBatis框架"></a>SpringBoot整合MyBatis框架</h2><h3 id="MyBatis"><a href="#MyBatis" class="headerlink" title="MyBatis"></a>MyBatis</h3><p>讲到MyBatis，就先讲明这是什么吧。它是一个主流的ORM框架。那ORM又是什么呢？</p>
 <p>对象-关系映射（Object-Relational Mapping，简称ORM），面向对象的开发方法是当今企业级应用开发环境中的主流开发方法，关系数据库是企业级应用环境中永久存放数据的主流数据存储系统。对象和关系数据是业务实体的两种表现形式，业务实体在内存中表现为对象，在数据库中表现为关系数据。内存中的对象之间存在关联和继承关系，而在数据库中，关系数据无法直接表达多对多关联和继承关系。因此，对象-关系映射(ORM)系统一般以中间件的形式存在，主要实现程序对象到关系数据库数据的映射。</p>
 <p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/orm.jpg" alt=""></p>
 <p><strong>简而言之，可以通过ORM框架去更方便的操控数据库。</strong></p>
@@ -332,19 +19,19 @@
 
 <h5 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/springdatajpa?useSSL=false&amp;serverTimezone=GMT%2B8&amp;useUnicode=true&amp;characterEncoding=utf8</span></span><br><span class="line"></span><br><span class="line"><span class="meta">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"></span><br><span class="line"><span class="meta">spring.datasource.password</span>=<span class="string">qwe123456</span></span><br><span class="line"></span><br><span class="line"><span class="meta">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
 
-<p>定义好要连接的数据库属性，这里涉及到Spring的AOP。</p>
+<p>定义好要连接的数据库属性，这里涉及到Spring的AOP，这些都是基础配置了。</p>
 <h5 id="实体类："><a href="#实体类：" class="headerlink" title="实体类："></a>实体类：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> id ;</span><br><span class="line">	<span class="keyword">private</span> String loginName ;</span><br><span class="line">	<span class="keyword">private</span> String username ;</span><br><span class="line">	<span class="keyword">private</span> String password;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getLoginName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> loginName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLoginName</span><span class="params">(String loginName)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.loginName = loginName;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getUsername</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> username;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUsername</span><span class="params">(String username)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.username = username;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> password;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.password = password;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>也可以用插件，省略掉写这些get和set哦，后面会讲。</p>
 <h5 id="SQL的实现"><a href="#SQL的实现" class="headerlink" title="SQL的实现"></a>SQL的实现</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserRepository</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Insert</span>(<span class="string">"insert into tb_user(login_name ,username ,password) "</span></span><br><span class="line">				+ <span class="string">"values (#&#123;loginName&#125;,#&#123;username&#125;,#&#123;password&#125;)"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertUser</span><span class="params">(User user)</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 插入数据获取主键</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Insert</span>(<span class="string">"insert into tb_user(login_name ,username ,password) "</span></span><br><span class="line">			+ <span class="string">"values (#&#123;loginName&#125;,#&#123;username&#125;,#&#123;password&#125;)"</span>)</span><br><span class="line">	<span class="meta">@Options</span>(useGeneratedKeys=<span class="keyword">true</span>,keyProperty=<span class="string">"id"</span>,keyColumn=<span class="string">"id"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertGetKey</span><span class="params">(User user)</span></span>;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Select</span>(<span class="string">"select * from tb_user where username = #&#123;username&#125;"</span>)</span><br><span class="line">	<span class="comment">// 引用id="userResult"的@Results</span></span><br><span class="line">	<span class="meta">@ResultMap</span>(<span class="string">"userResult"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">selectByUsername</span><span class="params">(@Param(<span class="string">"username"</span>)</span> String username)</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Select</span>(<span class="string">"select * from tb_user"</span>)</span><br><span class="line">	<span class="comment">// @Results用于映射对象属性和数据库列，常用于对象属性和数据库列不同名情况</span></span><br><span class="line">	<span class="meta">@Results</span>(id=<span class="string">"userResult"</span>,value=&#123;</span><br><span class="line">			<span class="meta">@Result</span>(id=<span class="keyword">true</span>,column=<span class="string">"id"</span>,property=<span class="string">"id"</span>),</span><br><span class="line">			<span class="meta">@Result</span>(column=<span class="string">"login_name"</span>,property=<span class="string">"loginName"</span>),</span><br><span class="line">			<span class="meta">@Result</span>(column=<span class="string">"password"</span>,property=<span class="string">"password"</span>),</span><br><span class="line">			<span class="meta">@Result</span>(column=<span class="string">"username"</span>,property=<span class="string">"username"</span>)</span><br><span class="line">		&#125;)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Delete</span>(<span class="string">"delete from tb_user where id=#&#123;id&#125;"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">final</span> Integer id)</span></span>;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Select</span>(<span class="string">"select * from tb_user where id=#&#123;id&#125;"</span>)</span><br><span class="line">	<span class="comment">// 引用id="userResult"的@Results</span></span><br><span class="line">	<span class="meta">@ResultMap</span>(<span class="string">"userResult"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">findUserById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Update</span>(<span class="string">"update tb_user set username=#&#123;username&#125;, login_name=#&#123;loginName&#125; where id=#&#123;id&#125;"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">final</span> User user)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>讲所有的SQL实现通过注解写在函数前面，就拥有了这些功能。</p>
+<p>这里是一个接口，所有的SQL实现通过注解写在函数前面，就拥有了这些功能。</p>
 <h5 id="服务层"><a href="#服务层" class="headerlink" title="服务层"></a>服务层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 注入UserRepository</span></span><br><span class="line">	<span class="meta">@Resource</span></span><br><span class="line">	<span class="keyword">private</span> UserRepository userRepository;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertUser</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userRepository.insertUser(user);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">selectByUsername</span><span class="params">(String username)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userRepository.selectByUsername(username);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userRepository.findAll();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertGetKey</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 数据插入成功以后，Mybatis框架会将插入成功的数据主键存入到user对象中去</span></span><br><span class="line">		userRepository.insertGetKey(user);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">		userRepository.update(user);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">		userRepository.delete(id);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>服务层并不需要做些什么，仅仅是注入持久层便可。</p>
+<p>服务层并不需要做些什么，仅仅是注入持久层便可。持久层会使用它的方法，再结合注解去完成查找或查询操作。</p>
 <h5 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 注入UserService</span></span><br><span class="line">	<span class="meta">@Resource</span></span><br><span class="line">	<span class="keyword">private</span> UserService userService;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/insertUser"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">insertUser</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"插入数据["</span>+userService.insertUser(user)+<span class="string">"]条"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/insertGetKey"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">insertGetKey</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">		userService.insertGetKey(user);</span><br><span class="line">		<span class="keyword">return</span> user ;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/selectByUsername"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">selectByUsername</span><span class="params">(String username)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userService.selectByUsername(username);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/findAll"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userService.findAll();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/update"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">		userService.update(user);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/delete"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">		userService.delete(id);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我们使用的@Resource可以寻找类去注入，从结构来看，一般都是从控制层往下直到持久层。</p>
+<p>我们使用的@Resource可以寻找服务层的类去注入，从结构来看，一般都是从控制层往下直到持久层。</p>
 <h5 id="启动器"><a href="#启动器" class="headerlink" title="启动器"></a>启动器</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@MapperScan</span>(<span class="string">"com.my.data07mybatis.repository"</span>)</span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Data07mybatisApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Data07mybatisApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最后别忘了在启动器前面加入@MapperScan，它会扫描在这个包下的所有类，并将其识别为MyBatis的Mapper类，这也是MyBatis独有的注解。</p>
@@ -362,10 +49,13 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.example.mybatis2.mapper.userMapper"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"find"</span>  <span class="attr">resultType</span>=<span class="string">"user"</span> <span class="attr">parameterType</span>=<span class="string">"int"</span>&gt;</span></span><br><span class="line">        select * from t_user where id=#&#123;id&#125;<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>这便是一个SQL语句，由namespace定位mapper类，由id确定方法头，由parametertype确定传入参数类型，而resulttype则是返回值类型啦。</p>
+<p>记得要放在resource文件的mapper文件下哦，不然扫描不到的，具体可以根据自己的需求，在application.yml里面改。</p>
 <h5 id="业务层和控制层"><a href="#业务层和控制层" class="headerlink" title="业务层和控制层"></a>业务层和控制层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">userService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> userMapper user;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">find</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> user.find(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">userController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> userService user;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/find"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">find</span><span class="params">(<span class="keyword">int</span> id )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> user.find(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>和上面差不多，这里省略了其他方法。</p>
+<p>同样的，也需要在启动器中加入MapperScan（），去扫描dao层(持久层)的数据哦。</p>
 <h5 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h5><p>在浏览器输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:8888&#x2F;user&#x2F;find?id&#x3D;1</span><br></pre></td></tr></table></figure>
 
@@ -422,14 +112,14 @@
 <p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/3.png" alt=""></p>
 <p>看看数据库：</p>
 <p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mybatis/4.png" alt=""></p>
-<p>发现也成功了。这样的方式，省略了大量的SQL语句，同样将数据传入了数据库。</p>
-<p>是不是一点SQL都没写，只用写实体类，再调用方法就行了。很棒吧。</p>
+<p>发现也成功了，删除就不演示了。这样的方式，省略了大量的SQL语句，同样将数据传入了数据库。</p>
+<p>是不是一点SQL都不用写，只用写实体类，再调用方法就行了。很棒吧。</p>
 <p>。</p>
 <p>。</p>
 <p>。</p>
 <p>。</p>
 <p>。</p>
-<p>还是太懒了，我实体类都不想写，我想让数据库自己跑到后端，自己动。</p>
+<p>还是太麻烦了，我懒，我实体类都不想写，我想让实体类都自己生成。</p>
 <p>。</p>
 <p>。</p>
 <p>行吧，我告诉你一个更好的办法，自动生成代码！</p>
@@ -451,7 +141,8 @@
 <li>javaClientGenerator：指定自动生成的 DAO接口置于哪个包下</li>
 <li>table tableName：指定数据表名，可以使用_和%通配符</li>
 </ul>
-<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>点击右边的MyBatis Generator：</p>
+<p>记得一定要配置好，具体可以对照着配置。</p>
+<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>双击右边的MyBatis Generator：</p>
 <p><img src="https://s2.ax1x.com/2020/01/15/lXtUne.png" alt=""></p>
 <p>看看效果吧：</p>
 <p><img src="https://s2.ax1x.com/2020/01/15/lXtW7j.png" alt=""></p>
@@ -462,411 +153,13 @@
 <p>。</p>
 <p>。</p>
 <p>。</p>
-<p>我还想。。。</p>
+<p>我还想。。。让数据库自己跑到后端，自己动，可以吗？</p>
 <p>。</p>
 <p>。</p>
 <p><img src="https://imgsa.baidu.com/forum/w%3D580/sign=0c4373343ad12f2ece05ae687fc3d5ff/44130ae93901213fcfa15c3f58e736d12e2e9542.jpg" alt=""></p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/" rel="next" title="Java虚拟机（七）虚拟机性能监控、故障处理工具">
-                <i class="fa fa-chevron-left"></i> Java虚拟机（七）虚拟机性能监控、故障处理工具
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"
-                alt="攀" />
-            
-              <p class="site-author-name" itemprop="name">攀</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">32</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-            <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/Antarctica000" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                  </span>
-                
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot整合MyBatis框架"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot整合MyBatis框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MyBatis"><span class="nav-number">1.1.</span> <span class="nav-text">MyBatis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最原始的MyBatis"><span class="nav-number">1.1.1.</span> <span class="nav-text">最原始的MyBatis</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#先加入pom依赖"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">先加入pom依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置文件"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实体类："><span class="nav-number">1.1.1.3.</span> <span class="nav-text">实体类：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SQL的实现"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">SQL的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务层"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">服务层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#控制层"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">控制层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动器"><span class="nav-number">1.1.1.7.</span> <span class="nav-text">启动器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XML型MyBatis"><span class="nav-number">1.1.2.</span> <span class="nav-text">XML型MyBatis</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实体类"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">实体类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mapper类"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">mapper类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#业务层和控制层"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">业务层和控制层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#测试"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级偷懒法：MyBatis-Puls"><span class="nav-number">1.2.</span> <span class="nav-text">高级偷懒法：MyBatis-Puls</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在pom文件中加入MyBatis-Puls依赖：："><span class="nav-number">1.2.0.1.</span> <span class="nav-text">在pom文件中加入MyBatis-Puls依赖：：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#application-yml"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">application.yml:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#config的配置："><span class="nav-number">1.2.0.3.</span> <span class="nav-text">config的配置：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UserMapper"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">UserMapper</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#建立数据库"><span class="nav-number">1.2.0.5.</span> <span class="nav-text">建立数据库</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业务编写"><span class="nav-number">1.2.1.</span> <span class="nav-text">业务编写</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实体类-1"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">实体类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Mapper类"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Mapper类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Service接口"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Service接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实现Service层"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">实现Service层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller层"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">Controller层</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#究极偷懒法：Mybatis-Generator"><span class="nav-number">1.3.</span> <span class="nav-text">究极偷懒法：Mybatis-Generator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引入依赖"><span class="nav-number">1.3.1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置"><span class="nav-number">1.3.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行"><span class="nav-number">1.3.3.</span> <span class="nav-text">运行</span></a></li></ol></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-        <div class="back-to-top">
-          <i class="fa fa-arrow-up"></i>
-          
-            <span id="scrollpercent"><span>0</span>%</span>
-          
-        </div>
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">攀</span>
-
-  
-</div>
-
-
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/three/three.min.js"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-</body>
-</html>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/16/spirng2/"><i class="fa fa-chevron-left">  </i><span>SpringBoot整合Redis缓存</span></a></div><div class="next-post pull-right"><a href="/2020/01/13/Java%E8%99%9A%E6%8B%9F%E6%9C%BA7/"><span>Java虚拟机（七）虚拟机性能监控、故障处理工具</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
