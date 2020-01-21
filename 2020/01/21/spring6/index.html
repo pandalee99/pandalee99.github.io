@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="SpringBoot整合Thymeleaf"><meta name="keywords" content="SpringBoot,Thymeleaf,前端"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>SpringBoot整合Thymeleaf | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Thymeleaf"><span class="toc-number">1.</span> <span class="toc-text">Thymeleaf</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Thymeleaf的概念："><span class="toc-number">1.1.1.</span> <span class="toc-text">Thymeleaf的概念：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#功能"><span class="toc-number">1.1.2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常用场景"><span class="toc-number">1.1.3.</span> <span class="toc-text">常用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用的方法"><span class="toc-number">1.2.</span> <span class="toc-text">常用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本准备"><span class="toc-number">1.2.1.</span> <span class="toc-text">基本准备</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#引入依赖"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">引入依赖</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#各个类的准备"><span class="toc-number">1.2.2.</span> <span class="toc-text">各个类的准备</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#实体类"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Dao层"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Dao层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#服务层"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">服务层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Mapper"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">Mapper</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#控制层"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">控制层</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开始测试"><span class="toc-number">1.2.3.</span> <span class="toc-text">开始测试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#th-each"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">th:each</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用form表单提交信息"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">使用form表单提交信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#删除信息"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">删除信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用按钮删除信息"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">使用按钮删除信息</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#标准表达式语法"><span class="toc-number">1.2.4.</span> <span class="toc-text">标准表达式语法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#变量表达式"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">变量表达式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#选择表达式"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">选择表达式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#文字国际化表达式"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">文字国际化表达式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#URL表达式"><span class="toc-number">1.2.4.4.</span> <span class="toc-text">URL表达式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#表达式支持的语法"><span class="toc-number">1.2.4.5.</span> <span class="toc-text">表达式支持的语法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用的th：标签"><span class="toc-number">1.3.</span> <span class="toc-text">常用的th：标签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用th标签都有那些？"><span class="toc-number">2.</span> <span class="toc-text">常用th标签都有那些？</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">37</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">22</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">SpringBoot整合Thymeleaf</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-01-21</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="Thymeleaf"><a href="#Thymeleaf" class="headerlink" title="Thymeleaf"></a>Thymeleaf</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="Thymeleaf的概念："><a href="#Thymeleaf的概念：" class="headerlink" title="Thymeleaf的概念："></a>Thymeleaf的概念：</h4><p><strong>Thymeleaf</strong>是适用于Web和独立环境的现代服务器端Java模板引擎。</p>
+<p>Thymeleaf的主要目标是为您的开发工作流程带来优雅的<em>自然模板</em> -HTML可以在浏览器中正确显示，也可以作为静态原型工作，从而可以在开发团队中加强协作。</p>
+<p>可以在Web（基于servlet ）和非Web环境中工作。 它更适合在基于MVC的Web应用程序的视图层提供XHTML / HTML5，但它甚至可以在脱机环境中处理任何XML文件。 它提供完整的Spring Framework。</p>
+<p>在Web应用程序中，Thymeleaf旨在成为JavaServer Pages （JSP）的完全替代品，并实现自然模板的概念：模板文件可以直接在浏览器中打开，并且仍然可以正确显示为网页。</p>
+<h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><ul>
+<li><p>用于<a href="https://zh.wikipedia.org/wiki/XML" target="_blank" rel="noopener">XML</a> ， <a href="https://zh.wikipedia.org/wiki/XHTML" target="_blank" rel="noopener">XHTML</a>和<a href="https://zh.wikipedia.org/wiki/HTML5" target="_blank" rel="noopener">HTML5的</a> Java 模板引擎 。</p>
+</li>
+<li><p>适用于Web和非Web（离线）环境。 没有硬依赖<a href="https://zh.wikipedia.org/wiki/Java_Servlet" target="_blank" rel="noopener">Servlet</a> API。</p>
+</li>
+<li><p>基于称为</p>
+<p>方言的</p>
+<p>模块化特征集。</p>
+<ul>
+<li>方言特征（例如：评估，迭代等）通过将它们链接到模板的标签和/或属性来应用。</li>
+<li>开箱即用的两种方言：Standard和SpringStandard（适用于<a href="https://zh.wikipedia.org/wiki/Spring_Framework" target="_blank" rel="noopener">Spring MVC</a>应用程序，与标准语法相同）。</li>
+<li>开发人员可以扩展和创建自定义方言。</li>
+</ul>
+</li>
+<li><p>几种模板模式：</p>
+<ul>
+<li><strong><a href="https://zh.wikipedia.org/wiki/XML" target="_blank" rel="noopener">XML</a></strong> ：验证<a href="https://zh.wikipedia.org/wiki/文档类型定义" target="_blank" rel="noopener">DTD</a>与否。</li>
+<li><strong><a href="https://zh.wikipedia.org/wiki/XHTML" target="_blank" rel="noopener">XHTML</a> 1.0和1.1</strong> ：是否针对标准<a href="https://zh.wikipedia.org/wiki/文档类型定义" target="_blank" rel="noopener">DTD进行</a>验证。</li>
+<li><strong><a href="https://zh.wikipedia.org/wiki/HTML5" target="_blank" rel="noopener">HTML5</a></strong> ：XML格式的代码和基于遗留的HTML5。 传统的非XML代码将自动清理并转换为<a href="https://zh.wikipedia.org/wiki/XML" target="_blank" rel="noopener">XML</a>格式。</li>
+</ul>
+</li>
+<li><p>完整（和可扩展）的<strong>国际化</strong>支持。</p>
+</li>
+<li><p>可配置的高性能<strong>解析模板缓存</strong> ，可将输入/输出降至最低。</p>
+</li>
+<li><p>自动DOCTYPE转换 - 从模板<a href="https://zh.wikipedia.org/wiki/文档类型定义" target="_blank" rel="noopener">DTD</a>到结果DTD-用于（可选）验证模板和结果代码。</p>
+</li>
+<li><p>极易扩展：如果需要，可以用作模板引擎框架。</p>
+</li>
+<li><p>完整的文档，包括几个示例应用。</p>
+</li>
+</ul>
+<h4 id="常用场景"><a href="#常用场景" class="headerlink" title="常用场景"></a>常用场景</h4><p>Thymeleaf现在经常和Spring组件一起，成为一个完整的SSM框架。</p>
+<p><strong>SSM</strong>：</p>
+<p><strong>Spring</strong><br>　　Spring就像是整个项目中装配bean的大工厂，在配置文件中可以指定使用特定的参数去调用实体类的构造方法来实例化对象。也可以称之为项目中的粘合剂。<br>　　Spring的核心思想是IoC（控制反转），即不再需要程序员去显式地<code>new</code>一个对象，而是让Spring框架帮你来完成这一切。<br><strong>SpringMVC</strong><br>　　SpringMVC在项目中拦截用户请求，它的核心Servlet即DispatcherServlet承担中介或是前台这样的职责，将用户请求通过HandlerMapping去匹配Controller，Controller就是具体对应请求所执行的操作。SpringMVC相当于SSH框架中struts。<br><strong>mybatis</strong><br>　　mybatis是对jdbc的封装，它让数据库底层操作变的透明。mybatis的操作都是围绕一个sqlSessionFactory实例展开的。mybatis通过配置文件关联到各实体类的Mapper文件，Mapper文件中配置了每个类对数据库所需进行的sql语句映射。在每次与数据库交互时，通过sqlSessionFactory拿到一个sqlSession，再执行sql命令。</p>
+<p>到现在，新一代的SSM定义应该为SpringBoot+SpringMVC+MyBatis。</p>
+<p>于是，现在开始学习关于SpringMVC的知识。</p>
+<h3 id="常用的方法"><a href="#常用的方法" class="headerlink" title="常用的方法"></a>常用的方法</h3><p>Thymeleaf有很多的语法，虽然一个一个列出来并不复杂，但是为了更好的去理解它们的使用，而不是仅仅的列出公式。我希望能够将常用的抽离出来，并且将它们整合为一个项目。然后再单独的讲一下不常用的。</p>
+<h4 id="基本准备"><a href="#基本准备" class="headerlink" title="基本准备"></a>基本准备</h4><h5 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为了更好的完成视图的开发，一般会多引入一个依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-devtools<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这是开发工具，能够实时的在网页上查看更改的效果，实现边改边看。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  thymeleaf:</span><br><span class="line">    cache: false</span><br></pre></td></tr></table></figure>
+
+<p>关闭缓存，实现实现边改边看。</p>
+<h4 id="各个类的准备"><a href="#各个类的准备" class="headerlink" title="各个类的准备"></a>各个类的准备</h4><h5 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Alias</span>(<span class="string">"product"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">3288311147760635602L</span>;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String productName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> stock;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> price;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> version;</span><br><span class="line">    <span class="keyword">private</span> String note;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Dao层"><a href="#Dao层" class="headerlink" title="Dao层"></a>Dao层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ProductDao</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 展示产品</span></span><br><span class="line"></span><br><span class="line">     <span class="function">List&lt;Product&gt; <span class="title">showProduct</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//删除产品</span></span><br><span class="line">     <span class="function"><span class="keyword">int</span> <span class="title">deleteProduct</span><span class="params">(Long id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//增加产品</span></span><br><span class="line">     <span class="function"><span class="keyword">int</span> <span class="title">addProduct</span><span class="params">(Product product)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="服务层"><a href="#服务层" class="headerlink" title="服务层"></a>服务层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ProductService</span> </span>&#123;</span><br><span class="line">    <span class="comment">//展示全部</span></span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;Product&gt; <span class="title">ShowAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除产品</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">delete</span><span class="params">(Long id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//增加产品</span></span><br><span class="line">    </span><br><span class="line">     <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(Product product)</span></span>;</span><br><span class="line">     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductServiceImpl</span> <span class="keyword">implements</span> <span class="title">ProductService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ProductDao productDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Product&gt; <span class="title">ShowAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> productDao.showProduct();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">delete</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> productDao.deleteProduct(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(Product product)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> productDao.addProduct(product);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">        <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Mapper 3.0//EN"</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.example.thymeleaf.dao.ProductDao"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 展示产品 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"showProduct"</span> <span class="attr">resultType</span>=<span class="string">"product"</span>&gt;</span></span><br><span class="line">		select * from t_product</span><br><span class="line">	<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--增加产品	--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"addProduct"</span> <span class="attr">useGeneratedKeys</span>=<span class="string">"true"</span> <span class="attr">keyProperty</span>=<span class="string">"id"</span></span></span><br><span class="line"><span class="tag">			<span class="attr">parameterType</span>=<span class="string">"product"</span>&gt;</span></span><br><span class="line">		insert into t_product(product_name, stock,price,version,note)</span><br><span class="line">		values(#&#123;productName&#125;,#&#123;stock&#125;,#&#123;price&#125;,#&#123;version&#125;,#&#123;note&#125;)</span><br><span class="line">	<span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 减少产品 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">"deleteProduct"</span> <span class="attr">parameterType</span>=<span class="string">"long"</span>&gt;</span></span><br><span class="line">		delete from t_product where id = #&#123;id&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="控制层"><a href="#控制层" class="headerlink" title="控制层"></a>控制层</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ProductService productService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/index"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">         model.addAttribute(<span class="string">"products"</span>, productService.ShowAll());</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h4><p>首先要准备一个index页面，并且在顶部添上一句：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span> <span class="attr">xmlns:th</span>=<span class="string">"http://www.thymeleaf.org"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样HTML页面便能够识别我们的Thymeleaf语法。</p>
+<h5 id="th-each"><a href="#th-each" class="headerlink" title="th:each"></a>th:each</h5><p>th:each 是一个经常被使用的语法，它能够不断地去读取从后端发出的队列，并且显示出来。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">th:each</span>=<span class="string">"product:$&#123;products&#125;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.id&#125;"</span>&gt;</span>id<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.productName&#125;"</span>&gt;</span>产品名称<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.stock&#125;"</span>&gt;</span>库存<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.price&#125;"</span>&gt;</span>价格<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.version&#125;"</span>&gt;</span>版本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.note&#125;"</span>&gt;</span>备注<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">"@&#123;deletelist/&#123;id&#125;(id=$&#123;product.getId()&#125;)&#125;"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">th:value</span>=<span class="string">"$&#123;product.getId()&#125;"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">onclick</span>=<span class="string">"return del()"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>删除<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>它会将我们从数据库中读取到的数据量的多少，来显示我们的页面。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/thymeleaf/1.png" alt=""></p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/thymeleaf/2.png" alt=""></p>
+<h5 id="使用form表单提交信息"><a href="#使用form表单提交信息" class="headerlink" title="使用form表单提交信息"></a>使用form表单提交信息</h5><p>我们在添加信息的时候，首先会在index页面添加一个：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"add"</span>&gt;</span>增加产品<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>它能够发起一个add请求到后端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/add"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">add</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">    Product product=<span class="keyword">new</span> Product();</span><br><span class="line">    model.addAttribute(<span class="string">"product"</span>,product);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"add"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后端接收到了这个请求后，就会使用return到另一个页面，值得注意的是，我们这里又new了一个新的product，之所以这样做是为了能够add页面，使用product这个类。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"#"</span> <span class="attr">th:action</span>=<span class="string">"@&#123;/addproduct&#125;"</span> <span class="attr">th:object</span>=<span class="string">"$&#123;product&#125;"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;id&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;productName&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;stock&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;price&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;version&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;note&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个就是我们的提交表单的行为，这里的<strong>th:action</strong>表示这个表单将会提交到：/addproduct 这个链接的方法中。</p>
+<p>这里使用<strong>th:object</strong>去定义要使用的实例，我们就能够再text框中输入实例的属性，以此决定我们实例的数据。</p>
+<p>使用<strong>th:field</strong>去表示这是我们实例的哪个属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/addproduct"</span>,method = RequestMethod.POST)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">addpro</span><span class="params">(@ModelAttribute Product product)</span></span>&#123;</span><br><span class="line">    productService.add(product);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"redirect:/add"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个请求就是表单提交的链接的方法，会使用服务的方法区增加信息。最后哪个redirect:/add ，表示需要重定向到链接add，重新执行add链接下的方法。</p>
+<h5 id="删除信息"><a href="#删除信息" class="headerlink" title="删除信息"></a>删除信息</h5><p>写一个删除信息的页面，再添加：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"#"</span> <span class="attr">th:action</span>=<span class="string">"@&#123;/deleteproduct&#125;"</span> <span class="attr">th:object</span>=<span class="string">"$&#123;product&#125;"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:field</span>=<span class="string">"*&#123;id&#125;"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>会根据id去删除数据库的信息，这个也是一个表单，和add类似，使用表单的好处是以后更方便的用于修改。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/delete"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">delete</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">    Product product=<span class="keyword">new</span> Product();</span><br><span class="line">    model.addAttribute(<span class="string">"product"</span>,product);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"delete"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/deleteproduct"</span>,method = RequestMethod.POST)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">deletepro</span><span class="params">(@ModelAttribute Product product)</span></span>&#123;</span><br><span class="line">    productService.delete(product.getId());</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"redirect:index"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里设置为重定向到index。</p>
+<h5 id="使用按钮删除信息"><a href="#使用按钮删除信息" class="headerlink" title="使用按钮删除信息"></a>使用按钮删除信息</h5><p>实际在后端管理中，为了更方便的去增删改查。很多时候都是使用链接去完成的。回看index页面</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">th:each</span>=<span class="string">"product:$&#123;products&#125;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.id&#125;"</span>&gt;</span>id<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.productName&#125;"</span>&gt;</span>产品名称<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.stock&#125;"</span>&gt;</span>库存<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.price&#125;"</span>&gt;</span>价格<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.version&#125;"</span>&gt;</span>版本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">"$&#123;product.note&#125;"</span>&gt;</span>备注<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">"@&#123;deletelist/&#123;id&#125;(id=$&#123;product.getId()&#125;)&#125;"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">th:value</span>=<span class="string">"$&#123;product.getId()&#125;"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">onclick</span>=<span class="string">"return del()"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>删除<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里使用在最后的时候使用了一个 a 标签，表示这是一个链接。<strong>th:href</strong> 里面表示的是链接值，链接值的id，使用了REST风格的形式。</p>
+<p><strong>onclick</strong>则是表达点击下去会发生什么。这里运用了js的知识，返回了一个函数del()，看一下这个del函数：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">src</span>=<span class="string">"https://code.jquery.com/jquery-3.2.1.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">del</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">if</span> (confirm(<span class="string">"您确定要删除吗？"</span>)) &#123;</span></span><br><span class="line"><span class="actionscript">            <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="actionscript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="actionscript">            <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>它会显示：你是否确定点击这个链接，是则返回true，否则返回false。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/thymeleaf/3.png" alt=""></p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/thymeleaf/4.png" alt=""></p>
+<h4 id="标准表达式语法"><a href="#标准表达式语法" class="headerlink" title="标准表达式语法"></a>标准表达式语法</h4><h5 id="变量表达式"><a href="#变量表达式" class="headerlink" title="变量表达式"></a>变量表达式</h5><p>我们使用${xxxxx}，就是一个变量表达式，它能够获取从控制层中传入的Model。</p>
+<h5 id="选择表达式"><a href="#选择表达式" class="headerlink" title="选择表达式"></a>选择表达式</h5><p>*{xxxxxx}，使用预先选择的对象来表达，可理解为是能够获取实例中的属性。</p>
+<h5 id="文字国际化表达式"><a href="#文字国际化表达式" class="headerlink" title="文字国际化表达式"></a>文字国际化表达式</h5><p>文字国际化表达式允许我们从一个外部文件获取区域文字信息(.properties)，用 Key 索引 Value，还可以提供一组参数(可选)：</p>
+<p>#{main.title}<br>#{message.entrycreated(${entryId})}</p>
+<p>这个主要的做法是用于整个网站的字体或者语言文字转化。</p>
+<h5 id="URL表达式"><a href="#URL表达式" class="headerlink" title="URL表达式"></a>URL表达式</h5><p>@{XXXXX}，能够把一个有用的上下文或者是回话信息添加到URL</p>
+<h5 id="表达式支持的语法"><a href="#表达式支持的语法" class="headerlink" title="表达式支持的语法"></a>表达式支持的语法</h5><p>字面（Literals）</p>
+<ul>
+<li>文本文字（Text literals）: ‘one text’, ‘Another one!’,…</li>
+<li>数字文本（Number literals）: 0, 34, 3.0, 12.3,…</li>
+<li>布尔文本（Boolean literals）:true, false</li>
+<li>空（Null literal）:null</li>
+<li>文字标记（Literal tokens）:one, sometext, main,…</li>
+</ul>
+<p>文本操作（Text operations）</p>
+<ul>
+<li>字符串连接(String concatenation):+</li>
+<li>文本替换（Literal substitutions）:|The name is ${name}|</li>
+</ul>
+<p>算术运算（Arithmetic operations）</p>
+<ul>
+<li>二元运算符（Binary operators）:+, -, *, /, %</li>
+<li>减号（单目运算符）Minus sign (unary operator):-</li>
+</ul>
+<p>布尔操作（Boolean operations）</p>
+<ul>
+<li>二元运算符（Binary operators）:and, or</li>
+<li>布尔否定（一元运算符）Boolean negation (unary operator):!, not</li>
+</ul>
+<p>比较和等价(Comparisons and equality)</p>
+<ul>
+<li>比较（Comparators）:&gt;, &lt;, &gt;=, &lt;= (gt, lt, ge, le)</li>
+<li>等值运算符（Equality operators）:==, != (eq, ne)</li>
+</ul>
+<p>条件运算符（Conditional operators）</p>
+<ul>
+<li>If-then:(if) ? (then)</li>
+<li>If-then-else:(if) ? (then) : (else)</li>
+<li>Default: (value) ?:(defaultvalue)</li>
+</ul>
+<h3 id="常用的th：标签"><a href="#常用的th：标签" class="headerlink" title="常用的th：标签"></a>常用的th：标签</h3><h2 id="常用th标签都有那些？"><a href="#常用th标签都有那些？" class="headerlink" title="常用th标签都有那些？"></a>常用th标签都有那些？</h2><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>功能介绍</th>
+<th>案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>th:id</td>
+<td>替换id</td>
+<td><input th:id="'xxx' + ${collect.id}"/></td>
+</tr>
+<tr>
+<td>th:text</td>
+<td>文本替换</td>
+<td><p th:text="${collect.description}">description</p></td>
+</tr>
+<tr>
+<td>th:utext</td>
+<td>支持html的文本替换</td>
+<td><p th:utext="${htmlcontent}">conten</p></td>
+</tr>
+<tr>
+<td>th:object</td>
+<td>替换对象</td>
+<td><div th:object="${session.user}"></td>
+</tr>
+<tr>
+<td>th:value</td>
+<td>属性赋值</td>
+<td><input th:value="${user.name}" /></td>
+</tr>
+<tr>
+<td>th:with</td>
+<td>变量赋值运算</td>
+<td><div th:with="isEven=${prodStat.count}%2==0"></div></td>
+</tr>
+<tr>
+<td>th:style</td>
+<td>设置样式</td>
+<td><code>th:style=&quot;&#39;display:&#39; + @{(${sitrue} ? &#39;none&#39; : &#39;inline-block&#39;)} + &#39;&#39;&quot;</code></td>
+</tr>
+<tr>
+<td>th:onclick</td>
+<td>点击事件</td>
+<td><code>th:onclick=&quot;&#39;getCollect()&#39;&quot;</code></td>
+</tr>
+<tr>
+<td>th:each</td>
+<td>属性赋值</td>
+<td><code>tr th:each=&quot;user,userStat:${users}&quot;&gt;</code></td>
+</tr>
+<tr>
+<td>th:if</td>
+<td>判断条件</td>
+<td><a th:if="${userId == collect.userId}" ></td>
+</tr>
+<tr>
+<td>th:unless</td>
+<td>和th:if判断相反</td>
+<td>&lt;a th:href=”@{/login}” th:unless=${session.user != null}&gt;Login</a></td>
+</tr>
+<tr>
+<td>th:href</td>
+<td>链接地址</td>
+<td>&lt;a th:href=”@{/login}” th:unless=${session.user != null}&gt;Login</a> /&gt;</td>
+</tr>
+<tr>
+<td>th:switch</td>
+<td>多路选择 配合th:case 使用</td>
+<td><div th:switch="${user.role}"></td>
+</tr>
+<tr>
+<td>th:case</td>
+<td>th:switch的一个分支</td>
+<td><p th:case="'admin'">User is an administrator</p></td>
+</tr>
+<tr>
+<td>th:fragment</td>
+<td>布局标签，定义一个代码片段，方便其它地方引用</td>
+<td><div th:fragment="alert"></td>
+</tr>
+<tr>
+<td>th:include</td>
+<td>布局标签，替换内容到引入的文件</td>
+<td><head th:include="layout :: htmlhead" th:with="title='xx'"></head> /&gt;</td>
+</tr>
+<tr>
+<td>th:replace</td>
+<td>布局标签，替换整个标签到引入的文件</td>
+<td><div th:replace="fragments/header :: title"></div></td>
+</tr>
+<tr>
+<td>th:selected</td>
+<td>selected选择框 选中</td>
+<td><code>th:selected=&quot;(${xxx.id} == ${configObj.dd})&quot;</code></td>
+</tr>
+<tr>
+<td>th:src</td>
+<td>图片类地址引入</td>
+<td>img class=”img-responsive” alt=”App Logo” th:src=”@{/img/logo.png}” /&gt;</td>
+</tr>
+<tr>
+<td>th:inline</td>
+<td>定义js脚本可以使用变量</td>
+<td><script type="text/javascript" th:inline="javascript"></td>
+</tr>
+<tr>
+<td>th:action</td>
+<td>表单提交的地址</td>
+<td><form action="subscribe.html" th:action="@{/subscribe}"></td>
+</tr>
+<tr>
+<td>th:remove</td>
+<td>删除某个属性</td>
+<td><tr th:remove="all"> 1.all:删除包含标签和所有的孩子。2.body:不包含标记删除,但删除其所有的孩子。3.tag:包含标记的删除,但不删除它的孩子。4.all-but-first:删除所有包含标签的孩子,除了第一个。5.none:什么也不做。这个值是有用的动态评估。</td>
+</tr>
+<tr>
+<td>th:attr</td>
+<td>设置标签属性，多个属性可以用逗号分隔</td>
+<td>比如<code>th:attr=&quot;src=@{/image/aa.jpg},title=#{logo}&quot;</code>，此标签不太优雅，一般用的比较少。</td>
+</tr>
+</tbody></table>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/Thymeleaf/">Thymeleaf</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/01/20/spring5/"><span>知识整合：抢购商品</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
