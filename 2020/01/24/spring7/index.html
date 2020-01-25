@@ -22,7 +22,7 @@
 
 <p>mapper的设置，直接获取全部属性。</p>
 <h5 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h5><p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/security/1.png" alt=""></p>
-<p>这是数据库的设置。</p>
+<p>这是数据库的设置，注意roles形式是固定，必须有ROLE_ 前缀</p>
 <h4 id="必要的组件"><a href="#必要的组件" class="headerlink" title="必要的组件"></a>必要的组件</h4><p>这里将所有必要的组件类列出来，这里不是重点，但是很有必要。</p>
 <h5 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Alias</span>(<span class="string">"user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String roles;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
