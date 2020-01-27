@@ -1,0 +1,181 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="MySQL体系结构"><meta name="keywords" content="MySQL"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>MySQL体系结构 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL体系结构"><span class="toc-number">1.</span> <span class="toc-text">MySQL体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库简介"><span class="toc-number">1.1.</span> <span class="toc-text">数据库简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#技术初衷"><span class="toc-number">1.1.1.</span> <span class="toc-text">技术初衷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库管理系统"><span class="toc-number">1.1.2.</span> <span class="toc-text">数据库管理系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库的分类"><span class="toc-number">1.1.3.</span> <span class="toc-text">数据库的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#关系数据库"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">关系数据库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#非关系数据库-NoSQL"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">非关系数据库(NoSQL)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库技术的发展"><span class="toc-number">1.1.4.</span> <span class="toc-text">数据库技术的发展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库模型"><span class="toc-number">1.1.5.</span> <span class="toc-text">数据库模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL"><span class="toc-number">1.2.</span> <span class="toc-text">MySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#定义数据库和实例"><span class="toc-number">1.2.1.</span> <span class="toc-text">定义数据库和实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四种隔离级别"><span class="toc-number">1.2.2.</span> <span class="toc-text">四种隔离级别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL构成"><span class="toc-number">1.2.3.</span> <span class="toc-text">MySQL构成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储引擎类型"><span class="toc-number">1.2.4.</span> <span class="toc-text">存储引擎类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#innoDB存储引擎"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">innoDB存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#My了SAM存储引擎"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">My了SAM存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#NDB存储引擎"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">NDB存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Memory存储引擎"><span class="toc-number">1.2.4.4.</span> <span class="toc-text">Memory存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Archive存储引擎"><span class="toc-number">1.2.4.5.</span> <span class="toc-text">Archive存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Federated-存储引擎"><span class="toc-number">1.2.4.6.</span> <span class="toc-text">Federated 存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Maria存储引擎"><span class="toc-number">1.2.4.7.</span> <span class="toc-text">Maria存储引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他存储引擎"><span class="toc-number">1.2.4.8.</span> <span class="toc-text">其他存储引擎</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库的链接方式"><span class="toc-number">1.2.5.</span> <span class="toc-text">数据库的链接方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#TCP-IP"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">TCP&#x2F;IP</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#命名管道和共享内存"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">命名管道和共享内存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#UNIX域套接字"><span class="toc-number">1.2.5.3.</span> <span class="toc-text">UNIX域套接字</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">39</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">MySQL体系结构</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-01-27</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h2><p>现在来讲一讲数据库，数据库是虚拟世界与现实世界的第一层抽象。数据库在任何领域，都有着非常重要的作用，我们的身体、每一个器官、每一个细胞，都可以是一个数据库。数据库可以是世界上所有信息的载体，而并非仅仅只体现在计算机学科身上。</p>
+<h3 id="数据库简介"><a href="#数据库简介" class="headerlink" title="数据库简介"></a>数据库简介</h3><h4 id="技术初衷"><a href="#技术初衷" class="headerlink" title="技术初衷"></a>技术初衷</h4><p>在操作系统出现之后，随着计算机应用范围的扩大、需要处理的数据迅速膨胀。最初，数据与程序一样，以简单的文件作为主要存储形式。以这种方式组织的数据在逻辑上更简单，但可扩展性差，访问这种数据的程序需要了解数据的具体组织格式。当系统数据量大或者用户访问量大时，应用程序还需要解决数据的完整性、一致性以及安全性等一系列的问题。因此，必须开发出一种系统软件，它应该能够像操作系统屏蔽了硬件访问复杂性那样，屏蔽数据访问的复杂性。由此产生了数据管理系统，即数据库。</p>
+<h4 id="数据库管理系统"><a href="#数据库管理系统" class="headerlink" title="数据库管理系统"></a>数据库管理系统</h4><p>数据库管理系统（英语：Database Management System，简称DBMS）是为管理数据库而设计的电脑软件系统，一般具有存储、截取、安全保障、备份等基础功能。数据库管理系统可以依据它所支持的数据库模型来作分类，例如关系式、XML；或依据所支持的电脑类型来作分类，例如服务器聚类、移动电话；或依据所用查询语言来作分类，例如SQL、XQuery；或依据性能冲量重点来作分类，例如最大规模、最高运行速度；亦或其他的分类方式。不论使用哪种分类方式，一些DBMS能够跨类别，例如，同时支持多种查询语言。</p>
+<h4 id="数据库的分类"><a href="#数据库的分类" class="headerlink" title="数据库的分类"></a>数据库的分类</h4><p>随着数据库技术与其他分支学科技术的结合，出现了多种新型数据库，例如：与分布处理技术结合产生的分布式数据库、与并行处理技术结合产生的并行数据库、与人工智能结合产生的演绎数据库、与多媒体技术结合产生的多媒体数据库。另外，数据库技术应用于特定的领域，出现了工程数据库、 地理数据库、统计数据库、空间数据库等特定领域数据库。</p>
+<h5 id="关系数据库"><a href="#关系数据库" class="headerlink" title="关系数据库"></a>关系数据库</h5><ul>
+<li>MySQL<ul>
+<li><a href="https://zh.wikipedia.org/wiki/MariaDB" target="_blank" rel="noopener">MariaDB</a></li>
+<li><a href="https://zh.wikipedia.org/w/index.php?title=Percona_Server&action=edit&redlink=1" target="_blank" rel="noopener">Percona Server</a></li>
+</ul>
+</li>
+<li><a href="https://zh.wikipedia.org/wiki/PostgreSQL" target="_blank" rel="noopener">PostgreSQL</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Microsoft_Access" target="_blank" rel="noopener">Microsoft Access</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Microsoft_SQL_Server" target="_blank" rel="noopener">Microsoft SQL Server</a></li>
+<li><a href="https://zh.wikipedia.org/w/index.php?title=Google_Fusion_Tables&action=edit&redlink=1" target="_blank" rel="noopener">Google Fusion Tables</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/FileMaker" target="_blank" rel="noopener">FileMaker</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Oracle数据库" target="_blank" rel="noopener">Oracle数据库</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Sybase" target="_blank" rel="noopener">Sybase</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/DBASE" target="_blank" rel="noopener">dBASE</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Clipper" target="_blank" rel="noopener">Clipper</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/FoxPro" target="_blank" rel="noopener">FoxPro</a></li>
+<li><a href="https://zh.wikipedia.org/w/index.php?title=Foshub&action=edit&redlink=1" target="_blank" rel="noopener">foshub</a></li>
+</ul>
+<p>几乎所有的数据库管理系统都配备了一个<a href="https://zh.wikipedia.org/wiki/開放式資料庫連接" target="_blank" rel="noopener">开放式数据库连接</a>（ODBC）驱动程序，令各个数据库之间得以互相集成。</p>
+<h5 id="非关系数据库-NoSQL"><a href="#非关系数据库-NoSQL" class="headerlink" title="非关系数据库(NoSQL)"></a>非关系数据库(NoSQL)</h5><ul>
+<li><p><a href="https://zh.wikipedia.org/wiki/BigTable" target="_blank" rel="noopener">BigTable</a>（Google）</p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/Cassandra" target="_blank" rel="noopener">Cassandra</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/MongoDB" target="_blank" rel="noopener">MongoDB</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/CouchDB" target="_blank" rel="noopener">CouchDB</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/Redis" target="_blank" rel="noopener">Redis</a></p>
+<p><strong>键值数据库</strong></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/Apache_Cassandra" target="_blank" rel="noopener">Apache Cassandra</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/w/index.php?title=Dynamo&action=edit&redlink=1" target="_blank" rel="noopener">Dynamo</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/LevelDB" target="_blank" rel="noopener">LevelDB</a>（Google）</p>
+</li>
+</ul>
+<h4 id="数据库技术的发展"><a href="#数据库技术的发展" class="headerlink" title="数据库技术的发展"></a>数据库技术的发展</h4><p>随着互联网的普及，数据库使用环境也随之发生变化，这种变化主要体现为XML和Java技术的大量使用、要求支持各种互联网环境下的应用服务器、极容易出现大量用户同时访问数据库、要求支持7x24小时不间断运行和高安全性等。</p>
+<p>为解决由于这些变化所带来的新问题，数据库管理系统也逐渐产生变化，包括：</p>
+<p>(一)网络化的大型通用数据库管理系统的出现</p>
+<p>由于互联网应用的用户数量无法预测，这就要求数据库相比以前拥有能处理更大量的数据以及为更多的用户提供服务的能力，即更好的可伸缩性及高可用性，因此，能够支持Internet的数据库应用已经成为数据库系统的重要方面，学术界及各主流数据库公司都将大型通用数据管理系统作为主要发展方向。例如Oracle公司从 8 版起全面支持互联网应用，微软公司更是将 SQL Server 作为 其整个 .NET计划中的一个重要的成分。</p>
+<p>(二)数据库安全系统及技术的提升</p>
+<p>由于数据库系统在现代计算机系统中的地位越来越趋于核心的地位，数据库系统的安全问题自然受到越来越多的关注。在当前各国所引用或制定的 一系列安全标准中，最重要的两个是由美国国防部制定的《可信计算机系统的评估标准》(简称TCSEC)和《可信计算机系统的评估标准关于可信数据库系统的解释》(简称 TDI)。当前，所有数据库的开发必须遵从相应的安全标准。</p>
+<p>(三)XML及Web数据管理技术的普及</p>
+<p>随着越来越多的Web应用，如电子商务、数字图书馆、信息服务等采用XML作为数据表现形式、越来越多网站采用XML作为信息发布的语言，以XML格式数据为主的半结构化数据逐步成为网上数据交换和数据表示的标准。而XML具有如下的一些特征：面向显示、半结构化和无结构、不同形式的数据源，动态变化以及数据海量等。因此，支持这种结构松散、形式多样、动态变化的海量数据的存储、共享、管理、检索，成了数据库技术的大势所趋。</p>
+<p>Web数据管理是一个很松散的概念，大体上它是指在Web环境下对各种复杂信息的有效组织与集成，进行方便而准确的信息查询和发布。当前Web数据管理的研究开发方向主要包括：半结构化数据管理、Web数据查询、Web信息集成、XML数据管理等。到当前为止，XML 与 Web 数据管理的研究工作中主要集中在如下的一些方面。</p>
+<ol>
+<li>半结构化数据</li>
+</ol>
+<p>2.Web 数据查询</p>
+<p>3.XML 相关标准</p>
+<p>4.XML 数据管理</p>
+<p>(四)嵌入式移动数据库技术</p>
+<p>随着移动通信技术的迅速发展和投入使用，加上移动智能电话、移动计算机的大量普及，国内外许多研究机构都展开了对移动数据库的研究，并获取了许多有价值的成果。移动数据库技术涉及数据库技术、分布式计算技术以及移动通信技术等多个学科领域，具有较高的学术起点。</p>
+<h4 id="数据库模型"><a href="#数据库模型" class="headerlink" title="数据库模型"></a>数据库模型</h4><ul>
+<li><p><a href="https://zh.wikipedia.org/w/index.php?title=物件模型&action=edit&redlink=1" target="_blank" rel="noopener">对象模型</a></p>
+</li>
+<li><p>层次模型（轻量级数据访问协议）</p>
+</li>
+<li><p>网状模型（大型数据储存）</p>
+</li>
+<li><p>关系模型</p>
+</li>
+<li><p>面向对象模型</p>
+</li>
+<li><p>半结构化模型</p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/w/index.php?title=平面模型&action=edit&redlink=1" target="_blank" rel="noopener">平面模型</a>（表格模型，一般在形式上是一个二维<a href="https://zh.wikipedia.org/wiki/数组" target="_blank" rel="noopener">数组</a>。如表格模型数据<a href="https://zh.wikipedia.org/wiki/Excel" target="_blank" rel="noopener">Excel</a>)</p>
+</li>
+</ul>
+<p><strong>架构</strong></p>
+<p>数据库的架构可以大致区分为三个概括层次：内层、概念层和外层。</p>
+<ul>
+<li>内层：最接近实际存储体，亦即有关数据的实际存储方式。</li>
+<li>外层：最接近用户，即有关个别用户观看数据的方式。</li>
+<li>概念层：介于两者之间的间接层。</li>
+</ul>
+<p><strong>数据库索引</strong></p>
+<p>数据索引的观念由来已久，像是一本书前面几页都有目录，目录也算是索引的一种，只是它的分类较广，例如车牌、身份证字号、条码等，都是一个索引的号码，当我们看到号码时，可以从号码中看出其中的端倪，若是要找的人、车或物品，也只要提供相关的号码，即可迅速查到正确的人事物。</p>
+<p>另外，索引跟字段有着相应的关系，索引即是由字段而来，其中字段有所谓的关键字段（Key Field），该字段具有唯一性，即其值不可重复，且不可为”<a href="https://zh.wikipedia.org/wiki/空值" target="_blank" rel="noopener">空值</a>（null）”。例如：在合并数据时，索引便是扮演欲附加字段数据之指向性用途的角色。故此索引为不可重复性且不可为空。</p>
+<p><strong>数据库事务</strong></p>
+<p>事务（transaction）包含一组数据库操作的逻辑工作单元，在事务中包含的数据库操作是不可分割的整体，这些操作要么一起做，要么一起回滚（Roll Back）到执行前的状态。 事务的<a href="https://zh.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a>特性：</p>
+<ul>
+<li>基元性（atomicity）</li>
+<li>一致性（consistency）</li>
+<li>隔离性（isolation）</li>
+<li>持续性（durability）</li>
+</ul>
+<p>事务的并发性是指多个事务的并行操作轮流交叉运行，事务的并发可能会访问和存储不正确的数据，破坏交易的隔离性和数据库的一致性。</p>
+<p><strong>网状数据模型的数据结构</strong></p>
+<p>满足下面两个条件的基本层次联系的集合为网状模型。</p>
+<ol>
+<li>允许一个以上的结点无双亲；</li>
+<li>一个结点可以有多于一个的双亲。</li>
+</ol>
+<h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><p>MySQL数据库是一个应用最为广泛，且免费的数据库。这个数据库无论在性能，还是在可操作性上，都非常的出众。现在众多的企业，都在使用着MySQL。</p>
+<h4 id="定义数据库和实例"><a href="#定义数据库和实例" class="headerlink" title="定义数据库和实例"></a>定义数据库和实例</h4><p><strong>数据库</strong>：物理操作系统文件或其他形式文件类型的集合。在MySQL数据库中，数据库文件可以是frm、MYD、MYI、ibd结尾的文件。可以看做为，数据库仅仅是一个静态的TXT文件，单独的存放在硬盘中。</p>
+<p><strong>实例</strong>：MySQL数据库由后台线程以及共享内存区组成。MySQL数据库实例在系统上的表现就是一个进程。也正是由实例，来操作数据库。</p>
+<h4 id="四种隔离级别"><a href="#四种隔离级别" class="headerlink" title="四种隔离级别"></a>四种隔离级别</h4><p>Read Uncommitted（读取未提交内容）</p>
+<p>在该隔离级别，所有事务都可以看到其他未提交事务的执行结果。本隔离级别很少用于实际应用，因为它的性能也不比其他级别好多少。读取未提交的数据，也被称之为脏读（Dirty Read）。</p>
+<p>Read Committed（读取提交内容）</p>
+<p>这是大多数数据库系统的默认隔离级别（但不是MySQL默认的）。它满足了隔离的简单定义：一个事务只能看见已经提交事务所做的改变。这种隔离级别 也支持所谓的不可重复读（Nonrepeatable Read），因为同一事务的其他实例在该实例处理其间可能会有新的commit，所以同一select可能返回不同结果。</p>
+<p>Repeatable Read（可重读）(默认)</p>
+<p>这是MySQL的默认事务隔离级别，它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行。不过理论上，这会导致另一个棘手的问题：幻读 （Phantom Read）。简单的说，幻读指当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影” 行。InnoDB和Falcon存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题。</p>
+<p>Serializable（可串行化）</p>
+<p>这是最高的隔离级别，它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简言之，它是在每个读的数据行上加上共享锁。在这个级别，可能导致大量的超时现象和锁竞争。</p>
+<p>这四种隔离级别采取不同的锁类型来实现，若读取的是同一个数据的话，就容易发生问题。例如：</p>
+<p>脏读(Drity Read)：某个事务已更新一份数据，另一个事务在此时读取了同一份数据，由于某些原因，前一个RollBack了操作，则后一个事务所读取的数据就会是不正确的。</p>
+<p>不可重复读(Non-repeatable read):在一个事务的两次查询之中数据不一致，这可能是两次查询过程中间插入了一个事务更新的原有的数据。</p>
+<p>幻读(Phantom Read):在一个事务的两次查询中数据笔数不一致，例如有一个事务查询了几列(Row)数据，而另一个事务却在此时插入了新的几列数据，先前的事务在接下来的查询中，就会发现有几列数据是它先前所没有的。</p>
+<p>在MySQL中，实现了这四种隔离级别，分别有可能产生问题如下所示：</p>
+<p><img src="https://box.kancloud.cn/c67eb13942f3ba82f96499bcd14bd47a_686x140.png" alt=""></p>
+<h4 id="MySQL构成"><a href="#MySQL构成" class="headerlink" title="MySQL构成"></a>MySQL构成</h4><p>数据库和实例，是两个不同的事物，但是也可以结合到一起，就好似，数据库是一个巨大的压缩包，你要用解压缩软件（实例），去操作这个压缩包。数据库文件一般都是二进制文件，因为二进制是最基础的类型，能够存储任何的信息。我们需要实例，去对二进制文件进行增删改查操作，</p>
+<p>MySQL由以下几部分组成：</p>
+<ul>
+<li>连接池组件</li>
+<li>管理服务和工具组件</li>
+<li>SQL接口组件</li>
+<li>查询分析器组件</li>
+<li>优化器组件</li>
+<li>缓冲组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li>
+</ul>
+<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580119995136&di=ccfb19525fab0e9fac77845a2d5d0443&imgtype=jpg&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D3988714236%2C2708734242%26fm%3D214%26gp%3D0.jpg" alt=""></p>
+<p>由图可以发现，MySQL数据库区别于其他数据库的最重要的一个特点就是其插件式服务。它提供了一系列标准的管理和服务支持，如SQL分析器和优化器，而存储引擎是底层物理结构的实现，<strong>存储引擎是基于表的，而不是数据库</strong>。</p>
+<h4 id="存储引擎类型"><a href="#存储引擎类型" class="headerlink" title="存储引擎类型"></a>存储引擎类型</h4><h5 id="innoDB存储引擎"><a href="#innoDB存储引擎" class="headerlink" title="innoDB存储引擎"></a>innoDB存储引擎</h5><p>Innodb引擎提供了对数据库ACID事务的支持，并且实现了SQL标准的四种隔离级别。 该引擎还提供了行级锁和外键约束，它的设计目标是处理大容量数据库系统，它本身其实就是基于MySQL后台的完整数据库系统，MySQL运行时Innodb会在内存中建立缓冲池，用于缓冲数据和索引。</p>
+<p>但是该引擎不支持FULLTEXT类型的索引，而且它没有保存表的行数，当SELECT COUNT(*) FROM TABLE时需要扫描全表。当需要使用数据库事务时，该引擎当然是首选。由于锁的粒度更小，写操作不会锁定全表，所以在并发较高时，使用Innodb引擎会提升效率。但是使用行级锁也不是绝对的，如果在执行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表。</p>
+<p>其特点十行锁设计、支持危机，并支持类型与Oracle的非锁定读，即默认读取操作不会产生锁。</p>
+<p>InnoDB通过使用多版本并发控制（MVCC） 来获取高并发性，并且实现了SQL标准的4种隔离，默认为REPEATABLE级别。同时使用一种被称为next-keylocking的策略来避免幻读（phantom）现象的产生。 除此之外，InnoDB存储引擎还提供了插入缓冲(insert buffer)、二次写（double write）、自适应哈希索引（adaptive hash index）、InnoDB存储的锁信息（lock info）、数据字典信息（data dictionary）等高性能和高可用的功能。<br>对于表中数据的存储， InnoDB存储引擎采用了聚集（slustered）的方式，因此每张表的存储都是按主键的顺序存放。如果没有显式地在表定义时指定主键，InnoDB存储引擎会为每一行生成一个6字节的ROWID，并以此为主键。</p>
+<h5 id="My了SAM存储引擎"><a href="#My了SAM存储引擎" class="headerlink" title="My了SAM存储引擎"></a>My了SAM存储引擎</h5><p>在MySQL 5.1 及之前的版本，是MySQL默认的引擎，但是它没有提供对数据库事务的支持，也不支持行级锁和外键，因此当INSERT(插入)或UPDATE(更新)数据时即写操作需要锁定整个表，效率便会低一些。不过和Innodb不同，MyISAM中存储了表的行数，于是SELECT COUNT(*) FROM TABLE时只需要直接读取已经保存好的值而不需要进行全表扫描。如果表的读操作远远多于写操作且不需要数据库事务的支持，那么MyISAM也是很好的选择。</p>
+<p>MyISAM存储引擎不支持事务、表锁设计，支持全文索引，主要面向一些OLAP数据库应用。 MyISAM存储引擎另一个与众不同的地方是它的缓冲池只缓存（cache）索引文件，而不缓冲数据文件。</p>
+<p>MyISAM存储引擎表由MYD和MYI组成，MYD用来存放数据文件，MYI用来存放索引文件。 可以通过myisampack工具来进一步压缩数据文件</p>
+<p>（采用赫夫曼【Huffman】）编码静态算法来压缩数据，因此压缩之后的数据表示只读的， 也可以通过该工具解压数据文件。 从5.0版本之前 默认支持表大小为4GB，5.0开始默认支持256TB的单表数据。）</p>
+<p><strong>简单介绍区别</strong>：</p>
+<ul>
+<li>1、MyISAM是非事务安全的，而InnoDB是事务安全的</li>
+<li>2、MyISAM锁的粒度是表级的，而InnoDB支持行级锁</li>
+<li>3、MyISAM支持全文类型索引，而InnoDB不支持全文索引</li>
+<li>4、MyISAM相对简单，效率上要优于InnoDB，小型应用可以考虑使用MyISAM</li>
+<li>5、MyISAM表保存成文件形式，跨平台使用更加方便</li>
+</ul>
+<p><strong>应用场景</strong>：</p>
+<ul>
+<li>1、MyISAM管理非事务表，提供高速存储和检索以及全文搜索能力，如果再应用中执行大量select操作，应该选择MyISAM</li>
+<li>2、InnoDB用于事务处理，具有ACID事务支持等特性，如果在应用中执行大量insert和update操作，应该选择InnoDB</li>
+</ul>
+<h5 id="NDB存储引擎"><a href="#NDB存储引擎" class="headerlink" title="NDB存储引擎"></a>NDB存储引擎</h5><p>NDB存储引擎是一个集群存储引擎，类似于Oracle 的RAC集群，不过与其架构不同的是，其结构是share nothing 的集群架构，因此能提供更高的可用性。NDB的特点是数据全部放在内存中（mysql 5.1版本开始，可以将非索引数据放在磁盘上），因此主键查找速度极快，并且通过添加NDB数据存储节点（Data Node）可以线性地提高数据库性能，是高可用、高性能的集群系统。</p>
+<p>注意：NDB存储引擎的连接操作（JOIN）是在MySQL数据库层完成的 ，而不是在存储引擎层完成的。 这意味着，复杂的挎包和操作需要巨大的网络开销，因此查询速度很慢。</p>
+<h5 id="Memory存储引擎"><a href="#Memory存储引擎" class="headerlink" title="Memory存储引擎"></a>Memory存储引擎</h5><p>Memory存储引擎（之前称为HEAP存储引擎）将表中的数据存放在内存中，如果数据重启或者发生崩溃，表中的数据将不在 所以适合用于存储临时数据的临时表，以及数据仓库的纬度表。 Memory存储引擎默认使用哈希索引，而不是我们熟悉的B+树状索引。<br>Memory存储引擎速度非常快，但是也有一定的限制。比如:只支持表锁,并发性能差。并且不支持TEXT和BLOB列类型。最重要的是，存储变长字段（varchar）时是按照定常字段（char）的方式进行的，因此会浪费内存（已经给出了patch解决方案）。</p>
+<p>MySQL数据库使用Memory存储引擎作为临时表存放查询中间的结果集。 如果中间结果集大于Memory存储引擎表的容量设置，或者含有TEXT或BLOB列类型字段，则MySQL数据库会转换成MyISAM存储引擎表而存放到磁盘。因为MyISAM不缓存数据文件，所以这是产生的临时表的性能对于查询会有损失。</p>
+<h5 id="Archive存储引擎"><a href="#Archive存储引擎" class="headerlink" title="Archive存储引擎"></a>Archive存储引擎</h5><p>Archive存储引擎只支持INSERT 和 SELECT 操作, MySQL5.1版本支持索引。 Archive存储引擎使用zlib算法将数据行进行压缩 压缩比一般可达1:10。可以用来做日志信息。 Archive存储引擎使用行锁来实现高并发的插入操作，但是其本身不是书屋安全的存储引擎，其设计目标主要是提供高数的插入和压缩功能。</p>
+<h5 id="Federated-存储引擎"><a href="#Federated-存储引擎" class="headerlink" title="Federated 存储引擎"></a>Federated 存储引擎</h5><p>Federated 存储引擎表并不存放数据，它只是指向一台远程MySQL数据库服务器上的表。这非常类似于SQL Server 的链接服务器和Oracle的透明网关，不同的是，当前Federated存储引擎只支持MySQL数据库表，不支持异构数据库表。</p>
+<h5 id="Maria存储引擎"><a href="#Maria存储引擎" class="headerlink" title="Maria存储引擎"></a>Maria存储引擎</h5><p>Maria存储引擎 是新开发订单引擎，设计目标主要是取代MyISAM存储引擎，从而成为MySQL的默认存储引擎。<br>特点：注册缓存数据和索引文件，应用了行锁设计，提供了MVCC功能，支持事务和非事务安全的选项，以及更好的BLOB字符类型的处理性能。</p>
+<h5 id="其他存储引擎"><a href="#其他存储引擎" class="headerlink" title="其他存储引擎"></a>其他存储引擎</h5><p>如：Merge、CSV、Sphinx和Infobright等。</p>
+<p>不同之处：存储容量的限制、事务支持、锁的粒度、MVCC支持、支持的索引、备份和复制等。</p>
+<p><img src="https://box.kancloud.cn/67c9fd3b0f58f5d7b83140026b5c9c21_836x582.png" alt=""></p>
+<h4 id="数据库的链接方式"><a href="#数据库的链接方式" class="headerlink" title="数据库的链接方式"></a>数据库的链接方式</h4><h5 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h5><p>TCP/IP套接字方式MySQL数据库 在任何的平台下都提供的链接方式，也是网络中使用最多的链接方式。<br>链接例如：mysql -h【ip】 -u 【用户名】 -p【密码】 &gt; mysql -h127.0.0.1 -u root -proot<br>判断客户端是否允许链接Mysql实例<br>链接完数据库<br>选择数据库 use mysql;<br>在查询表select host,user,password from user;<br>就可以得到相对应的链接ip</p>
+<h5 id="命名管道和共享内存"><a href="#命名管道和共享内存" class="headerlink" title="命名管道和共享内存"></a>命名管道和共享内存</h5><p><img src="https://box.kancloud.cn/7961c80f6443a8a63416658f2bbc856d_858x228.png" alt=""></p>
+<h5 id="UNIX域套接字"><a href="#UNIX域套接字" class="headerlink" title="UNIX域套接字"></a>UNIX域套接字</h5><p>linux和UNIX环境下 可以使用. UNIX域套接字不是网络协议 所以只能在同一台服务器上使用。<br>用户可以在配置文件中知道套接字文件的路径 如果–socket=/tmp/mysql.sock。<br>通过命令查找UNIX域套接字文件SHOW VARIABLES LIKE ‘socket’\G</p>
+<p><img src="https://box.kancloud.cn/aa479d02d235c06a2799f21198eef7be_484x115.png" alt=""></p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/01/24/spring7/"><span>SpringBoot整合Security框架</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>

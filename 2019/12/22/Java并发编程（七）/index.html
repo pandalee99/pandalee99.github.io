@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Java并发编程（七）volatile关键字"><meta name="keywords" content="并发编程,Volatile"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>Java并发编程（七）volatile关键字 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Java并发编程（七）Java内存模型"><meta name="keywords" content="并发编程,Volatile"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>Java并发编程（七）Java内存模型 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
   localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
@@ -7,7 +7,144 @@
     error: '复制错误',
     noSupport: '浏览器不支持'
   }
-} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile关键字是什么？"><span class="toc-number">1.</span> <span class="toc-text">volatile关键字是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一个例子"><span class="toc-number">1.1.</span> <span class="toc-text">一个例子</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volatile的实现原理"><span class="toc-number">2.</span> <span class="toc-text">Volatile的实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缓存一致性协议"><span class="toc-number">2.1.</span> <span class="toc-text">缓存一致性协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#锁缓存还是锁总线"><span class="toc-number">2.2.</span> <span class="toc-text">锁缓存还是锁总线</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">38</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">23</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Java并发编程（七）volatile关键字</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-22</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="volatile关键字是什么？"><a href="#volatile关键字是什么？" class="headerlink" title="volatile关键字是什么？"></a>volatile关键字是什么？</h3><h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>通常在进行并发编程的时候，我们总会遇到一些数据不一致的问题，接下，就这一问题开始讨论和解决。如一个例子：</p>
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JAVA内存模型"><span class="toc-number">1.</span> <span class="toc-text">JAVA内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JMM内存模型"><span class="toc-number">1.1.</span> <span class="toc-text">JMM内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#硬件内存架构"><span class="toc-number">1.1.1.</span> <span class="toc-text">硬件内存架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java内存模型和硬件内存架构之间的桥接"><span class="toc-number">1.1.2.</span> <span class="toc-text">Java内存模型和硬件内存架构之间的桥接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JMM模型下的线程间通信"><span class="toc-number">1.1.3.</span> <span class="toc-text">JMM模型下的线程间通信</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java内存模型解决的问题"><span class="toc-number">1.1.4.</span> <span class="toc-text">Java内存模型解决的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、多线程读同步与可见性"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">1、多线程读同步与可见性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、多线程写同步与原子性"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">2、多线程写同步与原子性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile关键字"><span class="toc-number">1.2.</span> <span class="toc-text">volatile关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一个例子"><span class="toc-number">1.2.1.</span> <span class="toc-text">一个例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Volatile不能保证原子性"><span class="toc-number">1.2.2.</span> <span class="toc-text">Volatile不能保证原子性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#锁缓存还是锁总线"><span class="toc-number">1.2.3.</span> <span class="toc-text">锁缓存还是锁总线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#volatile-可见性实现"><span class="toc-number">1.2.4.</span> <span class="toc-text">volatile 可见性实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#缓存一致性"><span class="toc-number">1.2.5.</span> <span class="toc-text">缓存一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#禁止重排序"><span class="toc-number">1.2.6.</span> <span class="toc-text">禁止重排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#happens-before-关系"><span class="toc-number">1.3.</span> <span class="toc-text">happens-before 关系</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">39</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Java并发编程（七）Java内存模型</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-22</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="JAVA内存模型"><a href="#JAVA内存模型" class="headerlink" title="JAVA内存模型"></a>JAVA内存模型</h2><h3 id="JMM内存模型"><a href="#JMM内存模型" class="headerlink" title="JMM内存模型"></a>JMM内存模型</h3><p>我们常说的JVM内存模式指的是JVM的内存分区；而Java内存模式是一种虚拟机规范。</p>
+<p>Java虚拟机规范中定义了Java内存模型（Java Memory Model，JMM），用于屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的并发效果，JMM规范了Java虚拟机与计算机内存是如何协同工作的：规定了一个线程如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。</p>
+<p>原始的Java内存模型存在一些不足，因此Java内存模型在Java1.5时被重新修订。这个版本的Java内存模型在Java8中仍然在使用。</p>
+<p>java内存模型（不仅仅是JVM内存分区）：调用栈和本地变量存放在线程栈上，对象存放在堆上。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-bd607bd9a5598a8330ad329033e04b91_hd.jpg" alt=""></p>
+<p><img src="https://pic3.zhimg.com/80/v2-a1a75c9f7264cf78d0927663371ca9d2_hd.jpg" alt=""></p>
+<ul>
+<li>一个本地变量可能是原始类型，在这种情况下，它总是“呆在”线程栈上。</li>
+<li>一个本地变量也可能是指向一个对象的一个引用。在这种情况下，引用（这个本地变量）存放在线程栈上，但是对象本身存放在堆上。</li>
+<li>一个对象可能包含方法，这些方法可能包含本地变量。这些本地变量仍然存放在线程栈上，即使这些方法所属的对象存放在堆上。</li>
+<li>一个对象的成员变量可能随着这个对象自身存放在堆上。不管这个成员变量是原始类型还是引用类型。</li>
+<li>静态成员变量跟随着类定义一起也存放在堆上。</li>
+<li>存放在堆上的对象可以被所有持有对这个对象引用的线程访问。当一个线程可以访问一个对象时，它也可以访问这个对象的成员变量。如果两个线程同时调用同一个对象上的同一个方法，它们将会都访问这个对象的成员变量，但是每一个线程都拥有这个成员变量的私有拷贝。</li>
+</ul>
+<h4 id="硬件内存架构"><a href="#硬件内存架构" class="headerlink" title="硬件内存架构"></a><strong>硬件内存架构</strong></h4><p>现代硬件内存模型与Java内存模型有一些不同，理解内存模型架构以及Java内存模型如何与它协同工作也是非常重要的。</p>
+<p>现代计算机硬件架构的简单图示：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-67833188e191c5e7a11d34e613ca352c_hd.jpg" alt=""></p>
+<ul>
+<li><strong>多CPU</strong>：一个现代计算机通常由两个或者多个CPU。其中一些CPU还有多核。从这一点可以看出，在一个有两个或者多个CPU的现代计算机上同时运行多个线程是可能的。每个CPU在某一时刻运行一个线程是没有问题的。这意味着，如果你的Java程序是多线程的，在你的Java程序中每个CPU上一个线程可能同时（并发）执行。</li>
+<li><strong>CPU寄存器</strong>：每个CPU都包含一系列的寄存器，它们是CPU内内存的基础。CPU在寄存器上执行操作的速度远大于在主存上执行的速度。这是因为CPU访问寄存器的速度远大于主存。</li>
+<li><strong>高速缓存cache</strong>：由于计算机的存储设备与处理器的运算速度之间有着几个数量级的差距，所以现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存（Cache）来作为内存与处理器之间的缓冲：将运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步回内存之中，这样处理器就无须等待缓慢的内存读写了。CPU访问缓存层的速度快于访问主存的速度，但通常比访问内部寄存器的速度还要慢一点。每个CPU可能有一个CPU缓存层，一些CPU还有多层缓存。在某一时刻，一个或者多个缓存行（cache lines）可能被读到缓存，一个或者多个缓存行可能再被刷新回主存。</li>
+<li><strong>内存</strong>：一个计算机还包含一个主存。所有的CPU都可以访问主存。主存通常比CPU中的缓存大得多。</li>
+<li><strong>运作原理</strong>：通常情况下，当一个CPU需要读取主存时，它会将主存的部分读到CPU缓存中。它甚至可能将缓存中的部分内容读到它的内部寄存器中，然后在寄存器中执行操作。当CPU需要将结果写回到主存中去时，它会将内部寄存器的值刷新到缓存中，然后在某个时间点将值刷新回主存。</li>
+</ul>
+<p><strong>一些问题：（多线程环境下尤其）</strong></p>
+<ul>
+<li><strong>缓存一致性问题</strong>：在多处理器系统中，每个处理器都有自己的高速缓存，而它们又共享同一主内存（MainMemory）。基于高速缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也引入了新的问题：缓存一致性（CacheCoherence）。当多个处理器的运算任务都涉及同一块主内存区域时，将可能导致各自的缓存数据不一致的情况，如果真的发生这种情况，那同步回到主内存时以谁的缓存数据为准呢？为了解决一致性的问题，需要各个处理器访问缓存时都遵循一些协议，在读写时要根据协议来进行操作，这类协议有MSI、MESI（IllinoisProtocol）、MOSI、Synapse、Firefly及DragonProtocol，等等：</li>
+</ul>
+<p><img src="https://pic1.zhimg.com/80/v2-1a021d2833b7a537dcdfdf0025f52a6c_hd.jpg" alt=""></p>
+<p><strong>指令重排序问题</strong>：为了使得处理器内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行（Out-Of-Order Execution）优化，处理器会在计算之后将乱序执行的结果重组，保证该结果与顺序执行的结果是一致的，但并不保证程序中各个语句计算的先后顺序与输入代码中的顺序一致。因此，如果存在一个计算任务依赖另一个计算任务的中间结果，那么其顺序性并不能靠代码的先后顺序来保证。与处理器的乱序执行优化类似，Java虚拟机的即时编译器中也有类似的指令重排序（Instruction Reorder）优化</p>
+<h4 id="Java内存模型和硬件内存架构之间的桥接"><a href="#Java内存模型和硬件内存架构之间的桥接" class="headerlink" title="Java内存模型和硬件内存架构之间的桥接"></a><strong>Java内存模型和硬件内存架构之间的桥接</strong></h4><p>Java内存模型与硬件内存架构之间存在差异。硬件内存架构没有区分线程栈和堆。对于硬件，所有的线程栈和堆都分布在主内存中。部分线程栈和堆可能有时候会出现在CPU缓存中和CPU内部的寄存器中。如下图所示：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-1a7b7bb752799b6c067a0eaca0a1a9b2_hd.jpg" alt=""></p>
+<p>从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：</p>
+<ul>
+<li><p>线程之间的共享变量存储在主内存（Main Memory）中</p>
+</li>
+<li><p>每个线程都有一个私有的本地内存（Local Memory），本地内存是JMM的一个抽象概念，并不真实存在，它涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。本地内存中存储了该线程以读/写共享变量的拷贝副本。</p>
+</li>
+<li><p>从更低的层次来说，主内存就是硬件的内存，而为了获取更好的运行速度，虚拟机及硬件系统可能会让工作内存优先存储于寄存器和高速缓存中。</p>
+</li>
+<li><p>Java内存模型中的线程的工作内存（working memory）是cpu的寄存器和高速缓存的抽象描述。而JVM的静态内存储模型（JVM内存模型）只是一种对内存的物理划分而已，它只局限在内存，而且只局限在JVM的内存。</p>
+</li>
+</ul>
+<p><img src="https://pic3.zhimg.com/80/v2-af520d543f0f4f205f822ec3b151ad46_hd.jpg" alt=""></p>
+<h4 id="JMM模型下的线程间通信"><a href="#JMM模型下的线程间通信" class="headerlink" title="JMM模型下的线程间通信"></a>JMM模型下的线程间通信</h4><p>线程间通信必须要经过主内存。</p>
+<p>如下，如果线程A与线程B之间要通信的话，必须要经历下面2个步骤：</p>
+<p>1）线程A把本地内存A中更新过的共享变量刷新到主内存中去。</p>
+<p>2）线程B到主内存中去读取线程A之前已更新过的共享变量。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-8750cb14ecaa93509e3f1981563513e1_hd.jpg" alt=""></p>
+<p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步到主内存之间的实现细节，Java内存模型定义了以下八种操作来完成：</p>
+<ul>
+<li><strong>lock（锁定）</strong>：作用于主内存的变量，把一个变量标识为一条线程独占状态。</li>
+<li><strong>unlock（解锁）</strong>：作用于主内存变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定。</li>
+<li><strong>read（读取）</strong>：作用于主内存变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用</li>
+<li><strong>load（载入）</strong>：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中。</li>
+<li><strong>use（使用）</strong>：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎，每当虚拟机遇到一个需要使用变量的值的字节码指令时将会执行这个操作。</li>
+<li><strong>assign（赋值）</strong>：作用于工作内存的变量，它把一个从执行引擎接收到的值赋值给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作。</li>
+<li><strong>store（存储）</strong>：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作。</li>
+<li><strong>write（写入）</strong>：作用于主内存的变量，它把store操作从工作内存中一个变量的值传送到主内存的变量中。</li>
+</ul>
+<p>Java内存模型还规定了在执行上述八种基本操作时，必须满足如下规则：</p>
+<ul>
+<li>如果要把一个变量从主内存中复制到工作内存，就需要按顺寻地执行read和load操作， 如果把变量从工作内存中同步回主内存中，就要按顺序地执行store和write操作。但Java内存模型只要求上述操作必须按顺序执行，而没有保证必须是连续执行。</li>
+<li>不允许read和load、store和write操作之一单独出现</li>
+<li>不允许一个线程丢弃它的最近assign的操作，即变量在工作内存中改变了之后必须同步到主内存中。</li>
+<li>不允许一个线程无原因地（没有发生过任何assign操作）把数据从工作内存同步回主内存中。</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（load或assign）的变量。即就是对一个变量实施use和store操作之前，必须先执行过了assign和load操作。</li>
+<li>一个变量在同一时刻只允许一条线程对其进行lock操作，但lock操作可以被同一条线程重复执行多次，多次执行lock后，只有执行相同次数的unlock操作，变量才会被解锁。lock和unlock必须成对出现</li>
+<li>如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行load或assign操作初始化变量的值</li>
+<li>如果一个变量事先没有被lock操作锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定的变量。</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步到主内存中（执行store和write操作）。</li>
+</ul>
+<h4 id="Java内存模型解决的问题"><a href="#Java内存模型解决的问题" class="headerlink" title="Java内存模型解决的问题"></a>Java内存模型解决的问题</h4><p>当对象和变量被存放在计算机中各种不同的内存区域中时，就可能会出现一些具体的问题。Java内存模型建立所围绕的问题：在多线程并发过程中，如何处理多线程读同步问题与可见性（多线程缓存与指令重排序）、多线程写同步问题与原子性（多线程竞争race condition）。</p>
+<h5 id="1、多线程读同步与可见性"><a href="#1、多线程读同步与可见性" class="headerlink" title="1、多线程读同步与可见性"></a>1、多线程读同步与可见性</h5><p><strong>可见性（共享对象可见性）</strong>：线程对共享变量修改的可见性。当一个线程修改了共享变量的值，其他线程能够立刻得知这个修改</p>
+<p><strong>线程缓存导致的可见性问题：</strong></p>
+<p>如果两个或者更多的线程在没有正确的使用volatile声明或者同步的情况下共享一个对象，一个线程更新这个共享对象可能对其它线程来说是不可见的：共享对象被初始化在主存中。跑在CPU上的一个线程将这个共享对象读到CPU缓存中，然后修改了这个对象。只要CPU缓存没有被刷新会主存，对象修改后的版本对跑在其它CPU上的线程都是不可见的。这种方式可能导致每个线程拥有这个共享对象的私有拷贝，每个拷贝停留在不同的CPU缓存中。</p>
+<p>下图示意了这种情形。跑在左边CPU的线程拷贝这个共享对象到它的CPU缓存中，然后将count变量的值修改为2。这个修改对跑在右边CPU上的其它线程是不可见的，因为修改后的count的值还没有被刷新回主存中去。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-7abd7500588012315f4f0e068e20e341_hd.jpg" alt=""></p>
+<p>解决这个内存可见性问题你可以使用：</p>
+<ul>
+<li>Java中的volatile关键字：volatile关键字可以保证直接从主存中读取一个变量，如果这个变量被修改后，总是会被写回到主存中去。Java内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值这种依赖主内存作为传递媒介的方式来实现可见性的，无论是普通变量还是volatile变量都是如此，普通变量与volatile变量的区别是：volatile的特殊规则保证了新值能立即同步到主内存，以及每个线程在每次使用volatile变量前都立即从主内存刷新。因此我们可以说volatile保证了多线程操作时变量的可见性，而普通变量则不能保证这一点。</li>
+<li>Java中的synchronized关键字：同步快的可见性是由“如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行load或assign操作初始化变量的值”、“对一个变量执行unlock操作之前，必须先把此变量同步回主内存中（执行store和write操作）”这两条规则获得的。</li>
+<li>Java中的final关键字：final关键字的可见性是指，被final修饰的字段在构造器中一旦被初始化完成，并且构造器没有把“this”的引用传递出去（this引用逃逸是一件很危险的事情，其他线程有可能通过这个引用访问到“初始化了一半”的对象），那么在其他线程就能看见final字段的值（无须同步）</li>
+</ul>
+<p><strong>重排序导致的可见性问题：</strong></p>
+<p>Java程序中天然的有序性可以总结为一句话：如果在本地线程内观察，所有操作都是有序的（“线程内表现为串行”(Within-Thread As-If-Serial Semantics)）；如果在一个线程中观察另一个线程，所有操作都是无序的（“指令重排序”现象和“线程工作内存与主内存同步延迟”现象）。</p>
+<p>Java语言提供了volatile和synchronized两个关键字来保证线程之间操作的有序性：</p>
+<ul>
+<li>volatile关键字本身就包含了禁止指令重排序的语义</li>
+<li>synchronized则是由“一个变量在同一个时刻只允许一条线程对其进行lock操作”这条规则获得的，这个规则决定了持有同一个锁的两个同步块只能串行地进入</li>
+</ul>
+<p><strong>指令序列的重排序：</strong></p>
+<p>1）编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。</p>
+<p>2）指令级并行的重排序。现代处理器采用了指令级并行技术（Instruction-LevelParallelism，ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</p>
+<p>3）内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-a92ef160e8ba8d33541fb57b8a32de9c_hd.jpg" alt=""></p>
+<p>每个处理器上的写缓冲区，仅仅对它所在的处理器可见。这会导致处理器执行内存操作的顺序可能会与内存实际的操作执行顺序不一致。由于现代的处理器都会使用写缓冲区，因此现代的处理器都会允许对写-读操作进行重排序：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-f8a75081bcad888a7e73b4785a672e5b_hd.jpg" alt=""></p>
+<p><strong>数据依赖：</strong></p>
+<p>编译器和处理器在重排序时，会遵守数据依赖性，编译器和处理器不会改变存在数据依赖关系的两个操作的执行顺序。（这里所说的数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑）</p>
+<p><img src="https://pic4.zhimg.com/80/v2-36500a7455955c58d02138913d5c0cd7_hd.jpg" alt=""></p>
+<p><strong>指令重排序对内存可见性的影响：</strong></p>
+<p><img src="https://pic4.zhimg.com/80/v2-8ef063a1b514d9cfbdf059984f83ed2f_hd.jpg" alt=""></p>
+<p>当1和2之间没有数据依赖关系时，1和2之间就可能被重排序（3和4类似）。这样的结果就是：读线程B执行4时，不一定能看到写线程A在执行1时对共享变量的修改。</p>
+<p><strong>指令重排序改变多线程程序的执行结果例子：</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-111bfd93bcd92fd2ee495a12cb34f9aa_hd.jpg" alt=""></p>
+<p>flag变量是个标记，用来标识变量a是否已被写入。这里假设有两个线程A和B，A首先执行writer()方法，随后B线程接着执行reader()方法。线程B在执行操作4时，能否看到线程A在操作1对共享变量a的写入呢？</p>
+<p>答案是：不一定能看到。</p>
+<p>由于操作1和操作2没有数据依赖关系，编译器和处理器可以对这两个操作重排序；同样，操作3和操作4没有数据依赖关系，编译器和处理器也可以对这两个操作重排序。</p>
+<p><strong>as-if-serial语义：</strong></p>
+<p>不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变。（编译器、runtime和处理器都必须遵守as-if-serial语义）</p>
+<p><strong>happens before：</strong></p>
+<p>从JDK 5开始，Java使用新的JSR-133内存模型，JSR-133使用happens-before的概念来阐述操作之间的内存可见性：在JMM中，如果一个操作执行的结果需要对另一个操作可见（两个操作既可以是在一个线程之内，也可以是在不同线程之间），那么这两个操作之间必须要存在happens-before关系：</p>
+<ul>
+<li>程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</li>
+<li>监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li>传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。</li>
+</ul>
+<p>一个happens-before规则对应于一个或多个编译器和处理器重排序规则</p>
+<p><strong>内存屏障禁止特定类型的处理器重排序：</strong></p>
+<p>重排序可能会导致多线程程序出现内存可见性问题。对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障（Memory Barriers，Intel称之为Memory Fence）指令，通过内存屏障指令来禁止特定类型的处理器重排序。通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。</p>
+<p>为了保证内存可见性，Java编译器在生成指令序列的适当位置会插入内存屏障指令来禁止特定类型的处理器重排序。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-6db326ce298332a673151117edcb1fcd_hd.jpg" alt=""></p>
+<p>StoreLoad Barriers是一个“全能型”的屏障，它同时具有其他3个屏障的效果。现代的多处理器大多支持该屏障（其他类型的屏障不一定被所有处理器支持）。执行该屏障开销会很昂贵，因为当前处理器通常要把写缓冲区中的数据全部刷新到内存中（Buffer Fully Flush）。</p>
+<h5 id="2、多线程写同步与原子性"><a href="#2、多线程写同步与原子性" class="headerlink" title="2、多线程写同步与原子性"></a>2、多线程写同步与原子性</h5><p><strong>多线程竞争（Race Conditions）问题</strong>：当读，写和检查共享变量时出现race conditions。</p>
+<p>如果两个或者更多的线程共享一个对象，多个线程在这个共享对象上更新变量，就有可能发生race conditions。</p>
+<p>想象一下，如果线程A读一个共享对象的变量count到它的CPU缓存中。再想象一下，线程B也做了同样的事情，但是往一个不同的CPU缓存中。现在线程A将count加1，线程B也做了同样的事情。现在count已经被增加了两次，每个CPU缓存中一次。如果这些增加操作被顺序的执行，变量count应该被增加两次，然后原值+2被写回到主存中去。然而，两次增加都是在没有适当的同步下并发执行的。无论是线程A还是线程B将count修改后的版本写回到主存中取，修改后的值仅会被原值大1，尽管增加了两次：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-02ae4be429d4b48a18442efe91131155_hd.jpg" alt=""></p>
+<p>解决这个问题可以使用Java同步块。一个同步块可以保证在同一时刻仅有一个线程可以进入代码的临界区。同步块还可以保证代码块中所有被访问的变量将会从主存中读入，当线程退出同步代码块时，所有被更新的变量都会被刷新回主存中去，不管这个变量是否被声明为volatile。</p>
+<p><strong>使用原子性保证多线程写同步问题：</strong></p>
+<p><strong>原子性：</strong>指一个操作是按原子的方式执行的。要么该操作不被执行；要么以原子方式执行，即执行过程中不会被其它线程中断。</p>
+<p><strong>实现原子性：</strong></p>
+<ul>
+<li>由Java内存模型来直接保证的原子性变量操作包括read、load、assign、use、store、write，我们大致可以认为基本数据类型变量、引用类型变量、声明为volatile的任何类型变量的访问读写是具备原子性的（long和double的非原子性协定：对于64位的数据，如long和double，Java内存模型规范允许虚拟机将没有被volatile修饰的64位数据的读写操作划分为两次32位的操作来进行，即允许虚拟机实现选择可以不保证64位数据类型的load、store、read和write这四个操作的原子性，即如果有多个线程共享一个并未声明为volatile的long或double类型的变量，并且同时对它们进行读取和修改操作，那么某些线程可能会读取到一个既非原值，也不是其他线程修改值的代表了“半个变量”的数值。但由于目前各种平台下的商用虚拟机几乎都选择把64位数据的读写操作作为原子操作来对待，因此在编写代码时一般也不需要将用到的long和double变量专门声明为volatile）。这些类型变量的读、写天然具有原子性，但类似于 “基本变量++” / “volatile++” 这种复合操作并没有原子性。</li>
+<li>如果应用场景需要一个更大范围的原子性保证，需要使用同步块技术。Java内存模型提供了lock和unlock操作来满足这种需求。虚拟机提供了字节码指令monitorenter和monitorexist来隐式地使用这两个操作，这两个字节码指令反映到Java代码中就是同步快——synchronized关键字。</li>
+</ul>
+<h3 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h3><h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>通常在进行并发编程的时候，我们总会遇到一些数据不一致的问题，接下，就这一问题开始讨论和解决。如一个例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">test1</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"="</span> + count);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> test1());</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//第一次</span></span><br><span class="line">=<span class="number">13118</span></span><br><span class="line">=<span class="number">13921</span></span><br><span class="line"><span class="comment">//第二次</span></span><br><span class="line">=<span class="number">10937</span></span><br><span class="line">=<span class="number">10937</span></span><br></pre></td></tr></table></figure>
 
 <p>我们发现无论怎么运行都差不多是这两种情况，要么两个数字都不一样，要么两个数字一样但都不是20000，这是什么情况呢？我想，第一种是因为两个线程在不断的使用i的过程中，某一个线程先完成了计算，还有一个线程仍在继续着循环，导致两次数字不一样，且第一次数字都小于第二次，第二种情况是两个线程交替执行，导致最后虽然同时完成，但是仍然损失了很多数字。</p>
@@ -30,12 +167,111 @@
 </ol>
 <p>其实当我们进行到步骤2的时候，Volatile就已经无法保证i的原子性了，可以看到，如果线程A和线程B几乎同时读取到i的值为1，而不是线程A先于线程B读取修改并写入count的话，那么就已经无法保证i的原子性了，因为Volatile关键字并没有对count进行加锁，虽然声明了Volatile，会让count只会被一个单位所修改，但是在读取这个操作中，其实是不加以限制的。</p>
 <p>volatile具有可见性和有序性，并不具备原子性，volatile只能确保一个线程修改了数据之后，另一个线程能够看到这个改动，当两个线程同时修改一个数据时，仍然会产生冲突。</p>
-<h3 id="Volatile的实现原理"><a href="#Volatile的实现原理" class="headerlink" title="Volatile的实现原理"></a>Volatile的实现原理</h3><h4 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h4><p>我们的所有的代码，实际运行的空间其实是在Java虚拟机当中，而Java虚拟机中的Java堆，使用的就是计算的内存。CPU在读取一个值的时候，初次是需要从主内存中读取，读取到缓存中来，之后只要每次读取都会从缓存当中读取值，直到缓存时间过期或者是缓存地址被修改，才会重新去主存中读取值。</p>
+<h4 id="Volatile不能保证原子性"><a href="#Volatile不能保证原子性" class="headerlink" title="Volatile不能保证原子性"></a>Volatile不能保证原子性</h4><p>我们的所有的代码，实际运行的空间其实是在Java虚拟机当中，而Java虚拟机中的Java堆，使用的就是计算的内存。CPU在读取一个值的时候，初次是需要从主内存中读取，读取到缓存中来，之后只要每次读取都会从缓存当中读取值，直到缓存时间过期或者是缓存地址被修改，才会重新去主存中读取值。</p>
 <p>volatile声明了一个对象后，将那个对象转为汇编代码，可以发现那个对象的已经加了lock前缀去处理。它会在主存和CPU之间中使用缓存一致性协议，此刻的主存会在CPU的每一个缓存中使用嗅探器去嗅探自己的缓存是否过期了，当发现自己的缓存被修改了，就会使在缓存的对象无效化，让在缓存中的对象重新去主存读取新的值。</p>
 <p>下面就以一张图去表述吧：</p>
 <p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/volatileyuanli.png" alt="volatile"></p>
-<p>而在修改了被声明为volatile的对象后，该缓存就会通过嗅探器得知，然后去通知其他的缓存，lock#信号就会锁住其他的缓存，不让它被读取，然后将该CPU的缓存中所修改的值，写回主存中去，其他缓存需要从主存中获取到新值后才能解锁。讲到这里，为什么还是不能保证原子性呢？我们再次拿出上面讲的例子来：当 i=1 的时候A,B两个线程同时读入了 i 的值， 然后A线程执行了 temp = i + 1的操作， 要注意，此时的 i 的值还没有变化，然后B线程也执行了 temp = i + 1的操作，注意，此时A，B两个线程保存的 i 的值都是1，temp 的值都是2， 然后A线程执行了 i = temp （2）的操作，此时i的值会立即刷新到主存并通知其他线程保存的 i 值失效， 此时B线程需要重新读取 i 的值那么此时B线程保存的 i 就是2，同时B线程保存的 temp 还仍然是2， 然后B线程执行 i=temp （2），然后B线程就以为自己已经成功读取到了新的值，这样下来，就损失了一个1。</p>
+<p>而在修改了被声明为volatile的对象后，该缓存就会通过嗅探器得知，然后去通知其他的缓存，lock#信号就会锁住其他的缓存，不让它被读取，然后将该CPU的缓存中所修改的值，写回主存中去，其他缓存需要从主存中获取到新值后才能解锁。</p>
+<p>讲到这里，为什么还是不能保证原子性呢？我们再次拿出上面讲的例子来：</p>
+<p>当 i=1 的时候A,B两个线程同时读入了 i 的值， 然后A线程执行了 temp = i + 1的操作， 要注意，此时的 i 的值还没有变化，然后B线程也执行了 temp = i + 1的操作，注意，此时A，B两个线程保存的 i 的值都是1，temp 的值都是2， 然后A线程执行了 i = temp （2）的操作，此时i的值会立即刷新到主存并通知其他线程保存的 i 值失效， 此时B线程需要重新读取 i 的值那么此时B线程保存的 i 就是2，同时B线程保存的 temp 还仍然是2， 然后B线程执行 i=temp （2），然后B线程就以为自己已经成功读取到了新的值，这样下来，就损失了一个1。</p>
 <h4 id="锁缓存还是锁总线"><a href="#锁缓存还是锁总线" class="headerlink" title="锁缓存还是锁总线"></a>锁缓存还是锁总线</h4><p>前面讲到，volatile会锁住全部缓存，使得它们必须更新新的值。除此之外，volatile还可以选择锁住总线，让该cpu暂时独占整个内存，完成所需操作。但是一般都不会去使用锁总线的方式，因为锁总线的开销实在是太大了，但有时候却不得不去锁总线，一是当前操作的数据跨越了多个缓存行，只能使用总线锁，二是设备不支持(现在很少)。默认情况下，Lock前缀都是通过锁缓存来保证一致性的。</p>
+<h4 id="volatile-可见性实现"><a href="#volatile-可见性实现" class="headerlink" title="volatile 可见性实现"></a>volatile 可见性实现</h4><p>volatile 变量的内存可见性是基于内存屏障（Memory Barrier）实现。</p>
+<p>内存屏障，又称内存栅栏，是一个 CPU 指令。<br>在程序运行时，为了提高执行性能，编译器和处理器会对指令进行重排序，JMM 为了保证在不同的编译器和 CPU 上有相同的结果，通过插入特定类型的内存屏障来禁止特定类型的编译器重排序和处理器重排序，插入一条内存屏障会告诉编译器和 CPU：不管什么指令都不能和这条 Memory Barrier 指令重排序。</p>
+<h4 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h4><p>缓存是分段（line）的，一个段对应一块存储空间，称之为缓存行，它是 CPU 缓存中可分配的最小存储单元，大小 32 字节、64 字节、128 字节不等，这与 CPU 架构有关，通常来说是 64 字节。</p>
+<ul>
+<li>为了使其行为看起来如同一组缓存那样。因而设计了 缓存一致性协议。</li>
+<li>缓存一致性协议有多种，但是日常处理的大多数计算机设备都属于 “ 嗅探（snooping）” 协议。</li>
+<li>所有内存的传输都发生在一条共享的总线上，而所有的处理器都能看到这条总线。</li>
+<li>缓存本身是独立的，但是内存是共享资源，所有的内存访问都要经过仲裁（同一个指令周期中，只有一个 CPU 缓存可以读写内存）。</li>
+<li>CPU 缓存不仅仅在做内存传输的时候才与总线打交道，而是不停在嗅探总线上发生的数据交换，跟踪其他缓存在做什么。</li>
+<li>当一个缓存代表它所属的处理器去读写内存时，其它处理器都会得到通知，它们以此来使自己的缓存保持同步。</li>
+<li>只要某个处理器写内存，其它处理器马上知道这块内存在它们的缓存段中已经失效。</li>
+</ul>
+<h4 id="禁止重排序"><a href="#禁止重排序" class="headerlink" title="禁止重排序"></a>禁止重排序</h4><p>为了性能优化，JMM 在不改变正确语义的前提下，会允许编译器和处理器对指令序列进行重排序。JMM 提供了内存屏障阻止这种重排序。</p>
+<p>Java 编译器会在生成指令系列时在适当的位置会插入内存屏障指令来禁止特定类型的处理器重排序。</p>
+<p>JMM 会针对编译器制定 volatile 重排序规则表。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5714666-390c861ed043ef94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt=""></p>
+<p>“ NO “ 表示禁止重排序。</p>
+<ul>
+<li>为了实现 volatile 内存语义时，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。</li>
+<li>对于编译器来说，发现一个最优布置来最小化插入屏障的总数几乎是不可能的，为此，JMM 采取了保守的策略。<ul>
+<li>在每个 volatile 写操作的前面插入一个 StoreStore 屏障。</li>
+<li>在每个 volatile 写操作的后面插入一个 StoreLoad 屏障。</li>
+<li>在每个 volatile 读操作的后面插入一个 LoadLoad 屏障。</li>
+<li>在每个 volatile 读操作的后面插入一个 LoadStore 屏障。</li>
+</ul>
+</li>
+</ul>
+<p>volatile 写是在前面和后面分别插入内存屏障，而 volatile 读操作是在后面插入两个内存屏障。</p>
+<table>
+<thead>
+<tr>
+<th>内存屏障</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>StoreStore 屏障</td>
+<td>禁止上面的普通写和下面的 volatile 写重排序。</td>
+</tr>
+<tr>
+<td>StoreLoad 屏障</td>
+<td>防止上面的 volatile 写与下面可能有的 volatile 读/写重排序。</td>
+</tr>
+<tr>
+<td>LoadLoad 屏障</td>
+<td>禁止下面所有的普通读操作和上面的 volatile 读重排序。</td>
+</tr>
+<tr>
+<td>LoadStore 屏障</td>
+<td>禁止下面所有的普通写操作和上面的 volatile 读重排序。</td>
+</tr>
+</tbody></table>
+<p><img src="https://upload-images.jianshu.io/upload_images/5714666-42b7250449160dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/747/format/webp" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5714666-cce9ccf139acf1a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/801/format/webp" alt=""></p>
+<h3 id="happens-before-关系"><a href="#happens-before-关系" class="headerlink" title="happens-before 关系"></a>happens-before 关系</h3><p>我们无法就所有场景来规定某个线程修改的变量何时对其他线程可见，但是我们可以指定某些规则，这规则就是happens-before，从JDK 5 开始，JMM就使用happens-before的概念来阐述多线程之间的内存可见性。</p>
+<p><strong>在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在happens-before关系。</strong></p>
+<p>happens-before原则非常重要，它是判断数据是否存在竞争、线程是否安全的主要依据，依靠这个原则，我们解决在并发环境下两操作之间是否可能存在冲突的所有问题。下面我们就一个简单的例子稍微了解下happens-before ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设线程A执行writer方法，线程B执行reader方法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VolatileExample</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        a = <span class="number">1</span>;              <span class="comment">// 1 线程A修改共享变量</span></span><br><span class="line">        flag = <span class="keyword">true</span>;        <span class="comment">// 2 线程A写volatile变量</span></span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (flag) &#123;         <span class="comment">// 3 线程B读同一个volatile变量</span></span><br><span class="line">        <span class="keyword">int</span> i = a;          <span class="comment">// 4 线程B读共享变量</span></span><br><span class="line">        ……</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据 happens-before 规则，上面过程会建立 3 类 happens-before 关系。</p>
+<ul>
+<li>根据程序次序规则：1 happens-before 2 且 3 happens-before 4。</li>
+<li>根据 volatile 规则：2 happens-before 3。</li>
+<li>根据 happens-before 的传递性规则：1 happens-before 4。</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/5714666-04e61c5e5c4e91c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/587/format/webp" alt=""></p>
+<p>因为以上规则，当线程 A 将 volatile 变量 flag 更改为 true 后，线程 B 能够迅速感知。</p>
+<p>happens-before原则定义如下：</p>
+<p><strong>1. 如果一个操作happens-before另一个操作，那么第一个操作的执行结果将对第二个操作可见，而且第一个操作的执行顺序排在第二个操作之前。</strong><br><strong>2. 两个操作之间存在happens-before关系，并不意味着一定要按照happens-before原则制定的顺序来执行。如果重排序之后的执行结果与按照happens-before关系来执行的结果一致，那么这种重排序并不非法。</strong></p>
+<p>下面是happens-before原则规则：</p>
+<ol>
+<li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作；</li>
+<li>锁定规则：一个unLock操作先行发生于后面对同一个锁额lock操作；</li>
+<li>volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作；</li>
+<li>传递规则：如果操作A先行发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C；</li>
+<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每个一个动作；</li>
+<li>线程中断规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生；</li>
+<li>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行；</li>
+<li>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始；</li>
+</ol>
+<p>我们来详细看看上面每条规则：</p>
+<p><strong>程序次序规则</strong>：一段代码在单线程中执行的结果是有序的。注意是执行结果，因为虚拟机、处理器会对指令进行重排序（重排序后面会详细介绍）。虽然重排序了，但是并不会影响程序的执行结果，所以程序最终执行的结果与顺序执行的结果是一致的。故而这个规则只对单线程有效，在多线程环境下无法保证正确性。</p>
+<p><strong>锁定规则</strong>：这个规则比较好理解，无论是在单线程环境还是多线程环境，一个锁处于被锁定状态，那么必须先执行unlock操作后面才能进行lock操作。</p>
+<p><strong>volatile变量规则</strong>：这是一条比较重要的规则，它标志着volatile保证了线程可见性。通俗点讲就是如果一个线程先去写一个volatile变量，然后一个线程去读这个变量，那么这个写操作一定是happens-before读操作的。</p>
+<p><strong>传递规则</strong>：提现了happens-before原则具有传递性，即A happens-before B , B happens-before C，那么A happens-before C</p>
+<p><strong>线程启动规则</strong>：假定线程A在执行过程中，通过执行ThreadB.start()来启动线程B，那么线程A对共享变量的修改在接下来线程B开始执行后确保对线程B可见。</p>
+<p><strong>线程终结规则</strong>：假定线程A在执行的过程中，通过制定ThreadB.join()等待线程B终止，那么线程B在终止之前对共享变量的修改在线程A等待返回后可见。</p>
+<p>上面八条是原生Java满足Happens-before关系的规则，但是我们可以对他们进行推导出其他满足happens-before的规则：</p>
+<ol>
+<li>将一个元素放入一个线程安全的队列的操作Happens-Before从队列中取出这个元素的操作</li>
+<li>将一个元素放入一个线程安全容器的操作Happens-Before从容器中取出这个元素的操作</li>
+<li>在CountDownLatch上的倒数操作Happens-Before CountDownLatch#await()操作</li>
+<li>释放Semaphore许可的操作Happens-Before获得许可操作</li>
+<li>Future表示的任务的所有操作Happens-Before Future#get()操作</li>
+<li>向Executor提交一个Runnable或Callable的操作Happens-Before任务开始执行操作</li>
+</ol>
+<p>这里再说一遍happens-before的概念：<strong>如果两个操作不存在上述（前面8条 + 后面6条）任一一个happens-before规则，那么这两个操作就没有顺序的保障，JVM可以对这两个操作进行重排序。如果操作A happens-before操作B，那么操作A在内存上所做的操作对操作B都是可见的。</strong></p>
 </div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><a class="post-meta__tags" href="/tags/Volatile/">Volatile</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AB%EF%BC%89/"><i class="fa fa-chevron-left">  </i><span>Java并发编程（八）synchronized原理</span></a></div><div class="next-post pull-right"><a href="/2019/12/22/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89/"><span>Java并发编程（六）隐蔽的错误</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
