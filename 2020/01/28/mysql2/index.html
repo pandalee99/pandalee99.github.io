@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="事务的特性和隔离级别"><meta name="keywords" content="MySQL"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>事务的特性和隔离级别 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-number">1.</span> <span class="toc-text">事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事务管理-ACID"><span class="toc-number">1.1.</span> <span class="toc-text">事务管理(ACID)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#原子性（Atomicity）"><span class="toc-number">1.1.1.</span> <span class="toc-text">原子性（Atomicity）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一致性（Consistency）"><span class="toc-number">1.1.2.</span> <span class="toc-text">一致性（Consistency）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#持久性（Durability）"><span class="toc-number">1.1.3.</span> <span class="toc-text">持久性（Durability）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#隔离性（Isolation）"><span class="toc-number">1.1.4.</span> <span class="toc-text">隔离性（Isolation）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隔离的级别"><span class="toc-number">1.2.</span> <span class="toc-text">隔离的级别</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#未提交读（Read-uncommitted）"><span class="toc-number">1.2.1.</span> <span class="toc-text">未提交读（Read uncommitted）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#读写提交（Read-committed）"><span class="toc-number">1.2.2.</span> <span class="toc-text">读写提交（Read committed）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可重复读（Repeatable-Read）"><span class="toc-number">1.2.3.</span> <span class="toc-text">可重复读（Repeatable Read）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可串行化（Serializable）"><span class="toc-number">1.2.4.</span> <span class="toc-text">可串行化（Serializable）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#InnoDB下幻读是如何在RR级别下被解决的？"><span class="toc-number">1.3.</span> <span class="toc-text">InnoDB下幻读是如何在RR级别下被解决的？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MVCC实现原理"><span class="toc-number">1.3.1.</span> <span class="toc-text">MVCC实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#举例说明"><span class="toc-number">1.3.2.</span> <span class="toc-text">举例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SELECT"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">SELECT</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#UPDATE"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">UPDATE</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#DELETE"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">DELETE</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#InnoDB锁机制"><span class="toc-number">1.3.3.</span> <span class="toc-text">InnoDB锁机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Record-Lock"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">Record Lock</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Gap-Lock"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">Gap Lock</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Next-Key-Lock"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">Next-Key Lock</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">事务的特性和隔离级别</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-01-28</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>在执行SQL语句的时候，某些业务要求，一系列操作必须全部执行，而不能仅执行一部分。例如，一个转账操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 从id=1的账户给id=2的账户转账100元</span></span><br><span class="line"><span class="comment">-- 第一步：将id=1的A账户余额减去100</span></span><br><span class="line"><span class="keyword">UPDATE</span> accounts <span class="keyword">SET</span> balance = balance - <span class="number">100</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 第二步：将id=2的B账户余额加上100</span></span><br><span class="line"><span class="keyword">UPDATE</span> accounts <span class="keyword">SET</span> balance = balance + <span class="number">100</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这两条SQL语句必须全部执行，或者，由于某些原因，如果第一条语句成功，第二条语句失败，就必须全部撤销。</p>
+<p>这种把多条语句作为一个整体进行操作的功能，被称为数据库<strong>事务</strong>。数据库事务可以确保该事务范围内的所有操作都可以全部成功或者全部失败。如果事务失败，那么效果就和没有执行这些SQL一样，不会对数据库数据有任何改动。</p>
+<h3 id="事务管理-ACID"><a href="#事务管理-ACID" class="headerlink" title="事务管理(ACID)"></a>事务管理(ACID)</h3><p>讲到事务，一般就有一些评判标准，就像volatile有一致性和可见性而没有原子性一样，对于事务，也有四种特性：</p>
+<h4 id="原子性（Atomicity）"><a href="#原子性（Atomicity）" class="headerlink" title="原子性（Atomicity）"></a>原子性（Atomicity）</h4><p>这个原子性和并发中的原子性类似，但不完全一样。并发中的原子性表示操作不可分割，要么执行完，要么不执行。这个放在数据库也是一样的：</p>
+<p>举个例子，A向B转账，会出现两个步骤：</p>
+<ul>
+<li>A扣除100块</li>
+<li>B获得100块</li>
+</ul>
+<p>这两个步骤要么不执行，要么一起执行，这就是原子性。</p>
+<h4 id="一致性（Consistency）"><a href="#一致性（Consistency）" class="headerlink" title="一致性（Consistency）"></a>一致性（Consistency）</h4><p>就以上面的例子而言，一致性就是必须符合运算逻辑：</p>
+<ul>
+<li>A必须扣除的数值是100，而不是90或者是其他数值。</li>
+<li>B收到的数值必须是A扣除的数值，假如A因特殊原因只扣到50，B也只能收到50。</li>
+</ul>
+<h4 id="持久性（Durability）"><a href="#持久性（Durability）" class="headerlink" title="持久性（Durability）"></a><strong>持久性（Durability）</strong></h4><p>表示事务结束后的数据不随着外界原因导致数据丢失</p>
+<p>操作前A：800，B：200<br>操作后A：600，B：400<br>如果在操作前（事务还没有提交）服务器宕机或者断电，那么重启数据库以后，数据状态应该为<br>A：800，B：200<br>如果在操作后（事务已经提交）服务器宕机或者断电，那么重启数据库以后，数据状态应该为<br>A：600，B：400</p>
+<h4 id="隔离性（Isolation）"><a href="#隔离性（Isolation）" class="headerlink" title="隔离性（Isolation）"></a><strong>隔离性（Isolation）</strong></h4><p>针对多个用户同时操作，主要是排除其他事务对本次事务的影响。就比如多个事务同时进行，存在ABCD互相转账，要根据实际情况来进行数据的隔离。</p>
+<h3 id="隔离的级别"><a href="#隔离的级别" class="headerlink" title="隔离的级别"></a>隔离的级别</h3><h4 id="未提交读（Read-uncommitted）"><a href="#未提交读（Read-uncommitted）" class="headerlink" title="未提交读（Read uncommitted）"></a>未提交读（Read uncommitted）</h4><p>未提交读是最低的隔离级别，但这种隔离级别有着最高的效率，在这种情况允许一个未提交的事务去读取另一个未提交的事务，可以让一个事务被数据库处理之前，已经把两个事务应该处理的数据处理完毕。</p>
+<p>但是如此高效率的处理方式，容易引起一个糟糕的现象，叫做脏读：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/1.png" alt=""></p>
+<p>在T3时刻，事务2去读取了事务1的数据，并进行了处理，然后提交。但是这个时候，如果发生了因为第一类丢失更新而导致的回滚，（第一类丢失更新是指在高并发情况下产生的数据丢不一致，但现已经被克服，所以会产生回滚），但是因为数据是在事务2被处理完成的，如果将事务1进行回滚，将不会回滚为2，而是直接为0。这样会导致最后的订单数少于总库存量。</p>
+<p>还有一种情况下：</p>
+<ul>
+<li><p>T1 事务读取账户余额 100 块，取钱，将余额修改为 50 块，但并没有提交。</p>
+</li>
+<li><p>T2 事务读取了 <strong>尚未提交</strong> 的数据，认为余额是 50 块。</p>
+</li>
+<li><p>T1 事务回滚。</p>
+</li>
+<li><p>T2 事务存钱 100 块，将余额计算为 50 + 100 = 150 块，此为脏数据，实际余额应该为 200 块。</p>
+</li>
+</ul>
+<p>在高并发情况下，很容易会发生第一类丢失更新，这个时候，事务1执行过程中修改了数据X，在未提交前，事务2读取了X，而事务1却回滚了，这样事务2就形成了脏读。也就是说，当前事务读到的数据是别的事务想要修改成为的但是没有修改成功的数据。</p>
+<h4 id="读写提交（Read-committed）"><a href="#读写提交（Read-committed）" class="headerlink" title="读写提交（Read committed）"></a>读写提交（Read committed）</h4><p>是指一个事务只能读取到另外一个事务已经提交的数据。</p>
+<p>就以上述例子而言，因为总是读取到尚未提交的数据，才导致的数据不一致，那么，就只读取已经提交的数据便可以的，如此克服脏读：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/2.png" alt=""></p>
+<p>但是读写提交也会导致下面的问题：那就是当我们事务2读取到了库存之后，事务1马上提交事务，导致事务2读取到的库存是脏的、错误的库存。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/3.png" alt=""></p>
+<p>T3时刻读取到库存为1，由于事务尚未提交，所以就导致了事务2误以为还能够进行减库存，但随之事务1便进行了提交，最后发现减库存失败的现象，这种现象会导致订单的数量多于商品的库存量。</p>
+<h4 id="可重复读（Repeatable-Read）"><a href="#可重复读（Repeatable-Read）" class="headerlink" title="可重复读（Repeatable Read）"></a>可重复读（Repeatable Read）</h4><p><strong>这正是 MySQL InnoDB 的默认事务隔离级别</strong><br>它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行。同时也克服了不可重读的场景：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/4.png" alt=""></p>
+<p>此级别可能出现的问题——幻读（Phantom Read）：当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影” 行：</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/5.png" alt=""></p>
+<p>很多人容易搞混不可重复读和幻读，确实这两者有些相似。但不可重复读重点在于 update 和 delete，而幻读的重点在于 insert。</p>
+<p>InnoDB 存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题</p>
+<h4 id="可串行化（Serializable）"><a href="#可串行化（Serializable）" class="headerlink" title="可串行化（Serializable）"></a>可串行化（Serializable）</h4><ul>
+<li>这是最高的隔离级别</li>
+<li>它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简言之,它是在每个读的数据行上加上共享锁。</li>
+<li>在这个级别，可能导致大量的超时现象和锁竞争</li>
+</ul>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/6.png" alt=""></p>
+<p>InnoDB 实现方式：这种事务的隔离级别下，所有 select 语句都会被隐式的转化为 select … in share mode。</p>
+<p><strong>首先这些读数据读错了，但是不管脏读，不可重复读，还是幻读，都是读操作似乎不会对数据库的数据造成影响，但是我们代码里面有后续的操作，一般都要用读出来的值进行对数据加工处理，然后就会对数据造成影响。</strong></p>
+<p>在SpingBoot中，可以通过application.yml来统一设置事务的隔离级别，也可以在方法上使用@Translational（isolation=isolation.Serializable），指定事务的隔离级别。</p>
+<h3 id="InnoDB下幻读是如何在RR级别下被解决的？"><a href="#InnoDB下幻读是如何在RR级别下被解决的？" class="headerlink" title="InnoDB下幻读是如何在RR级别下被解决的？"></a>InnoDB下幻读是如何在RR级别下被解决的？</h3><p><strong>RR(Repeatable Read)</strong> </p>
+<p>一个事务A在事务执行过程中第一次读取的值和第二次读取的值一致（解决了不可重复读），但是其他事务B 的insert 或者 delete的操作，会影响到俩次查询的条数（现象：幻读）</p>
+<h4 id="MVCC实现原理"><a href="#MVCC实现原理" class="headerlink" title="MVCC实现原理"></a>MVCC实现原理</h4><p>MVCC(Multi Version Concurrency Control的简称)，代表多版本并发控制。与MVCC相对的，是基于锁的并发控制，Lock-Based Concurrency Control)。<br>MVCC最大的优势：读不加锁，读写不冲突。在读多写少的OLTP应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能</p>
+<p><strong>MVCC是通过在每行记录后面保存两个隐藏的列来实现的。这两个列，一个保存了行的创建时间，一个保存行的过期时间（或删除时间）。当然存储的并不是实际的时间值，而是系统版本号（system version number)。每开始一个新的事务，系统版本号都会自动递增。事务开始时刻的系统版本号会作为事务的版本号，用来和查询到的每行记录的版本号进行比较。</strong><br> 下面看一下在REPEATABLE READ隔离级别下，MVCC具体是如何操作的。</p>
+<ul>
+<li><p>SELECT</p>
+<p>InnoDB会根据以下两个条件检查每行记录：</p>
+<ol>
+<li>InnoDB只查找版本早于当前事务版本的数据行（也就是，行的系统版本号小于或等于事务的系统版本号），这样可以确保事务读取的行，要么是在事务开始前已经存在的，要么是事务自身插入或者修改过的。</li>
+<li>行的删除版本要么未定义，要么大于当前事务版本号。这可以确保事务读取到的行，在事务开始之前未被删除。</li>
+</ol>
+<p>只有符合上述两个条件的记录，才能返回作为查询结果</p>
+</li>
+<li><p>INSERT</p>
+<p>InnoDB为新插入的每一行保存当前系统版本号作为行版本号。</p>
+</li>
+<li><p>DELETE</p>
+<p>InnoDB为删除的每一行保存当前系统版本号作为行删除标识。</p>
+</li>
+<li><p>UPDATE</p>
+<p>InnoDB为插入一行新记录，保存当前系统版本号作为行版本号，同时保存当前系统版本号到原来的行作为行删除标识。<br> 保存这两个额外系统版本号，使大多数读操作都可以不用加锁。这样设计使得读数据操作很简单，性能很好，并且也能保证只会读取到符合标准的行，不足之处是每行记录都需要额外的存储空间，需要做更多的行检查工作，以及一些额外的维护工作</p>
+</li>
+</ul>
+<h4 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> mvcctest( </span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span> primary <span class="keyword">key</span> auto_increment, </span><br><span class="line"><span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">20</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>transaction 1:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> mvcctest <span class="keyword">values</span>(<span class="literal">NULL</span>,<span class="string">'mi'</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> mvcctest <span class="keyword">values</span>(<span class="literal">NULL</span>,<span class="string">'kong'</span>);</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<p>假设系统初始事务ID为1:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>NAME</th>
+<th>创建时间</th>
+<th>过期时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>mi</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>2</td>
+<td>kong</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+</tbody></table>
+<p><strong>transaction 2:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> mvcctest;  //(1)</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> mvcctest;  //(2)</span><br><span class="line"><span class="keyword">commit</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h5><p>假设当执行事务2的过程中，准备执行语句(2)时，开始执行事务3：</p>
+<p><strong>transaction 3:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> mvcctest <span class="keyword">values</span>(<span class="literal">NULL</span>,<span class="string">'qu'</span>);</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>NAME</th>
+<th>创建时间</th>
+<th>过期时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>mi</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>2</td>
+<td>kong</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>3</td>
+<td>qu</td>
+<td>3</td>
+<td>undefined</td>
+</tr>
+</tbody></table>
+<p>事务3执行完毕，开始执行事务2 语句2，由于事务2只能查询创建时间小于等于2的，所以事务3新增的记录在事务2中是查不出来的，这就通过乐观锁的方式避免了幻读的产生</p>
+<h5 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h5><p>假设当执行事务2的过程中，准备执行语句(2)时，开始执行事务4：</p>
+<p><strong>transaction session 4:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">update</span> mvcctest <span class="keyword">set</span> <span class="keyword">name</span> = <span class="string">'fan'</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<p>InnoDB执行UPDATE，实际上是新插入了一行记录，并保存其创建时间为当前事务的ID，同时保存当前事务ID到要UPDATE的行的删除时间</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>NAME</th>
+<th>创建时间</th>
+<th>过期时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>mi</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>2</td>
+<td>kong</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2</td>
+<td>fan</td>
+<td>4</td>
+<td>undefined</td>
+</tr>
+</tbody></table>
+<p>事务4执行完毕，开始执行事务2 语句2，由于事务2只能查询创建时间小于等于2的，所以事务修改的记录在事务2中是查不出来的，这样就保证了事务在两次读取时读取到的数据的状态是一致的</p>
+<h5 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h5><p>假设当执行事务2的过程中，准备执行语句(2)时，开始执行事务5：</p>
+<p><strong>transaction session 5:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> mvcctest <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>NAME</th>
+<th>创建时间</th>
+<th>过期时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>mi</td>
+<td>1</td>
+<td>undefined</td>
+</tr>
+<tr>
+<td>2</td>
+<td>kong</td>
+<td>1</td>
+<td>5</td>
+</tr>
+</tbody></table>
+<p>事务5执行完毕，开始执行事务2 语句2，由于事务2只能查询创建时间小于等于2、并且过期时间大于等于2，所以id=2的记录在事务2 语句2中，也是可以查出来的,这样就保证了事务在两次读取时读取到的数据的状态是一致的</p>
+<h4 id="InnoDB锁机制"><a href="#InnoDB锁机制" class="headerlink" title="InnoDB锁机制"></a>InnoDB锁机制</h4><p>  数据库使用锁是为了支持更好的并发，提供数据的完整性和一致性。InnoDB是一个支持行锁的存储引擎，锁的类型有：共享锁（S）、排他锁（X）、意向共享（IS）、意向排他（IX）。为了提供更好的并发，<strong>InnoDB提供了非锁定读：不需要等待访问行上的锁释放，读取行的一个快照。</strong></p>
+<p><strong>InnoDB有三种行锁的算法：</strong></p>
+<h5 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h5><p>单个行记录上的锁。record lock锁住的永远是索引，而非记录本身，即使该表上没有任何索引，那么innodb会在后台创建一个隐藏的聚集主键索引，那么锁住的就是这个隐藏的聚集主键索引。所以说当一条sql没有走任何索引时，那么将会在每一条聚集索引后面加X锁，这个类似于表锁，但原理上和表锁应该是完全不同的。</p>
+<h5 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h5><p>间隙锁定是对索引记录之间的间隙的锁定，或者是对第一个或最后一个索引记录之前的间隙的锁定。例如，<code>SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE;</code>防止其他事务将value <code>15</code>插入column中<code>t.c1</code>，无论该列 中是否已有这样的值，因为该范围中所有现有值之间的间隙都是锁定的。</p>
+<p>间隙可能跨越单个索引值，多个索引值，甚至为空。</p>
+<p>间隙锁是性能和并发性之间权衡的一部分，并且在某些事务隔离级别而非其他级别中使用。</p>
+<p>对于使用唯一索引来锁定唯一行来锁定行的语句，不需要间隙锁定。（这不包括搜索条件仅包含多列唯一索引的某些列的情况；在这种情况下，会发生间隙锁定。）例如，如果该<code>id</code>列具有唯一索引，则以下语句仅使用一个具有<code>id</code>值100 的行的索引记录锁定，其他会话是否在前面的间隙中插入行并不重要：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">child</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果id未建立索引或索引不唯一，则该语句会锁定前面的间隙。</p>
+<p>在这里还值得注意的是，可以通过不同的事务将冲突的锁保持在间隙上。例如，事务A可以在间隙上保留一个共享的间隙锁（间隙S锁），而事务B可以在同一间隙上保留排他的间隙锁（间隙X锁）。允许冲突的间隙锁的原因是，如果从索引中清除记录，则必须合并由不同事务保留在记录上的间隙锁。</p>
+<p>间隙锁定InnoDB是“ 纯粹抑制性的 ”，这意味着它们的唯一目的是防止其他事务插入间隙。间隙锁可以共存。一个事务进行的间隙锁定不会阻止另一事务对相同的间隙进行间隙锁定。共享和专用间隙锁之间没有区别。它们彼此不冲突，并且执行相同的功能。</p>
+<p>间隙锁定可以显式禁用。如果将事务隔离级别更改为，则会发生这种情况 READ COMMITTED。在这种情况下，将禁用间隙锁定来进行搜索和索引扫描，并且间隙锁定仅用于外键约束检查和重复键检查。</p>
+<p>使用READ COMMITTED隔离级别还有其他影响 。MySQL评估WHERE条件后，将释放不匹配行的记录锁。对于 UPDATE语句，请InnoDB 执行“ 半一致 ”读取，以便将最新的提交版本返回给MySQL，以便MySQL可以确定行是否与的WHERE 条件匹配UPDATE。</p>
+<h5 id="Next-Key-Lock"><a href="#Next-Key-Lock" class="headerlink" title="Next-Key Lock"></a>Next-Key Lock</h5><p>Next-Key Lock是索引记录上的记录锁定和索引记录之前的间隙上的间隙锁定的组合。</p>
+<p>InnoDB执行行级锁定，以使其在搜索或扫描表索引时对遇到的索引记录设置共享或排他锁。因此，行级锁实际上是索引记录锁。索引记录上的Next-Key Lock也会影响该索引记录之前的“ 间隙 ”。即，Next-Key Lock是索引记录锁定加上索引记录之前的间隙上的间隙锁定。如果一个会话R在索引中的记录上具有共享或排他锁 ，则另一会话不能R在索引顺序之前的间隙中插入新的索引记录 。</p>
+<p>假定索引包含值10、11、13和20。此索引的可能的Next-Key Lock涵盖以下间隔，其中，圆括号表示排除区间端点，方括号表示包括端点：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(negative infinity, 10]</span><br><span class="line">(10, 11]</span><br><span class="line">(11, 13]</span><br><span class="line">(13, 20]</span><br><span class="line">(20, positive infinity)</span><br></pre></td></tr></table></figure>
+
+<p>对于最后一个间隔，Next-Key Lock将间隙锁定在索引中的最大值之上，并且“ supreumum ” 伪记录的值高于索引中实际的任何值。最高不是真正的索引记录，因此，实际上，此Next-Key Lock仅锁定最大索引值之后的间隙。</p>
+<p>默认情况下，InnoDB以 REPEATABLE READ事务隔离级别运行。在这种情况下，请InnoDB使用next-key锁进行搜索和索引扫描。</p>
+<p>用于Next-Key Lock事务数据出现类似于在下面SHOW ENGINE INNODB STATUS和 InnoDB的监视器 输出：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">RECORD LOCKS space id 58 page no 3 n bits 72 index `PRIMARY` of table `test`.`t` </span><br><span class="line">trx id 10080 lock_mode X</span><br><span class="line">Record <span class="keyword">lock</span>, <span class="keyword">heap</span> <span class="keyword">no</span> <span class="number">1</span> <span class="keyword">PHYSICAL</span> <span class="built_in">RECORD</span>: n_fields <span class="number">1</span>; compact format; info bits 0</span><br><span class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</span><br><span class="line"></span><br><span class="line">Record <span class="keyword">lock</span>, <span class="keyword">heap</span> <span class="keyword">no</span> <span class="number">2</span> <span class="keyword">PHYSICAL</span> <span class="built_in">RECORD</span>: n_fields <span class="number">3</span>; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 8000000a; asc     ;;</span><br><span class="line"> 1: len 6; hex 00000000274f; asc     'O;;</span><br><span class="line">2: len 7; hex b60000019d0110; asc        ;;</span><br></pre></td></tr></table></figure>
+
+
+
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/29/mysql3/"><i class="fa fa-chevron-left">  </i><span>InnoDB存储引擎</span></a></div><div class="next-post pull-right"><a href="/2020/01/27/mysql1/"><span>MySQL体系结构</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://gitee.com/antarctica/img_sotre/raw/img/img/xingkong2.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>
