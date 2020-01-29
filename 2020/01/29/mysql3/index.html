@@ -13,7 +13,7 @@
 <p>mysql&gt;SHOW VARIABLES LIKE ‘innodb_version’\G;</p>
 <p>mysql&gt; SHOW VARIABLES LIKE ‘innodb_%io_threads’\G;</p>
 <p>通过SHOW ENGINE INNODB STATUS\G; 观察 InnoDB 中的IO Thread。</p>
-<h4 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h4><p>事务被提交后,其所使用的undolog可能不再需要，因此需要Purge Thread来回收已经使用并分配的undo页。<br>在InnoDB 1.1 版本中 innodb_purge_rgreads设为大于1,存储启动将其设为1,并报错.</p>
+<h4 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h4><p>事务被提交后,其所使用的undolog可能不再需要，因此需要Purge Thread来回收已经使用并分配的undo页。<br>在InnoDB 1.1 版本中 innodb_purge_rgreads设为大于1,存储启动将其设为1,并报错。</p>
 <p>在InnoDB1.2版本开始 InnoDB 支持多个Purge Thread。</p>
 <h4 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h4><p>Page Cleaner Thread在InnoDB 1.2.x版本中引入的。其作用是将之前版本中的脏页的刷新操作放入到单独的线程中完成。</p>
 <h3 id="InnoDB内存"><a href="#InnoDB内存" class="headerlink" title="InnoDB内存"></a>InnoDB内存</h3><h4 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h4><p>InnoDB存储引擎是基于磁盘存储的,并将其中的记录按照页的方式进行管理。<br>缓存池简单来说就是一块内存区域。</p>
