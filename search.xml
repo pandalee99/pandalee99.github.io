@@ -430,11 +430,11 @@
             
             <tag> Redis </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -455,13 +455,13 @@
             
             <tag> SpringBoot </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -939,9 +939,9 @@
       
         <tags>
             
-            <tag> HashMap </tag>
-            
             <tag> 并发编程 </tag>
+            
+            <tag> HashMap </tag>
             
         </tags>
       
