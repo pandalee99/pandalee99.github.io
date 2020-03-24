@@ -342,11 +342,11 @@
       
         <tags>
             
+            <tag> 排错指南 </tag>
+            
             <tag> Docker </tag>
             
             <tag> MySQL </tag>
-            
-            <tag> 排错指南 </tag>
             
         </tags>
       
@@ -365,9 +365,9 @@
       
         <tags>
             
-            <tag> 排错指南 </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> 排错指南 </tag>
             
         </tags>
       
@@ -491,11 +491,11 @@
             
             <tag> Redis </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -516,13 +516,13 @@
             
             <tag> SpringBoot </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
