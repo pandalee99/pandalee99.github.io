@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="介绍一些常用的IDEA插件"><meta name="keywords" content="插件"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>介绍一些常用的IDEA插件 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍一些常用的IDEA插件"><span class="toc-number">1.</span> <span class="toc-text">介绍一些常用的IDEA插件</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">64</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">37</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://blog-1251750343.cos.ap-beijing.myqcloud.com/blog/blog-bg.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">介绍一些常用的IDEA插件</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-12</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="介绍一些常用的IDEA插件"><a href="#介绍一些常用的IDEA插件" class="headerlink" title="介绍一些常用的IDEA插件"></a>介绍一些常用的IDEA插件</h2><p>介绍一些常用的插件吧，这些插件是我在实际使用的时候觉得好用的插件。（部分图片来自于网络）</p>
+<p><strong>Rainbow Brackets</strong></p>
+<p>这个插件是一个彩虹色的括弧。他可以在我们使用很多括弧的时候，对不同层级的括弧给予不同的色号。让我们很清晰地能找到我们所包裹的这个括弧是属于哪个函数实体的内容</p>
+<p><img src="https://img2018.cnblogs.com/blog/1825757/201912/1825757-20191202154819590-1192501650.png;%20charset=UTF-8" alt=""></p>
+<p><img src="https://img2018.cnblogs.com/blog/1825757/201912/1825757-20191202154823062-1243015982.gif;%20charset=UTF-8" alt=""></p>
+<p><strong>Lombok</strong></p>
+<p>这个插件可以很方便的省略掉，我们去编写set和get方法，虽然说我们也能用别的方式都去实现，但是我们只要加入这个注解就可以省略掉有很多步骤而且还不会出错。但是要注意的是它生产的构造器是所有元素的默认构造器。如果需要定制的话，还是要自己编写内容的。</p>
+<ul>
+<li>@NonNull : 注解在参数上, 如果该类参数为 null , 就会报出异常, throw new NullPointException(参数名)</li>
+<li>@Cleanup : 注释在引用变量前, 自动回收资源 默认调用 close() 方法</li>
+<li>@Getter/@Setter : 注解在类上, 为类提供读写属性</li>
+<li>@Getter(lazy=true) :</li>
+<li>@ToString : 注解在类上, 为类提供 toString() 方法</li>
+<li>@EqualsAndHashCode : 注解在类上, 为类提供 equals() 和 hashCode() 方法</li>
+<li>@NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor : 注解在类上, 为类提供无参,有指定必须参数, 全参构造函数</li>
+<li>@Data : 注解在类上, 为类提供读写属性（get,set）, 此外还提供了 equals()、hashCode()、toString() 方法</li>
+<li>@Value :</li>
+<li>@Builder : 注解在类上, 为类提供一个内部的 Builder</li>
+<li>@SneakThrows :</li>
+<li>@Synchronized : 注解在方法上, 为方法提供同步锁</li>
+<li>@Log :</li>
+<li>@Log4j : 注解在类上, 为类提供一个属性名为 log 的 log4j 的日志对象</li>
+<li>@Slf4j : 注解在类上, 为类提供一个属性名为 log 的 log4j 的日志对象</li>
+</ul>
+<p><strong>Easy Code</strong></p>
+<p>这个插件和之前讲的插件类似，这个插件可以。使用我们的数据源快速的生成相应的类文件。并且能够在此右上构造默认的注解。对于不同的连接池需要实现的注解都可以用这个默认模板就实现。省掉很多重复和不必要的步骤。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14226414-9426d5d10eb698cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1066/format/webp" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14226414-440d8fa96585bdaf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14226414-c16f4257fc98b322.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/832/format/webp" alt=""></p>
+<p><strong>Statistic</strong></p>
+<p>这个插件可以统计在文件里所有代码的代码量和代码长度，最大长度，以代码所含内容等等。可以很方便地计算出我们的大小以及各种各样的数据。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/plugins/something/statistic.jpg" alt=""></p>
+<p><strong>Restservices</strong></p>
+<p>这个插件可以直接展示出我们控制层中的所有接口和各个接口的方法名，我们可以通过这个插件快速的定位到我们所需要的结果，而省略了在不同的文件中一遍一遍查找需要的接口和方法所花费的时间。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/plugins/something/restservices.jpg" alt=""></p>
+<p><strong>Alibaba coding guideline</strong></p>
+<p>还有一个就是一个叫做阿里巴巴代码规范的插件，这种插件可以在你编写任意代码时。你显示指出你这个代码所不包含规范的地方。但这种提示也只是相对而言，并不一定有绝对效力，也不强制。</p>
+<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/plugins/something/alibabacodingguideline.jpg" alt=""></p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>以上就是我经常使用的插件，这种插件可以快速形成着我们所需要的业务和代码。但同时要注重自己水平的提高，否则被淘汰也只是迟早的事情了。</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8F%92%E4%BB%B6/">插件</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/04/20/cloud1/"><i class="fa fa-chevron-left">  </i><span>服务治理和服务发现——Eureka</span></a></div><div class="next-post pull-right"><a href="/2020/04/07/%E4%B9%A6%E7%B1%8D/"><span>介绍一些读过的书籍</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://blog-1251750343.cos.ap-beijing.myqcloud.com/blog/blog-bg.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>
