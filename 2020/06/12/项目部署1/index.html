@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="利用Nginx进行前后端分离项目部署-ruoyi"><meta name="keywords" content="SpringBoot,项目,Vue"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>利用Nginx进行前后端分离项目部署-ruoyi | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#利用Nginx进行前后端分离项目部署"><span class="toc-number">1.</span> <span class="toc-text">利用Nginx进行前后端分离项目部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#开始准备"><span class="toc-number">1.1.</span> <span class="toc-text">开始准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Nodejs和Nginx"><span class="toc-number">1.2.</span> <span class="toc-text">安装Nodejs和Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NodeJs"><span class="toc-number">1.2.1.</span> <span class="toc-text">NodeJs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx"><span class="toc-number">1.2.2.</span> <span class="toc-text">Nginx</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署前端"><span class="toc-number">1.3.</span> <span class="toc-text">部署前端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Nginx代理服务器完成部署"><span class="toc-number">1.4.</span> <span class="toc-text">使用Nginx代理服务器完成部署</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#负载均衡"><span class="toc-number">1.4.1.</span> <span class="toc-text">负载均衡</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/tou.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Antarctica000">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">75</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">50</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="http://antarctica.gitee.io/blog/" target="_blank" rel="noopener">码云的Blog</a><a class="author-info-links__name text-center" href="https://github.com/Antarctica000/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">利用Nginx进行前后端分离项目部署-ruoyi</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-06-12</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="利用Nginx进行前后端分离项目部署"><a href="#利用Nginx进行前后端分离项目部署" class="headerlink" title="利用Nginx进行前后端分离项目部署"></a>利用Nginx进行前后端分离项目部署</h2><p>首先需要这个项目，利用git去仓库克隆：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://gitee.com/y_project/RuoYi-Vue.git</span><br></pre></td></tr></table></figure>
+
+<p>然后我们就获得了这个项目，你可以看到，这个项目分为：</p>
+<ul>
+<li>ruoyi</li>
+<li>ruoyi-ui</li>
+</ul>
+<p>这两个文件夹，一个是后端，一个是前端。</p>
+<p>根据正常的操作使用说明，我们先使用idea打开这个项目，更改一下项目的目标地址。一般都是在application.yml 文件上：</p>
+<p>比如你可以改localhost，或者是其他的ip地址，我就改了ip地址。</p>
+<p>当然，如果你仅仅需要部署到单个服务器上，其他的都别管，直接使用maven打包就行了。</p>
+<p><strong>后端的打包和运行很简单，这里不多赘述了</strong></p>
+<h3 id="开始准备"><a href="#开始准备" class="headerlink" title="开始准备"></a>开始准备</h3><p>我这里准备了三台虚拟机：</p>
+<ol>
+<li>192.168.78.128</li>
+<li>192.168.78.129</li>
+<li>192.168.78.130</li>
+</ol>
+<p>第二台和第三台虚拟机都是部署后端的jar包，我们准备使用Nginx进行负载均衡，这里我后端的数据库是连接前端的128的ip，因为只有同一个数据库才好进行负载均衡。</p>
+<p>首先需要在128部署好docker，docker下安装好MySQL和Redis。</p>
+<p>启动docker镜像，启动两个后端，紧接着我们来到前端进行部署。</p>
+<h3 id="安装Nodejs和Nginx"><a href="#安装Nodejs和Nginx" class="headerlink" title="安装Nodejs和Nginx"></a>安装Nodejs和Nginx</h3><h4 id="NodeJs"><a href="#NodeJs" class="headerlink" title="NodeJs"></a>NodeJs</h4><p>我这⾥下载的是 node-v12.16.3-linux-x64.tar.xz 安装包，并将其直接放在了 root ⽬录下。</p>
+<p>1、在 /usr/local/ 下创建 node ⽂件夹并进⼊：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/</span><br><span class="line">mkdir node</span><br><span class="line">cd nod</span><br></pre></td></tr></table></figure>
+
+<p>2、将 Node 的安装包解压到 /usr/local/node 中即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost node]# tar -xJvf /root/node-v12.16.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>解压完之后， /usr/local/node ⽬录中会出现⼀个 node-v12.16.3-linux-x64 的⽬录</p>
+<p><strong>配置NODE系统环境变量</strong></p>
+<p>编辑 ~/.bash_profile ⽂件，在⽂件末尾追加如下信息:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Nodejs</span></span><br><span class="line">export PATH=/usr/local/node/node-v12.16.3-linux-x64/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>刷新环境变量，使之⽣效即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p><strong>检查安装结果</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm version</span><br><span class="line">npx -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h4><p>这⾥下载的是 nginx-1.17.10.tar.gz 安装包，并将其直接放在了 root ⽬录下</p>
+<p>1、在 /usr/local/ 下创建 nginx ⽂件夹并进⼊:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/</span><br><span class="line">mkdir nginx</span><br><span class="line">cd nginx</span><br></pre></td></tr></table></figure>
+
+<p>2、将 Nginx 安装包解压到 /usr/local/nginx 中即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# tar zxvf /root/nginx-1.17.10.tar.gz -C ./</span><br></pre></td></tr></table></figure>
+
+<p>解压完之后， /usr/local/nginx ⽬录中会出现⼀个 nginx-1.17.10 的⽬录</p>
+<p><strong>预先安装额外的依赖</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install pcre-devel</span><br><span class="line">yum -y install openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<p><strong>编译安装NGINX</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd nginx-1.17.10</span><br><span class="line">./configure</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，Nginx的可执⾏⽂件位置位于</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动NGINX</strong></p>
+<p>直接执⾏如下命令即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost sbin]# /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<p>如果想停⽌Nginx服务，可执⾏：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s stop</span><br></pre></td></tr></table></figure>
+
+<p>如果修改了配置⽂件后想重新加载Nginx，可执⾏：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>注意其配置⽂件位于：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署前端"><a href="#部署前端" class="headerlink" title="部署前端"></a>部署前端</h3><p>把ruoyi-ui放在：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/workspace/ruoyi-ui/</span><br></pre></td></tr></table></figure>
+
+<p>文件夹下，并使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --unsafe-perm --registry=https:registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<p>–unsafe-perm：是为了更高的权限</p>
+<p>–registry=https:registry.npm.taobao.org：拥有更快的镜像源</p>
+<p>然后等待执行完毕。</p>
+<p>执行完毕后，可以看到多了一个node模块。</p>
+<p>接着输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build:prod</span><br></pre></td></tr></table></figure>
+
+<p>开始建立，建立完成后，可以看到多了一个dist文件夹，这表示我们基本完成了环境的构建。</p>
+<h3 id="使用Nginx代理服务器完成部署"><a href="#使用Nginx代理服务器完成部署" class="headerlink" title="使用Nginx代理服务器完成部署"></a>使用Nginx代理服务器完成部署</h3><p>打开配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>把最上的user注释改为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user  root;</span><br></pre></td></tr></table></figure>
+
+<p>以此获得最大的权限。</p>
+<p>接着，定位到：location /，并将其改为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root   /root/workspace/ruoyiui/dist;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到的是，这里的root路径，就是我们的前端路径。</p>
+<p>启动nginx，然后我们可以打开节点：192.168.78.128</p>
+<p>我们却发现，它出现了一点错误（暂时无图）</p>
+<p>这个错误是地址引用错误，在验证码这个url错误，原因是正确的地址是：192.168.78.128/prod-api/xxxx</p>
+<p>这表示，我们遗失了 prod-api 这个路径，那怎么办呢？</p>
+<p>我们回到Nginx配置文件，添加一项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">       location /prod-api/ &#123;</span><br><span class="line">proxy_set_header Host $http_host;</span><br><span class="line">proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">proxy_set_header REMOTE-HOST $remote_addr;</span><br><span class="line">proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">proxy_pass http://192.168.78.129:8080/;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>/usr/local/nginx/sbin/nginx -s reload ，重启Nginx，便可以了。</p>
+<p>这里的前四段是标准写法，不用太多思考，最后的一段才是真正后端地址</p>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><p>需要在任意一个位置加上upstream：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   upstream ruoyi&#123;</span><br><span class="line">server 192.168.78.129:8080 weight=5;</span><br><span class="line">server 192.168.78.130:8080 weight=3;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>并且把location /prod-api/ ，改为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   location /prod-api/ &#123;</span><br><span class="line">proxy_set_header Host $http_host;</span><br><span class="line">proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">proxy_set_header REMOTE-HOST $remote_addr;</span><br><span class="line">proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">proxy_pass http://ruoyi/;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>/usr/local/nginx/sbin/nginx -s reload，重启Nginx，这样Nginx便会自动的实现负载均衡。</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/%E9%A1%B9%E7%9B%AE/">项目</a><a class="post-meta__tags" href="/tags/Vue/">Vue</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/06/09/redis4/"><span>深入理解Redis（二）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2020 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>
