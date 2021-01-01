@@ -4,6 +4,29 @@
   
     
     <entry>
+      <title>利用Kurento实现一对一通信</title>
+      <link href="/2020/06/20/Kurento1/"/>
+      <url>/2020/06/20/Kurento1/</url>
+      
+        <content type="html"><![CDATA[<h2 id="利用Kurento实现一对一通信"><a href="#利用Kurento实现一对一通信" class="headerlink" title="利用Kurento实现一对一通信"></a>利用Kurento实现一对一通信</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>自己的计划是，毕业设计做一个类似于腾讯会议的视频流通信服务，发现想要实现起来并不容易，不过自己也还是慢慢的在摸索，最后找到了一个叫做Kurento的视频流服务器，打算使用这个服务器去开发程序。</p><h3 id="配置与实现"><a href="#配置与实现" class="headerlink" title="配置与实现"></a>配置与实现</h3><p>想要配置这个东西可是非常非常的坑啊，本来自己是去官网找到了一些可以直接运行的例子，然后在本地直接start，完全没有问题，然后拿到虚拟机试一试：</p><p>当然，kurento肯定是利用docker安装的，这个dockerhub也有，这里先列出来：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --name kms -p 8888:8888 kurento/kurento-media-server:xenial-latest</span><br></pre></td></tr></table></figure><p>发现仍然可以使用，最后拿去阿里云服务器试了试，结果就……，完全没有作用，安全组什么的都开了，我之后就觉得会不会是公网ip之类的问题，但是不知道怎么下手，之后再Stack Overflow中，看到了创建者的发言，在公网中必须有turn服务器，于是乎，我便开始了配置turn服务器之路。</p><p>由于在dockerhub没有turn服务器的镜像源，turn服务器安装这块坑就大了，网上有很多的教程，非常之乱，又要什么内网ip，什么什么md5验证，什么什么必须要在Ubuntu下运行，看的我真的是一脸懵逼，怎么可能这么复杂而且又有这么多说法呢？？</p><p>我基本都试了一次，嗯，如同预期一般，非常的不靠谱。</p><p>但最后还是找到了解决方案，在github找到了可以直接使用的dockerfile：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/konoui/kurento-coturn-docker.git</span><br></pre></td></tr></table></figure><p>然后去运行它:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /kurento-coturn-docker/coturn/</span><br><span class="line">//使用dockerfile,记住加点</span><br><span class="line">sudo docker build --tag coturn .</span><br><span class="line">//后台运行coturn</span><br><span class="line">sudo docker run -p 3478:3478 -p 3478:3478/udp coturn</span><br><span class="line">//别忘了开完全组</span><br></pre></td></tr></table></figure><p>然后是网上博客都有讲到的有效性测试，这个大家自己看吧。</p><p>然后需要编辑Kurento：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入镜像</span></span><br><span class="line">docker exec -it kms /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">安装vim</span></span><br><span class="line">apt-get update</span><br><span class="line">apt-get install vim</span><br><span class="line"><span class="meta">#</span><span class="bash">进入配置文件夹</span></span><br><span class="line">cd /etc/kurento/modules/kurento/</span><br><span class="line"><span class="meta">#</span><span class="bash">编辑配置文件</span></span><br><span class="line">vim WebRtcEndpoint.conf.ini</span><br></pre></td></tr></table></figure><p>配置打洞服务器，配置文件应该改成这样的：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stunServerAddress=you_url</span><br><span class="line">stunServerPort=you_port</span><br><span class="line">turnURL=kurento:kurento@you_url?transport=tcp</span><br></pre></td></tr></table></figure><p>一般情况下，坑到这里应该也就完了，但是你可以在试试，还是跑不通！！！！</p><p>这又是为什么呢？？？？</p><p>最后我想了想，为什么本地配置就完全没问题呢？就算连接公网需要turn，但是代码层面却没有任何提示啊，这不应该，所以，接下来就是最坑的了，你甚至需要去打开源代码，修改并连接turn服务器！！！！</p><p>我敢说，绝大多数人都会和我一样，觉得这不应该，你特么本地的代码例子完全就是摆着看的嘛。</p><p>做法如下：</p><p>打开index.js</p><p>在函数function uiStart()里，增加一个叫iceservers的变量，格式如下:</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> iceservers=&#123;</span><br><span class="line">   <span class="string">"iceServers"</span>:[</span><br><span class="line">       &#123;</span><br><span class="line">         urls:<span class="string">"stun:139.198.123.138:3478"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       &#123;</span><br><span class="line">         urls:[<span class="string">"turn:139.198.123.138:3478"</span>]</span><br><span class="line">           username:<span class="string">"kurento"</span>,</span><br><span class="line">           credential: <span class="string">"kurento"</span></span><br><span class="line">       &#125;</span><br><span class="line">   ]</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure><p>再修改底下的options变量：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">   localVideo: uiLocalVideo,</span><br><span class="line">   remoteVideo: uiRemoteVideo,</span><br><span class="line">   mediaConstraints: &#123; <span class="attr">audio</span>: <span class="literal">true</span>, <span class="attr">video</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">   onicecandidate: <span class="function">(<span class="params">candidate</span>) =&gt;</span> sendMessage(&#123;</span><br><span class="line">     id: <span class="string">'ADD_ICE_CANDIDATE'</span>,</span><br><span class="line">     candidate: candidate,</span><br><span class="line">   &#125;),</span><br><span class="line">     configuration: iceservers <span class="comment">//修改在这里，增加了一个configuration的key</span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure><p>暂时不写了。。。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Kurento </tag>
+            
+            <tag> turn </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>利用Nginx进行前后端分离项目部署-ruoyi</title>
       <link href="/2020/06/12/%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B21/"/>
       <url>/2020/06/12/%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B21/</url>
@@ -680,9 +703,9 @@
       
         <tags>
             
-            <tag> 排错指南 </tag>
-            
             <tag> Docker </tag>
+            
+            <tag> 排错指南 </tag>
             
             <tag> MySQL </tag>
             
