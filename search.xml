@@ -705,9 +705,9 @@
             
             <tag> Docker </tag>
             
-            <tag> 排错指南 </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> 排错指南 </tag>
             
         </tags>
       
@@ -726,9 +726,9 @@
       
         <tags>
             
-            <tag> MyBatis </tag>
-            
             <tag> 排错指南 </tag>
+            
+            <tag> MyBatis </tag>
             
         </tags>
       
@@ -827,9 +827,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> Thymeleaf </tag>
-            
             <tag> 前端 </tag>
+            
+            <tag> Thymeleaf </tag>
             
         </tags>
       
@@ -1361,9 +1361,9 @@
       
         <tags>
             
-            <tag> HashMap </tag>
-            
             <tag> 并发编程 </tag>
+            
+            <tag> HashMap </tag>
             
         </tags>
       
@@ -1464,9 +1464,9 @@
       
         <tags>
             
-            <tag> HashMap </tag>
-            
             <tag> 并发编程 </tag>
+            
+            <tag> HashMap </tag>
             
         </tags>
       
