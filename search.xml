@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>restart_my_blog</title>
+      <link href="/2022/04/19/restart-my-blog/"/>
+      <url>/2022/04/19/restart-my-blog/</url>
+      
+        <content type="html"><![CDATA[<h1 id="人生重来了"><a href="#人生重来了" class="headerlink" title="人生重来了"></a>人生重来了</h1><h1 id="Restart"><a href="#Restart" class="headerlink" title="Restart"></a>Restart</h1><p>考上USTC了，一切重学。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>个人项目--SpringBoot+Vue商城</title>
       <link href="/2021/02/06/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C3/"/>
       <url>/2021/02/06/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C3/</url>
@@ -18,11 +37,11 @@
             
             <tag> MySQL </tag>
             
-            <tag> MyBatis </tag>
-            
             <tag> SpringBoot </tag>
             
             <tag> ElasticSearch </tag>
+            
+            <tag> MyBatis </tag>
             
             <tag> Redis </tag>
             
@@ -994,9 +1013,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 前端 </tag>
-            
             <tag> Thymeleaf </tag>
+            
+            <tag> 前端 </tag>
             
         </tags>
       
@@ -1019,11 +1038,11 @@
             
             <tag> Redis </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1044,13 +1063,13 @@
             
             <tag> SpringBoot </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1111,9 +1130,9 @@
       
         <tags>
             
-            <tag> MyBatis </tag>
-            
             <tag> SpringBoot </tag>
+            
+            <tag> MyBatis </tag>
             
         </tags>
       
