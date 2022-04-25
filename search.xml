@@ -37,21 +37,21 @@
             
             <tag> MySQL </tag>
             
+            <tag> MyBatis </tag>
+            
             <tag> SpringBoot </tag>
             
             <tag> ElasticSearch </tag>
             
-            <tag> MyBatis </tag>
-            
             <tag> Redis </tag>
-            
-            <tag> 七牛云 </tag>
             
             <tag> JWT </tag>
             
-            <tag> 项目 </tag>
+            <tag> 七牛云 </tag>
             
             <tag> Vue </tag>
+            
+            <tag> 项目 </tag>
             
             <tag> Element—ui </tag>
             
@@ -204,9 +204,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 项目 </tag>
-            
             <tag> Vue </tag>
+            
+            <tag> 项目 </tag>
             
         </tags>
       
@@ -1013,9 +1013,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> Thymeleaf </tag>
-            
             <tag> 前端 </tag>
+            
+            <tag> Thymeleaf </tag>
             
         </tags>
       
@@ -1038,11 +1038,11 @@
             
             <tag> Redis </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1063,13 +1063,13 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1130,9 +1130,9 @@
       
         <tags>
             
-            <tag> SpringBoot </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> SpringBoot </tag>
             
         </tags>
       
@@ -1408,9 +1408,9 @@
             
             <tag> 并发编程 </tag>
             
-            <tag> 设计模式 </tag>
-            
             <tag> 线程池 </tag>
+            
+            <tag> 设计模式 </tag>
             
         </tags>
       
@@ -1547,9 +1547,9 @@
       
         <tags>
             
-            <tag> HashMap </tag>
-            
             <tag> 并发编程 </tag>
+            
+            <tag> HashMap </tag>
             
         </tags>
       
@@ -1650,9 +1650,9 @@
       
         <tags>
             
-            <tag> HashMap </tag>
-            
             <tag> 并发编程 </tag>
+            
+            <tag> HashMap </tag>
             
         </tags>
       
