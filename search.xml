@@ -35,9 +35,9 @@
             
             <tag> Docker </tag>
             
-            <tag> MySQL </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> MySQL </tag>
             
             <tag> SpringBoot </tag>
             
@@ -853,9 +853,9 @@
             
             <tag> Docker </tag>
             
-            <tag> MySQL </tag>
-            
             <tag> 排错指南 </tag>
+            
+            <tag> MySQL </tag>
             
         </tags>
       
@@ -874,9 +874,9 @@
       
         <tags>
             
-            <tag> 排错指南 </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> 排错指南 </tag>
             
         </tags>
       
