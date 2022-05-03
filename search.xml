@@ -75,11 +75,11 @@
             
             <tag> MyBatis </tag>
             
+            <tag> MySQL </tag>
+            
             <tag> SpringBoot </tag>
             
             <tag> ElasticSearch </tag>
-            
-            <tag> MySQL </tag>
             
             <tag> Redis </tag>
             
@@ -1038,11 +1038,11 @@
             
             <tag> Redis </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1063,13 +1063,13 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
