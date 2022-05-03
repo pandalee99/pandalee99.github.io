@@ -23,7 +23,7 @@
     
     
     <entry>
-      <title>使用Go语言编写一个网站</title>
+      <title>使用Go语言编写一个web应用</title>
       <link href="/2022/04/27/go-web-study/"/>
       <url>/2022/04/27/go-web-study/</url>
       
@@ -87,9 +87,9 @@
             
             <tag> JWT </tag>
             
-            <tag> 项目 </tag>
-            
             <tag> Vue </tag>
+            
+            <tag> 项目 </tag>
             
             <tag> Element—ui </tag>
             
@@ -242,9 +242,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 项目 </tag>
-            
             <tag> Vue </tag>
+            
+            <tag> 项目 </tag>
             
         </tags>
       
