@@ -6,7 +6,7 @@
   <link href="https://github.com/Pandalee99/pandalee99.github.io/atom.xml" rel="self"/>
   
   <link href="https://github.com/Pandalee99/pandalee99.github.io/"/>
-  <updated>2022-05-09T05:58:03.049Z</updated>
+  <updated>2022-05-11T09:20:37.656Z</updated>
   <id>https://github.com/Pandalee99/pandalee99.github.io/</id>
   
   <author>
@@ -17,13 +17,13 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>置顶，谈谈几件事</title>
+    <title>【置顶】谈谈几件事</title>
     <link href="https://github.com/Pandalee99/pandalee99.github.io/2023/04/19/restart-my-blog/"/>
     <id>https://github.com/Pandalee99/pandalee99.github.io/2023/04/19/restart-my-blog/</id>
     <published>2023-04-19T12:11:40.000Z</published>
-    <updated>2022-05-09T05:58:03.049Z</updated>
+    <updated>2022-05-11T09:20:37.656Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="谈谈几件事"><a href="#谈谈几件事" class="headerlink" title="谈谈几件事"></a>谈谈几件事</h1><p>1、考上了USTC，很多知识都要重新学习了。</p><p>2、我的图片都是放到Gitee中的，使用Gitee做的图床。由于Gitee开启了防盗链模式，所有的图片都挂了，以后可能会做图片迁移，不过反正都没人看，能拖就拖。</p><p>3、前面大多数博客都是流水账，我当日记写的，也是后面才有的一点点知识总结，总体而言都是废话连篇。</p><p>4、开始学Go了，记录一下过程。</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="谈谈几件事"><a href="#谈谈几件事" class="headerlink" title="谈谈几件事"></a>谈谈几件事</h1><p>1、考上了USTC，很多知识都要重新学习了。</p><p>2、我的图片都是放到Gitee中的，使用Gitee做的图床。由于Gitee开启了防盗链模式，所有的图片都挂了，以后可能会做图片迁移，不过反正都没人看，能拖就拖。</p><p>3、前面大多数博客都是流水账，我当日记写的，也是后面才有的一点点知识总结，总体而言都是废话连篇。</p><p>4、开始学Go了，记录一下过程。</p><h3 id="续"><a href="#续" class="headerlink" title="续"></a>续</h3><p>1、学完Go了，不知道学啥。</p><p>2、英语听力不好，润不动。</p>]]></content>
     
     
       
@@ -131,15 +131,15 @@
     
     <category term="SpringBoot" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/SpringBoot/"/>
     
-    <category term="Redis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Redis/"/>
-    
     <category term="ElasticSearch" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/ElasticSearch/"/>
+    
+    <category term="Redis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Redis/"/>
     
     <category term="七牛云" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/%E4%B8%83%E7%89%9B%E4%BA%91/"/>
     
-    <category term="项目" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/%E9%A1%B9%E7%9B%AE/"/>
-    
     <category term="JWT" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/JWT/"/>
+    
+    <category term="项目" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/%E9%A1%B9%E7%9B%AE/"/>
     
     <category term="Vue" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Vue/"/>
     

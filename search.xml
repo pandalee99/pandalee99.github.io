@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>置顶，谈谈几件事</title>
+      <title>【置顶】谈谈几件事</title>
       <link href="/2023/04/19/restart-my-blog/"/>
       <url>/2023/04/19/restart-my-blog/</url>
       
-        <content type="html"><![CDATA[<h1 id="谈谈几件事"><a href="#谈谈几件事" class="headerlink" title="谈谈几件事"></a>谈谈几件事</h1><p>1、考上了USTC，很多知识都要重新学习了。</p><p>2、我的图片都是放到Gitee中的，使用Gitee做的图床。由于Gitee开启了防盗链模式，所有的图片都挂了，以后可能会做图片迁移，不过反正都没人看，能拖就拖。</p><p>3、前面大多数博客都是流水账，我当日记写的，也是后面才有的一点点知识总结，总体而言都是废话连篇。</p><p>4、开始学Go了，记录一下过程。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="谈谈几件事"><a href="#谈谈几件事" class="headerlink" title="谈谈几件事"></a>谈谈几件事</h1><p>1、考上了USTC，很多知识都要重新学习了。</p><p>2、我的图片都是放到Gitee中的，使用Gitee做的图床。由于Gitee开启了防盗链模式，所有的图片都挂了，以后可能会做图片迁移，不过反正都没人看，能拖就拖。</p><p>3、前面大多数博客都是流水账，我当日记写的，也是后面才有的一点点知识总结，总体而言都是废话连篇。</p><p>4、开始学Go了，记录一下过程。</p><h3 id="续"><a href="#续" class="headerlink" title="续"></a>续</h3><p>1、学完Go了，不知道学啥。</p><p>2、英语听力不好，润不动。</p>]]></content>
       
       
       
@@ -98,15 +98,15 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> Redis </tag>
-            
             <tag> ElasticSearch </tag>
+            
+            <tag> Redis </tag>
             
             <tag> 七牛云 </tag>
             
-            <tag> 项目 </tag>
-            
             <tag> JWT </tag>
+            
+            <tag> 项目 </tag>
             
             <tag> Vue </tag>
             
