@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>RPC框架的基本实现</title>
+      <link href="/2022/11/27/rpc01/"/>
+      <url>/2022/11/27/rpc01/</url>
+      
+        <content type="html"><![CDATA[<p><strong>什么是RPC框架？</strong><br>这两篇文章介绍的很好</p><blockquote><p><a href="https://zhuanlan.zhihu.com/p/374901408" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/374901408</a></p></blockquote><blockquote><p><a href="https://cloud.tencent.com/developer/article/2021745" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/2021745</a></p></blockquote><h1 id="RPC的基本实现"><a href="#RPC的基本实现" class="headerlink" title="RPC的基本实现"></a>RPC的基本实现</h1><h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><h3 id="InvocationHandler"><a href="#InvocationHandler" class="headerlink" title="InvocationHandler"></a>InvocationHandler</h3><p>先要实现RPC，在Java中，必不可少的就是动态代理。虽然可以使用字节码的方式，但是那样的方式仍然不如动态代理来的直接和方便。</p><blockquote><p><a href="https://zhuanlan.zhihu.com/p/42516717" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/42516717</a></p></blockquote><p>这篇文章把为什么用<strong>InvocationHandler</strong>的原因讲清楚了。<br>在实现动态代理，其中最为和核心的步骤是实现<strong>InvocationHandler</strong>接口，然后重写<strong>invoke</strong>方法。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClientProxy</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String host;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RpcClientProxy</span><span class="params">(String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.host = host;</span><br><span class="line">        <span class="keyword">this</span>.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">getProxy</span><span class="params">(Class&lt;T&gt; clazz)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(clazz.getClassLoader(), <span class="keyword">new</span> Class&lt;?&gt;[]&#123;clazz&#125;, <span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        RpcRequest rpcRequest = RpcRequest.builder()</span><br><span class="line">                .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">                .methodName(method.getName())</span><br><span class="line">                .parameters(args)</span><br><span class="line">                .paramTypes(method.getParameterTypes())</span><br><span class="line">                .build();</span><br><span class="line">        RpcClient rpcClient = <span class="keyword">new</span> RpcClient();</span><br><span class="line">        <span class="keyword">return</span> ((RpcResponse) rpcClient.sendRequest(rpcRequest, host, port)).getData();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>首先这里有两个方法是必须实现的第一个是代理方法：<br>这里会调用<strong>Proxy.newProxyInstance</strong>方法传入三个参数，但是参数的写法一般是固定的，类加载器，接口和方法名。getProxy这个方法的方法名倒是可以随意修改。<br>其次是<strong>invoke</strong>方法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">       <span class="comment">//自定义实现</span></span><br><span class="line">        RpcRequest rpcRequest = RpcRequest.builder()</span><br><span class="line">                .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">                .methodName(method.getName())</span><br><span class="line">                .parameters(args)</span><br><span class="line">                .paramTypes(method.getParameterTypes())</span><br><span class="line">                .build();</span><br><span class="line">        RpcClient rpcClient = <span class="keyword">new</span> RpcClient();</span><br><span class="line">        <span class="comment">//自定义实现</span></span><br><span class="line">        <span class="keyword">return</span> ((RpcResponse) rpcClient.sendRequest(rpcRequest, host, port)).getData();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">/* 最初的版本</span></span><br><span class="line"><span class="comment">    public Object invoke(Object proxy, Method method, Object[] args)</span></span><br><span class="line"><span class="comment">            throws Throwable &#123;</span></span><br><span class="line"><span class="comment">        //结果参数;</span></span><br><span class="line"><span class="comment">        Object result = new Object();</span></span><br><span class="line"><span class="comment">        // ...执行通信相关逻辑</span></span><br><span class="line"><span class="comment">        // ...</span></span><br><span class="line"><span class="comment">        return result;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure><p>** RpcRequest**：在自定义实现里面，我是写一个RPC请求，这个RPC请求其实并不是固定的写法，这里你甚至可以直接将其原封不动的发过去，不用将对象打包进去RPC请求里面也是可以的，两者的目的都是将对象发送。</p><p><strong>RpcClient</strong>：这个就是将对象发送过去的类，这个类调用的一个方法<strong>sendRequest</strong>将对象作为参数传入，然后会出现一个返回值。这个返回值就是代理方法的最终返回值。</p><h3 id="RpcClient"><a href="#RpcClient" class="headerlink" title="RpcClient"></a>RpcClient</h3><p>Client的实现主要是实现<strong>sendRequest</strong>方法，将我们的对象发送出去。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(RpcClient<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">sendRequest</span><span class="params">(RpcRequest rpcRequest, String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (Socket socket = <span class="keyword">new</span> Socket(host, port)) &#123;</span><br><span class="line">            ObjectOutputStream Output = <span class="keyword">new</span> ObjectOutputStream(socket.getOutputStream());</span><br><span class="line">            ObjectInputStream Input = <span class="keyword">new</span> ObjectInputStream(socket.getInputStream());</span><br><span class="line">            Output.writeObject(rpcRequest);</span><br><span class="line">            Output.flush();</span><br><span class="line">            <span class="comment">//flush()方法用于刷新此流，并将任何缓冲输出的字节立即写入基础流。</span></span><br><span class="line">            <span class="comment">//flush()方法是一种非静态方法，只能通过类对象访问。</span></span><br><span class="line">            <span class="keyword">return</span> Input.readObject();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException | ClassNotFoundException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"调用时有错误发生："</span>, e);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>sendRequest方法的方法名，参数，都是可以随意更改的，也可以直接将这个host和Port都写死。这样就只用传入一个参数就行了，这里传入的是RPCRequest。<br>这个方法首先要建立一个socket通信，如果创建不成功，则直接返回。这个socket创建成功后new ObjectOutputStream里面就会传入socket的OutputStream，这里主要是把socket通信端口的<strong>输入和输出流功能</strong>赋予我们自己创建的Output对象，使我们自己创建的Output和Input实例拥有接管socket通信的功能。然后写入Object并且使用flush方法立即将其刷入进去。<br>最后，这里执行的<strong>Input.readObject()</strong>会一直等待服务端的返回。如果服务端没有往这个端口写入任何信息，Input.readObject()都会阻塞的等待，不然就不返回。<br>以上就是客户端的实现。<br>最后可以测试：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        RpcClientProxy proxy = <span class="keyword">new</span> RpcClientProxy(<span class="string">"127.0.0.1"</span>, <span class="number">9000</span>);</span><br><span class="line">        HelloService helloService = proxy.getProxy(HelloService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        HelloObject object = <span class="keyword">new</span> HelloObject(<span class="number">12</span>, <span class="string">"This is a message"</span>);</span><br><span class="line">        String res = helloService.hello(object);</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RPC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【置顶】</title>
       <link href="/2022/04/30/restart-my-blog/"/>
       <url>/2022/04/30/restart-my-blog/</url>
@@ -71,11 +90,11 @@
       
         <tags>
             
-            <tag> MyBatis </tag>
-            
             <tag> Docker </tag>
             
             <tag> MySQL </tag>
+            
+            <tag> MyBatis </tag>
             
             <tag> SpringBoot </tag>
             
@@ -889,11 +908,11 @@
       
         <tags>
             
-            <tag> 排错指南 </tag>
-            
             <tag> Docker </tag>
             
             <tag> MySQL </tag>
+            
+            <tag> 排错指南 </tag>
             
         </tags>
       
@@ -912,9 +931,9 @@
       
         <tags>
             
-            <tag> MyBatis </tag>
-            
             <tag> 排错指南 </tag>
+            
+            <tag> MyBatis </tag>
             
         </tags>
       
@@ -1038,11 +1057,11 @@
             
             <tag> Redis </tag>
             
+            <tag> 定时任务 </tag>
+            
             <tag> 项目 </tag>
             
             <tag> MyBtis </tag>
-            
-            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1063,13 +1082,13 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> 定时任务 </tag>
-            
             <tag> 中间件 </tag>
             
             <tag> RabbitMQ </tag>
             
             <tag> 异步 </tag>
+            
+            <tag> 定时任务 </tag>
             
         </tags>
       
@@ -1408,9 +1427,9 @@
             
             <tag> 并发编程 </tag>
             
-            <tag> 线程池 </tag>
-            
             <tag> 设计模式 </tag>
+            
+            <tag> 线程池 </tag>
             
         </tags>
       
