@@ -155,21 +155,21 @@
     
     <category term="Docker" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Docker/"/>
     
-    <category term="MySQL" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MySQL/"/>
-    
-    <category term="MyBatis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MyBatis/"/>
-    
     <category term="SpringBoot" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/SpringBoot/"/>
     
     <category term="ElasticSearch" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/ElasticSearch/"/>
+    
+    <category term="MySQL" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MySQL/"/>
+    
+    <category term="MyBatis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MyBatis/"/>
     
     <category term="Redis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Redis/"/>
     
     <category term="七牛云" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/%E4%B8%83%E7%89%9B%E4%BA%91/"/>
     
-    <category term="JWT" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/JWT/"/>
-    
     <category term="项目" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/%E9%A1%B9%E7%9B%AE/"/>
+    
+    <category term="JWT" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/JWT/"/>
     
     <category term="Vue" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Vue/"/>
     
