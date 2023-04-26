@@ -25,6 +25,27 @@
     
     
     <entry>
+      <title>关于循环依赖的见解</title>
+      <link href="/2022/12/18/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/"/>
+      <url>/2022/12/18/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/</url>
+      
+        <content type="html"><![CDATA[<h1 id="关于循环依赖的见解"><a href="#关于循环依赖的见解" class="headerlink" title="关于循环依赖的见解"></a>关于循环依赖的见解</h1><p>关于循环依赖这一块，其实我一直充满着疑惑，因为我自己尝试着去实现了一下，看了很多文章（虽然很多是错误的）。</p><p>发现，<strong>其实二级缓存就能够解决循环依赖问题，根本不需要三级缓存</strong>。</p><p>首先，在单纯IOC的状态下，出现了循环依赖问题，在Bean不涉及代理对象的情况下，是只需要二级缓存的，但是很多文章说，因为涉及到AOP产生了代理对象，所以需要三级缓存，因为二级缓存和三级缓存存的对象不一样。但实际上，就算直接使用二级缓存，也是可以解决循环依赖问题，即使他们不一样。</p><p><strong>在任何状态下，二级缓存都能够完全的解决循环依赖问题，不管Bean有没有产生代理</strong>。</p><p>证明：(代补充)</p><p>但是Spring 为什么还是要使用三级缓存呢？因为设计者对于AOP一直都有一个原则：<strong>在对象初始化完毕后，再去创建代理对象</strong> </p><p>所以<strong>设计者一直在试图延迟代理对象的创建</strong>：</p><p>举例：</p><p>只有二级缓存：</p><p>1、发生了循环依赖，自然，在需要的时候就创建出来代理对象，放入缓存</p><p>2、没发生循环依赖，但是还是每一个对象在创建出原始对象后，就都会去创建代理对象</p><p>有三级缓存：</p><p>1、发生了循环依赖，在需要的时候就创建出来代理对象，放入二级缓存。</p><p>2、没发生循环依赖，正常的在初始化的后置处理器中创建。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> Spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>使用Netty+Nacos+Protobuf制作RPC框架</title>
       <link href="/2022/11/02/srpc/"/>
       <url>/2022/11/02/srpc/</url>
@@ -96,9 +117,9 @@
             
             <tag> Docker </tag>
             
-            <tag> MySQL </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> MySQL </tag>
             
             <tag> SpringBoot </tag>
             
@@ -933,9 +954,9 @@
             
             <tag> Docker </tag>
             
-            <tag> MySQL </tag>
-            
             <tag> 排错指南 </tag>
+            
+            <tag> MySQL </tag>
             
         </tags>
       
@@ -954,9 +975,9 @@
       
         <tags>
             
-            <tag> 排错指南 </tag>
-            
             <tag> MyBatis </tag>
+            
+            <tag> 排错指南 </tag>
             
         </tags>
       
@@ -1055,9 +1076,9 @@
             
             <tag> SpringBoot </tag>
             
-            <tag> Thymeleaf </tag>
-            
             <tag> 前端 </tag>
+            
+            <tag> Thymeleaf </tag>
             
         </tags>
       
