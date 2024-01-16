@@ -296,11 +296,11 @@
     
     <category term="MySQL" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MySQL/"/>
     
-    <category term="MyBatis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MyBatis/"/>
-    
     <category term="SpringBoot" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/SpringBoot/"/>
     
     <category term="ElasticSearch" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/ElasticSearch/"/>
+    
+    <category term="MyBatis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MyBatis/"/>
     
     <category term="Redis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Redis/"/>
     
