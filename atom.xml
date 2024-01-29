@@ -294,11 +294,11 @@
     
     <category term="Docker" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/Docker/"/>
     
-    <category term="MySQL" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MySQL/"/>
-    
     <category term="SpringBoot" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/SpringBoot/"/>
     
     <category term="ElasticSearch" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/ElasticSearch/"/>
+    
+    <category term="MySQL" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MySQL/"/>
     
     <category term="MyBatis" scheme="https://github.com/Pandalee99/pandalee99.github.io/tags/MyBatis/"/>
     
