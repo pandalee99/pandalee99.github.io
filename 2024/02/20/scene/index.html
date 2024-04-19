@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="常见场景问题总结"><meta name="keywords" content="场景"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>常见场景问题总结 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="小世界" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#常见场景题总结"><span class="toc-number">1.</span> <span class="toc-text">常见场景题总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-扫码登陆如何实现"><span class="toc-number">1.1.</span> <span class="toc-text">1.扫码登陆如何实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？"><span class="toc-number">1.2.</span> <span class="toc-text">2.一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-如何把一个文件快速下发到100w个服务器？"><span class="toc-number">1.3.</span> <span class="toc-text">3.如何把一个文件快速下发到100w个服务器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的"><span class="toc-number">1.4.</span> <span class="toc-text">4.给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-典型TOPk系列的问题：10亿个数，找出最大的10个。等-10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？"><span class="toc-number">1.5.</span> <span class="toc-text">5.典型TOPk系列的问题：10亿个数，找出最大的10个。等(10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。"><span class="toc-number">1.6.</span> <span class="toc-text">6.让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-分布式多个机器生成id，如何保证不重复"><span class="toc-number">1.7.</span> <span class="toc-text">7.分布式多个机器生成id，如何保证不重复?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-分布式集群中如何保证线程安全？"><span class="toc-number">1.8.</span> <span class="toc-text">8.分布式集群中如何保证线程安全？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-某网站-app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？"><span class="toc-number">1.9.</span> <span class="toc-text">9.某网站&#x2F;app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-如何设计一个本地缓存？需要考虑哪些方面？"><span class="toc-number">1.10.</span> <span class="toc-text">10.如何设计一个本地缓存？需要考虑哪些方面？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-在1G大小的文件中，找出高频top100的单词"><span class="toc-number">1.11.</span> <span class="toc-text">11.在1G大小的文件中，找出高频top100的单词</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述"><span class="toc-number">1.11.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法1"><span class="toc-number">1.11.2.</span> <span class="toc-text">解法1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法2"><span class="toc-number">1.11.3.</span> <span class="toc-text">解法2</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/pandalee99/image_store/master/hexo/c17f0489-42cd-439a-94bd-0612598b142f.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Pandalee99">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">100</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">69</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="https://github.com/Pandalee99/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">常见场景问题总结</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-02-20</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="常见场景题总结"><a href="#常见场景题总结" class="headerlink" title="常见场景题总结"></a>常见场景题总结</h1><h2 id="1-扫码登陆如何实现"><a href="#1-扫码登陆如何实现" class="headerlink" title="1.扫码登陆如何实现"></a>1.扫码登陆如何实现</h2><p>1.答：访问PC端二维码生成页面，PC端请求服务端获取二维码ID 服务端生成相应的二维码ID，设置二维码的过期时间，状态等。 PC获取二维码ID，生成相应的二维码。 手机端扫描二维码，获取二维码ID。 手机端将手机端token和二维码ID发送给服务端，确认登录。 服务端校验手机端token，根据手机端token和二维码ID生成PC端token PC端通过轮询方式请求服务端，通过二维码ID获取二维码状态，如果已成功，返回PC token，登录成功。</p>
+<p>好了，这样我们一个扫描登录的功能就设计完成了。</p>
+<h2 id="2-一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？"><a href="#2-一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？" class="headerlink" title="2.一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？"></a>2.一个外卖平台上有一个外卖单子，现在有多名骑手想接这一单，如何保证只有一个骑手可以接到单子？</h2><p>2.确保你的Spring Boot项目已经集成了Redis，并正确配置了Redis连接信息。</p>
+<p>在发布外卖配送单时，生成一个唯一的标识符（比如订单ID或随机UUID），作为这个配送单的唯一标识。</p>
+<p>在Redis中设置一个键，用来表示当前已经被接单的配送单。这个键可以是一个字符串类型的键，例如：“delivery_order_accepted”。</p>
+<p>当骑手想要接单时，首先通过Redis的分布式锁机制尝试获取锁。只有一个骑手能够成功获取到锁，表示该骑手接到了单子。</p>
+<p>如果骑手成功获取到锁，即成功接到单子，将配送单的信息存储在Redis中，例如使用Hash结构保存配送单的详细信息。</p>
+<p>如果骑手没有成功获取到锁，表示已经有其他骑手接到了单子，可以给骑手返回一个提示或者重新获取其他的配送单。</p>
+<h2 id="3-如何把一个文件快速下发到100w个服务器？"><a href="#3-如何把一个文件快速下发到100w个服务器？" class="headerlink" title="3.如何把一个文件快速下发到100w个服务器？"></a>3.如何把一个文件快速下发到100w个服务器？</h2><ul>
+<li>使用分发工具：使用专门的分发工具，如BitTorrent、rsync等，可以帮助在多个服务器之间并行地进行文件传输，提高传输效率。</li>
+<li>利用分布式文件系统：使用分布式文件系统，如Hadoop HDFS、GlusterFS等，将文件存储在分布式节点上，可以更快地将文件分发到多个服务器上。</li>
+<li>使用多线程或并行传输：在传输文件时，采用多线程或并行传输的方式，可以同时向多个服务器传输文件，提高传输速度。</li>
+<li>使用多个传输通道：尝试使用多个传输通道同时传输文件，可以增加传输的带宽，加快传输速度。</li>
+<li><strong>利用CDN（内容分发网络）：如果服务器部署在不同的地理位置，可以考虑使用CDN服务，将文件缓存到离用户较近的CDN节点，通过CDN节点将文件分发给多个服务器，提高传输速度和可靠性。</strong></li>
+</ul>
+<p>需要根据具体情况选择合适的方法，考虑网络带宽、服务器性能等因素，以实现快速和高效地将文件下发到大量服务器。</p>
+<h2 id="4-给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的"><a href="#4-给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的" class="headerlink" title="4.给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的?"></a>4.给每个组分配不同的IP段，怎么设计一种结构使的快速得知IP是哪个组的?</h2><p>可以使用CIDR（无类域间路由）来设计一种结构，该结构可以快速确定一个IP属于哪个组。以下是一种可能的设计方案：</p>
+<p>将每个组分配不同的CIDR块，确保它们不重叠。</p>
+<p>将每个CIDR块分配给该组的网络。</p>
+<p>构建一个CIDR前缀树（也称为路由转发表或路由表）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-  在前缀树中，每个节点表示一个CIDR块。</span><br><span class="line">  -  子节点表示更具体的CIDR块。</span><br><span class="line">  -  叶节点表示最具体的CIDR块，并将其与相应的组关联起来。</span><br></pre></td></tr></table></figure>
+
+<p>在前缀树中搜索给定的IP地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-  从根节点开始，比较IP地址与每个节点的CIDR块。</span><br><span class="line"> -  如果IP地址匹配节点的CIDR块，则继续向下搜索。</span><br><span class="line"> -  如果IP地址不匹配任何节点的CIDR块，则停止搜索，找到了最接近IP地址的匹配块。</span><br></pre></td></tr></table></figure>
+
+<p>通过前缀树中找到的节点，确定IP所属的组。</p>
+<p>通过这种设计，可以快速确定给定IP地址所属的组，而不需要遍历所有CIDR块。此外，这种结构还可以支持动态的CIDR块分配和组织变化，只需更新前缀树即可。</p>
+<h2 id="5-典型TOPk系列的问题：10亿个数，找出最大的10个。等-10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？"><a href="#5-典型TOPk系列的问题：10亿个数，找出最大的10个。等-10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？" class="headerlink" title="5.典型TOPk系列的问题：10亿个数，找出最大的10个。等(10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？)"></a>5.典型TOPk系列的问题：10亿个数，找出最大的10个。等(10万个数，输出从小到大？有十万个单词，找出重复次数最高十个？)</h2><p>5.典型TOPk系列问题是指在给定一组数据中，找出其中的前k个元素或者按照某种规则进行排序的问题。两个典型的TOPk问题分别是：</p>
+<p>在10亿个数中找出最大的10个数： - 解法1：使用堆数据结构。维护一个大小为10的最小堆，遍历10亿个数，如果当前数比堆顶元素大，则将堆顶元素替换为当前数并对堆进行调整，保持堆的大小为10。最终堆中的数就是最大的10个数。 - 解法2：使用快速选择算法。类似于快速排序算法，每次选择一个枢纽元素将数据分为两部分，左边的部分均小于枢纽元素，右边的部分均大于枢纽元素。如果枢纽元素的位置大于k，则在左边部分继续查找，否则在右边部分继续查找。最终得到的子数组中的前k个元素就是最大的k个数。</p>
+<p>在10万个数中输出从小到大的排序结果： - 解法1：使用快速排序算法。对于给定的数组，选择一个枢纽元素将数组分为两部分，左边的部分都小于枢纽元素，右边的部分都大于枢纽元素。然后递归地对左右两个部分进行快速排序，最终得到的数组就是从小到大的排序结果。 - 解法2：使用归并排序算法。将数组分成两个部分，分别对两个部分进行排序，然后将排好序的两个部分合并成一个有序的数组。通过递归地进行这个操作，最终得到的数组就是从小到大的排序结果。</p>
+<p>另外，对于十万个单词中找出重复次数最高的十个单词的问题，可以使用哈希表来统计每个单词出现的次数，并维护一个大小为10的最小堆，遍历哈希表，对于每个单词的出现次数，如果大于堆顶元素，则将堆顶元素替换为当前单词，并对堆进行调整。最终堆中的元素就是重复次数最高的十个单词。</p>
+<h2 id="6-让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。"><a href="#6-让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。" class="headerlink" title="6.让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。"></a>6.让你设计一个微信发红包的api，你会怎么设计，不能有人领到的红包里面没钱，红包数值精确到分。</h2><p>6.为了实现微信发红包的API，并确保红包金额精确到分且不能有人领到的红包里面没钱，可以按照以下步骤设计：</p>
+<p>确定红包发放的总金额和红包个数。 确定每个红包的最小和最大金额范围，以确保每个红包都有一定金额。 根据总金额和红包个数，计算出每个红包的平均金额。 为避免红包金额出现小数位，将平均金额放大100倍，以分为单位进行操作。 将红包金额转化为分后，依次生成每个红包的金额。 随机生成每个红包的金额，但要保证每个红包金额在最小和最大金额范围内，并且总金额不超过设定的总金额。 将每个红包金额再转化回元，以方便显示。 返回生成的红包列表。</p>
+<p>这样设计可以确保每个红包都有一定金额，并且总金额精确到分。</p>
+<h2 id="7-分布式多个机器生成id，如何保证不重复"><a href="#7-分布式多个机器生成id，如何保证不重复" class="headerlink" title="7.分布式多个机器生成id，如何保证不重复?"></a>7.分布式多个机器生成id，如何保证不重复?</h2><p>7.确保分布式多个机器生成的id不重复可以采用以下方法：</p>
+<ol>
+<li>使用全局唯一标识符（UUID）：每个机器都可以使用UUID算法生成独特的标识符，并且无需进行全局同步即可保证唯一性。这种方法的缺点是UUID通常比较长，不适合作为简短id使用。</li>
+<li>使用数据库的自增主键：可以使用数据库的自增主键功能生成唯一id。每个机器在插入数据时，都向数据库请求一个唯一的id，数据库会自动保证递增且唯一。缺点是需要使用数据库，并且会有一定的性能开销。</li>
+<li>Redis的incr命令：使用Redis的incr命令实现全局自增的计数器。每个机器向Redis请求递增的计数值，并将该计数值作为id。Redis会保证incr命令的原子性，保证了id的唯一性。缺点是需要使用Redis，并且Redis的性能可能会成为瓶颈。</li>
+<li>Twitter的Snowflake算法：Snowflake算法是一种在分布式系统中生成唯一id的算法。它使用一个64位的整数，其中包含了时间戳、机器id、序列号等信息。每个机器都有一个唯一的机器id，保证了id的唯一性。Snowflake算法的优点是生成的id比较短且有序。缺点是需要保证机器id的唯一性，并且需要有一个时钟的同步。</li>
+</ol>
+<p>以上方法均可以用于分布式环境下生成唯一id，选择哪种方法取决于具体系统的需求和限制。</p>
+<h2 id="8-分布式集群中如何保证线程安全？"><a href="#8-分布式集群中如何保证线程安全？" class="headerlink" title="8.分布式集群中如何保证线程安全？"></a>8.分布式集群中如何保证线程安全？</h2><p>8.在分布式集群中，线程安全问题需要特别注意，以下是几种保证线程安全的方法：</p>
+<ol>
+<li>加锁：在多线程访问共享资源时，使用锁机制（如互斥锁、读写锁等）来保证同一时间只能有一个线程访问该资源。对于分布式集群，可以使用分布式锁来协调多个节点对共享资源的访问。</li>
+<li>使用线程安全的数据结构：选择并使用线程安全的数据结构，例如线程安全的集合类（如ConcurrentHashMap、CopyOnWriteArrayList等），这些数据结构内部实现了同步机制，保证了在并发环境下的线程安全性。</li>
+<li>避免共享状态：尽量避免多个线程共享同一份数据，而是让每个线程拥有自己的局部变量，这样就不需要考虑线程安全性的问题。可以使用ThreadLocal类来实现每个线程独立拥有自己的变量。</li>
+<li>确保数据同步：在分布式环境下，如果涉及到跨节点之间的数据共享，需要确保数据的一致性和同步，可以通过分布式事务、分布式缓存、消息队列等机制来实现。</li>
+<li>使用乐观锁或悲观锁：乐观锁适用于读操作较多的场景，通过版本号或时间戳等方式来控制并发访问，而悲观锁适用于写操作较多的场景，通过加锁来确保同一时间只能有一个线程写入。</li>
+<li>合理划分任务：将任务划分成多个独立的子任务，每个子任务由一个线程处理，从而降低了并发冲突的可能性，提高了线程安全性。</li>
+</ol>
+<p>无论采取哪种方法，都需要在设计和实现时充分考虑并发访问的场景，评估并发冲突的可能性，并选择合适的线程安全措施来保护共享资源。</p>
+<h2 id="9-某网站-app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？"><a href="#9-某网站-app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？" class="headerlink" title="9.某网站/app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？"></a>9.某网站/app首页每天会从10000个商家里面推荐50个商家置顶，每个商家有一个权值，你如何来推荐？第二天怎么更新推荐的商家？</h2><p>9.推荐过程：</p>
+<ol>
+<li>初始推荐：根据商家的权值进行排序，选取排名前50的商家作为推荐商家，并将其置顶在网站/app首页上。权值高的商家有更大的概率被选中。</li>
+</ol>
+<p>更新推荐的商家：</p>
+<ol>
+<li>更新商家权值：根据前一天推荐商家的点击量、购买量、评价等指标，对商家的权值进行更新。点击量高、购买量多、评价好的商家权值会提高。</li>
+<li>选择推荐商家：根据更新后的商家权值重新排序，选取排名前50的商家作为第二天的推荐商家，并进行置顶。</li>
+</ol>
+<p>通过这种方式，每天根据商家的表现和用户的反馈实时更新商家的权值，从而不断优化推荐的商家列表，提供更为精准和个性化的推荐服务。</p>
+<h2 id="10-如何设计一个本地缓存？需要考虑哪些方面？"><a href="#10-如何设计一个本地缓存？需要考虑哪些方面？" class="headerlink" title="10.如何设计一个本地缓存？需要考虑哪些方面？"></a>10.如何设计一个本地缓存？需要考虑哪些方面？</h2><ol>
+<li>缓存策略：选择合适的缓存策略，如LRU（Least Recently Used，最近最少使用）、LFU（Least Frequently Used，最不经常使用）等，根据实际需求选择适合的缓存策略。</li>
+<li>缓存容量：确定缓存的最大容量，以避免缓存过多占用过多的内存空间。</li>
+<li>缓存淘汰机制：当缓存容量达到上限时，需要决定淘汰哪些缓存项。可以根据缓存策略、缓存项的使用频率、过期时间等进行淘汰。</li>
+<li>缓存过期机制：设置缓存项的过期时间，当缓存项超过过期时间未被使用时，需要从缓存中移除。</li>
+<li>缓存命中率：记录并统计缓存命中次数和未命中次数，以评估缓存效果，并可根据需求进行优化。</li>
+<li>并发访问控制：考虑多线程或多进程同时访问缓存的情况，确保并发访问时的数据一致性。</li>
+<li>键值存储方式：选择合适的键值存储方式，如哈希表、二叉树等，以便高效地进行缓存项的存取操作。</li>
+<li>数据持久化：可选项，如果需要在应用重启后仍然能够加载之前的缓存数据，则需要考虑将缓存数据持久化到磁盘或数据库中。</li>
+<li>内存管理：合理利用内存，控制缓存占用的内存大小，避免过多的内存占用导致系统性能下降。</li>
+<li>缓存更新机制：对于数据的更新操作，需要及时更新缓存中的缓存项，以保证缓存数据的一致性。可以使用订阅发布模式、数据库触发器等方法来实现缓存的更新。</li>
+</ol>
+<p>以上是设计一个本地缓存需要考虑的一些方面，具体的实现方式和细节根据实际需求和场景来确定。</p>
+<h2 id="11-在1G大小的文件中，找出高频top100的单词"><a href="#11-在1G大小的文件中，找出高频top100的单词" class="headerlink" title="11.在1G大小的文件中，找出高频top100的单词"></a>11.在1G大小的文件中，找出高频top100的单词</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>假如有一个<strong>1G</strong>大小的文件，文件里每一行是一个词，每个词的大小不超过<strong>16byte</strong>，要求返回出现频率最高的100个词。内存大小限制是<strong>10M</strong></p>
+<h3 id="解法1"><a href="#解法1" class="headerlink" title="解法1"></a>解法1</h3><p>由于内存限制，我们无法直接将大文件的所有词一次性读到内存中。</p>
+<p>可以采用<strong>分治策略</strong>，把一个大文件分解成多个小文件，保证每个文件的大小小于10M，进而直接将单个小文件读取到内存中进行处理。</p>
+<p><strong>第一步</strong>，首先遍历大文件，对遍历到的每个词x，执行 hash(x) % 500，将结果为i的词存放到文件f(i)中，遍历结束后，可以得到500个小文件，每个小文件的大小为2M左右；</p>
+<p><strong>第二步</strong>，接着统计每个小文件中出现频数最高的100个词。可以使用HashMap来实现，其中key为词，value为该词出现的频率。</p>
+<p>对于遍历到的词x，如果在map中不存在，则执行 map.put(x, 1)。</p>
+<p>若存在，则执行 map.put(x, map.get(x)+1)，将该词出现的次数加1。</p>
+<p><strong>第三步</strong>，在第二步中找出了每个文件出现频率最高的100个词之后，通过维护一个<strong>小顶堆</strong>来找出所有小文件中出现频率最高的100个词。</p>
+<p>具体方法是，遍历第一个文件，把第一个文件中出现频率最高的100个词构建成一个小顶堆。</p>
+<p>如果第一个文件中词的个数小于100，可以继续遍历第二个文件，直到构建好有100个结点的小顶堆为止。</p>
+<p>继续遍历其他小文件，如果遍历到的词的出现次数大于堆顶上词的出现次数，可以用新遍历到的词替换堆顶的词，然后重新调整这个堆为小顶堆。</p>
+<p>当遍历完所有小文件后，这个小顶堆中的词就是出现频率最高的100个词。</p>
+<p>总结一下，这种解法的主要思路如下：</p>
+<ol>
+<li>采用<strong>分治</strong>的思想，进行哈希取余</li>
+<li>使用<strong>HashMap</strong>统计每个小文件单词出现的次数</li>
+<li>使用<strong>小顶堆</strong>，遍历步骤2中的小文件，找出词频top100的单词</li>
+</ol>
+<p>但是很容易可以发现问题，在第二步中，如果这个1G的大文件中有某个词词频过高，可能导致小文件大小超过10m。这种情况下该怎么处理呢？</p>
+<p>接下来看另外一种解法。</p>
+<h3 id="解法2"><a href="#解法2" class="headerlink" title="解法2"></a>解法2</h3><p><strong>第一步</strong>：使用多路归并排序对大文件进行排序，这样相同的单词肯定是紧挨着的</p>
+<p>多路归并排序对大文件进行排序的步骤如下：</p>
+<p>① 将文件按照顺序切分成大小不超过2m的小文件，总共500个小文件</p>
+<p>② 使用10MB内存<strong>分别</strong>对 500 个小文件中的单词进行<strong>排序</strong></p>
+<p>③ 使用一个大小为500大小的堆，对500个小文件进行<strong>多路排序</strong>，结果写到一个大文件中</p>
+<p>其中第三步，对500个小文件进行多路排序的思路如下：</p>
+<ul>
+<li>初始化一个最小堆，大小就是有序小文件的个数500。堆中的每个节点存放每个有序小文件对应的输入流。</li>
+<li>按照每个有序文件中的下一行数据对所有文件输入流进行排序，单词小的输入文件流放在堆顶。</li>
+<li>拿出堆顶的输入流，并其下一行数据写入到最终排序的文件中，如果拿出来的输入流中还有数据的话，那么将这个输入流再一次添加到栈中。否则说明该文件输入流中没有数据了，那么可以关闭这个流。</li>
+<li>循环这个过程，直到所有文件输入流都没有数据为止。</li>
+</ul>
+<p><strong>第二步</strong>：</p>
+<p>① 初始化一个100个节点的<strong>小顶堆</strong>，用于保存100个出现频率最多的单词</p>
+<p>② 遍历整个文件，一个单词一个单词的从文件中取出来，并计数</p>
+<p>③ 等到遍历的单词和上一个单词不同的话，那么上一个单词及其频率如果大于堆顶的词的频率，那么放在堆中，否则不放</p>
+<p>最终，小顶堆中就是出现频率前100的单词了。</p>
+<p>解法2相对解法1，更加严谨，如果某个词词频过高或者整个文件都是同一个词的话，解法1不适用。</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9C%BA%E6%99%AF/">场景</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2024/02/24/s1s-1/"><i class="fa fa-chevron-left">  </i><span>搜一搜运营系统 WXG实践</span></a></div><div class="next-post pull-right"><a href="/2024/01/08/opensource1/"><span>SOFASTACK/SOFA-RPC</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2024 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>
