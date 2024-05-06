@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="了解搜索架构"><meta name="keywords" content="实习"><meta name="author" content="攀"><meta name="copyright" content="攀"><title>了解搜索架构 | 小世界</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="小世界" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#搜索流程"><span class="toc-number">1.</span> <span class="toc-text">搜索流程</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/pandalee99/image_store/master/hexo/c17f0489-42cd-439a-94bd-0612598b142f.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Pandalee99">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">102</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">69</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="https://github.com/Pandalee99/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">了解搜索架构</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-03-06</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>如果你想要深入的了解和熟悉搜索引擎，我可以推荐一本书：<br><strong>这就是搜索引擎</strong></p>
+<p>作者:张俊林<br>出版社:电子工业出版社<br>ISBN: 9787121148651</p>
+<p>从本人了解到了知识储备而言，搜索引擎技术在工业界似乎变化不大，即使过去了很多年，整体的思想并没有发生很大的变化，来来回回都是这么个用法，召回，排序，求交，整体的信息检索水平并没有像软件工程一样分化出例如诸多的SOA，Mesh架构，也没有诞生出MVC，DDD等特定的软件设计模式，搜索引擎更多的变化在于一些性能上吗的优化，而贴合业务更做出改变。虽然本人学识并不丰富，但是也可以感觉到落后很多年了。</p>
+<h2 id="搜索流程"><a href="#搜索流程" class="headerlink" title="搜索流程"></a>搜索流程</h2><p>这是一般搜索从离线到在线的整条数据流处理流程：</p>
+<p>类似于百度，Google等搜索服务商，整体来说都是这样的流程。</p>
+<p>但是搜一搜比较特殊，搜一搜的信息来源并不需要从网络爬取，而是自行产生的，比如公众号，小程序，这些数据来源都比较规范，而且一些基本属性，都是必须有的，这让整个搜索架构在建立索引的时候，会减少很多的功夫，所以相对于网络爬虫去爬去数据，要减少不少不必要的流程。</p>
+<p>目前六组主要负责的是富展示模块，主要是业务端，商业变现的内容。</p>
+<p>先看整个搜索架构，</p>
+<p>搜一搜架构中搜索常用简称释义：</p>
+<ul>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+<li>敏感数据</li>
+</ul>
+<p>整体从逻辑上也分为五层，如下：</p>
+<p>虽然整体架构看起来非常复杂，但是总的来说还是在干这些事情：</p>
+<p><strong>(离线)建立索引-&gt;召回求交排序-&gt;展示</strong></p>
+<p>现在结合本人看到的知识，一步步推导中间的过程，中途可能还会出现不少的错误，望评论区指正</p>
+<p>首先建立索引，这是最初步的过程，比如说我有很多的公众号文章和小程序数据，这里的每一个数据都是doc，doc_id就是每个doc的唯一标识，这些数据都是未经过处理的，没有任何意义的数据。这个时候我们肯定是需要先进行一步粗处理，将每个文档中的单词，都逐个分离出来，先变成一个正排索引：</p>
+<p>为什么不一开始就建立倒排呢？本人理解是一个将原doc经过粗处理变成更加适合检索的doc类型，这样系统就不用存储原doc，第二个是在进行摘要检索的时候更加方便。</p>
+<p>然后倒排索引就更加明确了：</p>
+<p>但是要注意的是，这只是一个抽象的索引，实际上搜一搜的索引非常复杂，会涉及到诸多方面的知识和要求，一个索引不仅仅这么简单，可以参考这个：</p>
+<p>在建立索引的过程中，还会涉及到很多的知识，这里再详细描述建立正排和倒排的过程</p>
+<p>建立正排其实</p>
+<p><strong>六要素</strong><br>不论索引结构如何改变，其核心依然是以下六类数据：</p>
+<ol>
+<li>Term词典<br>提供Term到Term对应倒排链位置的查询功能，常规实现如hash map，二分查找(有序数组)</li>
+<li>倒排索引<br>保存Term-&gt;文档id列表数据，通常实现为有序数组，实际上可以有多种实现形式</li>
+<li>Payload<br>Term或者文档的有效载荷，即每个Term/文档携带的额外数据，例如Term Payload通常存放Term对应文档的权重，Doc Payload则是文档的特征数据，定位是召回阶段可用的特征数据</li>
+<li>Forward<br>文档正排数据，定位为存放文档在粗排打分阶段时需要访问的特征数据</li>
+<li>PosOffset<br>各个Term在文档中各个域的精确位置偏移信息(原则上Pos数据也属于正排数据，同样是需要在粗排打分阶段才可访问)</li>
+<li>Abstract<br>文档摘要数据，通常用于存放文档富展现数据 </li>
+</ol>
+<p>接着是这些doc的存储问题，在一个海量数据的数据中，这些doc也必定是分布式存储的，这些数据会被分发到一个个的分片中，分片数是固定的，但是每个分片的节点数是不固定的，一般是多个分片对应一个节点。比如说，doc_id 114514，假设分片是100个，那么该doc会进入分片14，但是整个分片群中节点只有10个。如果我的节点扩展到20个，分片也会随着节点扩张也迁移。</p>
+<p>既然说了doc的存储，那么索引呢？其实常见的索引比如FOB，GOB，这些索引的存储一般不在磁盘中，而是在内存中，这里会采用一个LSM的方式去加速存储和当访问。</p>
+<p><strong>GOB</strong> ： <strong>全量索引库 FOB</strong> ： <strong>实时索引库</strong></p>
+<p>这里可以举一个例子去理解，比如说我们公众号每产生一个文章，就可能产生多个GOB，但是文章的更新程度其实一般不会太频繁，那如果更新了，希望现网可快速也进行更新，就产生了FOB，GOB的更新是一批一批，FOB的更新是实时的，每次GOB更新的时候都会覆盖掉所有的FOB。这个关系就像是cache和磁盘的关系一样，每次更新，先更新cache，每次落库，cache就清空。这个也是很好理解的。那么为什么不用FOB去更新GOB呢？个人感觉是这样会在现网产生很大的时延和抖动，因为会产生很大的计算量，而分别更新的话，GOB建立是离线的，只需要上线替换就好了，几乎没有计算量，综合下来还是这种方式更好。</p>
+<p>（未完待续。。。。。。）</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AE%9E%E4%B9%A0/">实习</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2024/03/14/bigdata/"><i class="fa fa-chevron-left">  </i><span>Flink和Pulsar实践</span></a></div><div class="next-post pull-right"><a href="/2024/02/24/s1s-1/"><span>搜一搜运营系统 WXG实践</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2024 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":210,"height":420,"position":"right","hOffset":0,"vOffset":-20},"log":false,"tagMode":false});</script></body></html>
