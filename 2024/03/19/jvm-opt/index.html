@@ -8,14 +8,116 @@
     noSupport: '浏览器不支持'
   }
 } </script><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="小世界" type="application/atom+xml">
-</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/pandalee99/image_store/master/hexo/c17f0489-42cd-439a-94bd-0612598b142f.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Pandalee99">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">103</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">70</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="https://github.com/Pandalee99/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">JVM调优</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-03-19</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>这个文章会依次表述本人经过的实践</p>
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#举例子"><span class="toc-number">1.</span> <span class="toc-text">举例子</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/pandalee99/image_store/master/hexo/c17f0489-42cd-439a-94bd-0612598b142f.jpg"></div><div class="author-info__name text-center">攀</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/Pandalee99">GitHub</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">104</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">70</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">链接</div><a class="author-info-links__name text-center" href="https://github.com/Pandalee99/Concurrent-programming">GItHub配套资源</a><a class="author-info-links__name text-center" href="https://translate.google.cn/" target="_blank" rel="noopener">Google翻译</a><a class="author-info-links__name text-center" href="https://www.bilibili.com/" target="_blank" rel="noopener">bilibili</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">小世界</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">JVM调优</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-03-19</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>这个文章会依次表述本人经过的实践</p>
 <p>首先是如何去发现问题，为什么要去调优？</p>
 <p>我之前在做开源项目的时候，碰到了需要优化字节码大小问题的需求，所以，这里就用到了虚拟机优化的知识：<br>在VM option里面增加参数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-XX:+PrintCompilation</span><br><span class="line">-XX:+UnlockDiagnosticVMOptions</span><br><span class="line">-XX:+PrintInlining</span><br></pre></td></tr></table></figure>
 
 <p>这样执行代码后，命令行会打印出运行时的内存大小</p>
-<p>等我更新。。。</p>
-</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2024/04/04/slice-transmit/"><i class="fa fa-chevron-left">  </i><span>分片传输和流量控制</span></a></div><div class="next-post pull-right"><a href="/2024/03/14/bigdata/"><span>Flink和Pulsar实践</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2024 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+<ol>
+<li><strong>-XX:+UnlockDiagnosticVMOptions</strong><ul>
+<li><strong>用途</strong>：<ul>
+<li>这个选项主要是用于解锁Java虚拟机（JVM）中的一些诊断相关的功能选项。在JVM的默认配置中，很多用于深度诊断和性能分析的选项是被限制使用的，目的是防止因误操作或不恰当的设置对JVM的正常运行产生负面影响。而通过使用<code>-XX:+UnlockDiagnosticVMOptions</code>，就像是打开了一个“高级功能开关”，使得后续可以使用其他更具深度的诊断选项，例如<code>-XX:+PrintCompilation</code>和<code>-XX:+PrintInlining</code>。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<ul>
+<li>假设你在没有添加<code>-XX:+UnlockDiagnosticVMOptions</code>的情况下，尝试在JVM启动命令中添加<code>-XX:+PrintInlining</code>来查看方法内联的详细信息。JVM会将这个选项忽略，因为这些诊断选项默认是被锁住的。只有在添加了<code>-XX:+UnlockDiagnosticVMOptions</code>后，JVM才会识别并启用<code>-XX:+PrintInlining</code>这个用于打印内联信息的选项。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>-XX:+PrintCompilation</strong><ul>
+<li><strong>用途</strong>：<ul>
+<li><strong>编译活动监控</strong>：它用于输出JVM中即时编译器（JIT）的编译活动情况。当JVM运行时，会根据一定的策略（如方法的调用频率、循环执行次数等）对字节码进行编译成机器码，这个过程是由JIT编译器完成的。<code>-XX:+PrintCompilation</code>可以让你看到哪些方法被编译、编译的顺序、编译的时间等信息。例如，你可以看到类似“300  3       java.util.HashMap::put (152 bytes)”的输出，其中“300”可能是一个编译任务编号，“3”可能是编译的级别或者版本相关信息，“java.util.HashMap::put”是被编译的方法名称及签名，“(152 bytes)”表示这个方法字节码的大小。</li>
+<li><strong>性能瓶颈发现</strong>：通过观察方法的编译情况，有助于定位性能瓶颈。如果某个方法被频繁编译，那么这个方法很可能是程序中的热点方法，也就是对性能影响较大的方法。例如，在一个Web应用程序中，如果发现某个业务逻辑处理方法被反复编译，就可以重点关注这个方法的代码实现，看是否可以通过优化算法、减少嵌套层次或者调整数据结构等方式来提高性能。</li>
+<li><strong>理解JIT策略</strong>：可以帮助开发人员理解JVM的JIT编译策略。不同的JVM实现（如HotSpot）有自己的一套编译策略，比如根据方法的热度（调用频率和执行时间）来决定何时进行编译。通过<code>-XX:+PrintCompilation</code>输出的信息，开发人员可以了解JVM是如何根据实际运行情况来动态优化代码的。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<ul>
+<li>考虑一个大型的企业级Java应用，它包含了复杂的业务逻辑和数据处理模块。在运行该应用并添加了<code>-XX:+PrintCompilation</code>选项后，发现一个名为<code>calculateCustomerDiscount</code>的方法频繁被编译。这就提示开发人员这个方法可能是性能敏感点，进一步查看这个方法的代码后，发现其中包含了复杂的嵌套循环和大量的条件判断。于是开发人员可以对这个方法进行优化，比如简化循环结构或者提前计算一些可以复用的数据，从而提高整个应用的性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>-XX:+PrintInlining</strong><ul>
+<li><strong>用途</strong>：<ul>
+<li><strong>方法内联信息展示</strong>：这个选项用于打印JVM中方法内联的相关信息。方法内联是JIT编译器的一种重要优化技术。简单来说，当一个方法被频繁调用，并且满足一定的条件（如方法体较小、执行时间短等）时，JIT编译器会把被调用方法的代码直接嵌入到调用者的方法体中，从而减少方法调用的开销（如参数传递、栈帧创建等）。<code>-XX:+PrintInlining</code>输出的信息可以让你清楚地看到哪些方法被内联了，以及内联的具体情况，如内联的深度、哪些方法因为内联而被优化等。</li>
+<li><strong>性能优化指导</strong>：通过查看内联信息，开发人员可以更好地理解JVM是如何对代码进行优化的，并且可以根据这些信息来调整代码结构，使代码更符合JVM的优化策略。例如，如果发现某个关键方法没有被内联，而你认为它应该被内联以提高性能，就可以通过调整方法的大小、复杂度或者调用方式等，来使它更有可能被JVM内联。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<ul>
+<li>假设你有一个简单的Java类，里面有一个<code>main</code>方法和一个<code>add</code>方法，<code>main</code>方法中多次调用<code>add</code>方法。当运行这个程序并添加了<code>-XX:+PrintInlining</code>选项后，可能会看到类似“@12   java.util.ArrayList::add inline (hot) made not entrant”的输出。其中“@12”可能是一个内部的编译编号，“java.util.ArrayList::add”是被内联的方法名称及签名，“inline (hot)”表示这个方法因为是热点（频繁调用）而被内联，“made not entrant”可能是关于这个方法在被内联后的状态说明，比如它可能不再以独立的方式被调用。通过这些信息，开发人员可以了解JVM对这个方法的优化过程，并且可以根据这个情况来优化代码，比如如果想让更多类似的方法被内联，可以考虑减少方法的复杂度或者大小。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="举例子"><a href="#举例子" class="headerlink" title="举例子"></a>举例子</h3><ol>
+<li><p><strong>场景：优化一个高性能计算应用</strong></p>
+<ul>
+<li><p><strong>应用背景</strong>：</p>
+<ul>
+<li>假设你正在开发一个高性能计算应用，用于对大规模的金融数据进行复杂的数学模型计算。这个应用包含了许多复杂的数学运算方法，例如矩阵乘法、向量运算等，并且需要处理大量的数据集合。</li>
+</ul>
+</li>
+<li><p><strong>步骤一：开启诊断功能</strong></p>
+<ul>
+<li>你在JVM启动参数中添加<code>-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintInlining</code>，这样可以深入了解JVM是如何对应用中的代码进行编译和内联优化的。例如，你的启动命令可能是<code>java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintInlining -jar financial_modeling_app.jar</code>。</li>
+</ul>
+</li>
+<li><p><strong>步骤二：观察编译情况（使用 -XX:+PrintCompilation）</strong></p>
+<ul>
+<li>当应用运行时，通过<code>-XX:+PrintCompilation</code>输出的信息，你可以看到哪些数学运算方法被JIT编译器频繁编译。例如，你可能会看到类似<code>450  3       com.example.FinancialModel::matrixMultiplication (1200 bytes)</code>这样的输出，这表明<code>matrixMultiplication</code>方法被编译了，其中“450”可能是编译任务编号，“3”可能与编译级别有关，“(1200 bytes)”表示方法字节码大小。</li>
+<li>如果这个方法频繁出现编译信息，就说明它是一个热点方法。这提示你这个方法的性能对整个应用的性能可能有很大影响。进一步检查这个方法，你可能发现它包含了多层嵌套循环用于矩阵元素的乘法和累加操作，这可能是导致它频繁编译和性能消耗的原因。</li>
+</ul>
+</li>
+<li><p><strong>步骤三：查看内联信息（使用 -XX:+PrintInlining）</strong></p>
+<ul>
+<li>同时，<code>-XX:+PrintInlining</code>会输出方法内联的相关信息。例如，你可能会看到<code>@70   com.example.FinancialModel::vectorAddition inline (hot) made not entrant</code>，这表示<code>vectorAddition</code>方法在某个编译阶段因为是热点方法而被内联。通过观察这些内联信息，你可以了解JVM是如何优化方法调用的。</li>
+<li>假设你发现一个频繁调用的<code>scalarMultiply</code>方法没有被内联，但是你认为它的代码结构简单且适合内联来提高性能。这个方法可能是在计算向量与标量的乘法时使用。通过查看<code>-XX:+PrintInlining</code>的输出，你可以确定它没有被内联的情况，然后通过调整方法的大小（例如，减少不必要的局部变量声明）或者复杂度（例如，简化方法中的条件判断），使它更符合JVM内联的条件。</li>
+</ul>
+</li>
+<li><p><strong>步骤四：优化应用</strong></p>
+<ul>
+<li>根据<code>-XX:+PrintCompilation</code>发现的热点方法和性能瓶颈，你可以对代码进行优化。对于<code>matrixMultiplication</code>方法，你可以考虑采用更高效的矩阵乘法算法，如Strassen算法来减少计算量。</li>
+<li>对于内联优化，通过调整<code>scalarMultiply</code>方法的代码结构后，再次运行应用并观察<code>-XX:+PrintInlining</code>的输出，看它是否能够被内联，从而提高方法调用的效率。通过这种方式，利用这三个JVM参数来深入分析和优化高性能计算应用的性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>场景：优化一个Java Web应用服务器的性能</strong></p>
+<ul>
+<li><p><strong>应用背景</strong>：</p>
+<ul>
+<li>考虑一个基于Java的Web应用服务器，它运行着多个企业级Web应用，处理大量的HTTP请求，包括用户认证、数据查询、业务逻辑处理等各种复杂功能。</li>
+</ul>
+</li>
+<li><p><strong>步骤一：启用诊断选项</strong></p>
+<ul>
+<li>在服务器的JVM启动配置中添加<code>-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintInlining</code>。例如，在Tomcat服务器中，你可以在<code>catalina.sh</code>（对于Linux系统）或<code>catalina.bat</code>（对于Windows系统）文件中找到JVM启动参数设置的地方，添加这三个参数。</li>
+</ul>
+</li>
+<li><p><strong>步骤二：分析编译活动（使用 -XX:+PrintCompilation）</strong></p>
+<ul>
+<li>当服务器开始处理大量请求后，通过<code>-XX:+PrintCompilation</code>输出可以看到哪些业务逻辑方法被频繁编译。比如，在一个电子商务Web应用的订单处理模块中，你可能会看到<code>380  3       com.example.ecommerce.OrderProcessor::calculateTotalPrice (800 bytes)</code>频繁出现。这表明<code>calculateTotalPrice</code>方法是一个热点方法，它在计算订单总价的过程中可能涉及复杂的价格计算规则、折扣应用、税费计算等操作，导致频繁编译。</li>
+<li>进一步分析这个方法，你可能发现它从数据库中多次查询商品价格和折扣信息，这可能是性能瓶颈。你可以考虑采用缓存机制来减少数据库查询次数，从而优化这个方法。</li>
+</ul>
+</li>
+<li><p><strong>步骤三：利用内联信息（使用 -XX:+PrintInlining）</strong></p>
+<ul>
+<li>通过<code>-XX:+PrintInlining</code>输出，你可以看到JVM对方法的内联情况。例如，在用户认证模块中，你可能看到<code>@45   com.example.auth.UserAuthenticator::checkPassword inline (hot) made not entrant</code>，这表示<code>checkPassword</code>方法在认证过程中被内联。这有助于你理解JVM如何优化这些频繁调用的方法。</li>
+<li>假设在另一个用户权限检查方法<code>checkPermissions</code>没有被内联，但它的代码结构简单且频繁调用。你可以根据<code>-XX:+PrintInlining</code>的信息调整这个方法，使其更有可能被内联，例如减少方法中的参数传递或者简化方法内部的逻辑判断，从而提高性能。</li>
+</ul>
+</li>
+<li><p><strong>步骤四：持续优化和监控</strong></p>
+<ul>
+<li>根据这些参数提供的信息，对Web应用服务器中的关键方法进行持续优化。并且在后续的运行过程中，继续观察<code>-XX:+PrintCompilation</code>和<code>-XX:+PrintInlining</code>的输出，以确保优化措施有效，并及时发现新的性能瓶颈。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2024/04/04/slice-transmit/"><i class="fa fa-chevron-left">  </i><span>分片传输和流量控制</span></a></div><div class="next-post pull-right"><a href="/2024/03/14/bigdata/"><span>Flink和Pulsar实践</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2025 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
   $('#top-container').addClass('is-mobile')
