@@ -48,14 +48,14 @@
 <p>在innodb的1.0x版本开始，引入了change buffer，可以把它看成insert buffer的升级版，innodb可以对DML操作-INSERT/DELETE/UPDATE都进行缓冲。<br>1.将一个辅助索引插入到页(space,offset)<br>2.检查这个页是否在缓冲池中<br>在:直接插入<br>不在:继续<br>3.缓存进入insert buffer<br>4.构造一个search key<br>5.查询insert buffer树<br>6.生成逻辑记录并插入树中</p>
 <h5 id="insert-buffer内部实现原理"><a href="#insert-buffer内部实现原理" class="headerlink" title="insert buffer内部实现原理"></a>insert buffer内部实现原理</h5><p>在mysql4.1版本之后，insert buffer是通过一全局唯一的一个B+树进行管理所有表的辅助索引。而这颗树存放在共享表空间中，格式为ibdata1，所以如果试图通过独立表空间idb文件恢复表中数据的时候，往往会导致CHECK TABLE失败，这是因为表的辅助索引中的数据可能还在INSERT BUFFER中，也就是共享表空间中，所以通过ibd文件进行恢复后，还需要进行REPAIR TABLE 操作来重建表上所有的辅助索引。</p>
 <p>insert buffer的b+树的非叶子节点存放的是查询的search key（键值），其构造如图：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/8.png" alt=""></p>
+<p><img src="/images/img/mysql/8.png" alt=""></p>
 <ul>
 <li>space为表空间id</li>
 <li>marker用来兼容老版本</li>
 <li>offset表示页所在偏移量</li>
 </ul>
 <p>叶子节点会比非叶子节点多俩数据，一个是metadata，一个是secondary index record。</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/7.png" alt=""></p>
+<p><img src="/images/img/mysql/7.png" alt=""></p>
 <ul>
 <li>metadata 记录的每一列的类型,长度</li>
 <li>secondary index record 记录的具体值</li>
@@ -74,7 +74,7 @@
 
 <p>从上面可以看到其中有一部分叫做INSERT BUFFER AND ADAPTIVE HASH INDEX，其中的seg size指的就是当前insert buffer的大小，具体计算方式为seg_size*16KB =32KB，free list len表示空闲列表的长度，size表示已经合并记录页的数量。</p>
 <h4 id="二次写（double-write）"><a href="#二次写（double-write）" class="headerlink" title="二次写（double write）"></a>二次写（double write）</h4><h5 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h5><p>doublewrite由两部分组成,一部分是内存的doublewrite buffer,大小为2MB,另一部分是物理磁盘上共享表空间中联系的128个页,即2个区(extent),大小同样为2MB。<br>脏读刷新先复制到内存中的doublewrite buffer，之后doublewrite buffer再分两次，每次1MB写入共享表空间的物理磁盘，然后马上调用fsync函数，同步磁盘，避免缓冲写带来的问题。如图：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/12.png" alt=""></p>
+<p><img src="/images/img/mysql/12.png" alt=""></p>
 <p>通过命令SHOW GLOBAL STATUS LIKE ‘innodb dblwr%’\G观察doublewrite运行的情况。</p>
 <h5 id="页断裂（partial-write）"><a href="#页断裂（partial-write）" class="headerlink" title="页断裂（partial write）"></a>页断裂（partial write）</h5><p>所谓页断裂是数据库宕机时(OS重启，或主机掉电重启)，数据库页面只有部分写入磁盘，导致页面出现不一致的情况。那么为什么会不一样呢？因为数据库，OS和磁盘读写的基本单位是块，也可以称之为(page size)block size。我们知道数据库的块一般为8K，16K；而OS的块则一般为4K；IO块则更小，linux内核要求IO block size&lt;=OS block size。磁盘IO除了IO block size，还有一个概念是扇区(IO sector)，扇区是磁盘物理操作的基本单位，而IO 块是磁盘操作的逻辑单位，一个IO块对应一个或多个扇区，扇区大小一般为512个字节。所以各个块大小的关系可以梳理如下：<br>DB block &gt; OS block &gt;= IO block &gt; 磁盘 sector，而且他们之间保持了整数倍的关系。所以说当数据库突然宕机，就会造成部分DB block的数据实际上并未写入到磁盘的sector中，出现了页断裂的情况，进而导致数据不一致的现象。</p>
 <h5 id="数据库日志的三种格式"><a href="#数据库日志的三种格式" class="headerlink" title="数据库日志的三种格式"></a>数据库日志的三种格式</h5><p>数据库系统实现日志主要有三种格式，逻辑日志(logical logging)，物理日志(physical logging)，物理逻辑日志(physiological logging)，逻辑日志，记录一个个逻辑操作，不涉及物理存储位置信息，比如mysql的binlog；物理日志，则是记录一个个具体物理位置的操作，比如在2号表空间，1号文件，48页的233这个offset地方写入了8个字节的数据，通过(group_id,file_id,page_no,offset)4元组，就能唯一确定数据存储在磁盘的物理位置；物理逻辑日志是物理日志和逻辑日志的混合，如果一个数据库操作(DDL，DML，DCL)产生的日志跨越了多个页面，那么会产生多个物理页面的日志，但对于每个物理页面日志，里面记录则是逻辑信息。这里我举一个简单的INSERT操作来说明几种日志形式。<br>比如innodb表T(c1,c2, key key_c1(c1)),插入记录row1(1,’abc’)<br>逻辑日志：</p>
@@ -89,9 +89,9 @@
 <p>因此对于上述一个INSERT操作，会产生一条逻辑日志，二条逻辑物理日志，2*N条物理日志。从上面简单的分析可以看出，逻辑日志的日志量最小，而物理日志的日志量最大；物理日志是纯物理的；而逻辑物理日志则页间物理，页内逻辑，所谓physical-to-a-page, logical-within-a-page。</p>
 <h5 id="页断裂和数据一致性"><a href="#页断裂和数据一致性" class="headerlink" title="页断裂和数据一致性"></a>页断裂和数据一致性</h5><p>前面我们分析了异常重启导致页断裂的原因，而页断裂就意味着数据库页面不完整，那么数据库页面不完整就意味着数据库不一致。我们知道，数据库异常重启时，自身有异常恢复机制，主流数据库基本原理类似：第一阶段重做redo日志，恢复数据页和undo页到异常crash时的状态；第二阶段，根据undo页的内容，回滚没有提交事务的修改。通过两个阶段保证了数据库的一致性。对于mysql而言，在第一阶段，若出现页断裂问题，则无法通过重做redo日志恢复，进而导致恢复中断，数据库不一致。这里大家可能会有疑问，数据库的redo不是记录了所有的变更，并且是物理的吗？理论上来说，无论页面是否断裂，从上一个检查点对应的redo位置开始，一直重做redo，页面自然能恢复到正常状态。对吗？</p>
 <h5 id="redo格式与数据一致性"><a href="#redo格式与数据一致性" class="headerlink" title="redo格式与数据一致性"></a>redo格式与数据一致性</h5><p>回到“发生页断裂后，是否会影响数据库一致性”的问题，发生页断裂后，对于利用纯物理日志实现redo的数据库不受影响，因为每一条redo日志完全不依赖物理页的状态，并且是幂等的(执行一次与N次，结果是一样的)，而逻辑物理日志则不行，比如修改页头信息，页内记录数加1，slot信息修改等都依赖于页面处于一个一致状态，否则就无法正确重做redo。而mysql正是采用这种日志类型，另外要说明一点，redo日志的页大小一般设计为512个字节，因此redo日志页本身不会发生页断裂。所以发生页面断裂时，异常恢复就会出现问题，需要借助于double write技术来辅助处理。</p>
-<h5 id="doubleWrite的实现"><a href="#doubleWrite的实现" class="headerlink" title="doubleWrite的实现"></a>doubleWrite的实现</h5><p>在InnoDB将BP中的Dirty Page刷（flush）到磁盘上时，首先会将（memcpy函数）Page刷到InnoDB tablespace的一个区域中，我们称该区域为Double write Buffer（大小为2MB，每次写入1MB，128个页，每个页16k,其中120个页为后台线程的批量刷Dirty Page，还有8个也是为了前台起的sigle Page Flash线程，用户可以主动请求，并且能迅速的提供空余的空间）。在向Double write Buffer写入成功后，第二步、再将数据分别刷到一个共享空间和真正应该存在的位置。具体的流程如下图所示：<br><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/9.png" alt=""></p>
+<h5 id="doubleWrite的实现"><a href="#doubleWrite的实现" class="headerlink" title="doubleWrite的实现"></a>doubleWrite的实现</h5><p>在InnoDB将BP中的Dirty Page刷（flush）到磁盘上时，首先会将（memcpy函数）Page刷到InnoDB tablespace的一个区域中，我们称该区域为Double write Buffer（大小为2MB，每次写入1MB，128个页，每个页16k,其中120个页为后台线程的批量刷Dirty Page，还有8个也是为了前台起的sigle Page Flash线程，用户可以主动请求，并且能迅速的提供空余的空间）。在向Double write Buffer写入成功后，第二步、再将数据分别刷到一个共享空间和真正应该存在的位置。具体的流程如下图所示：<br><img src="/images/img/mysql/9.png" alt=""></p>
 <h5 id="doubleWrite的保护机制"><a href="#doubleWrite的保护机制" class="headerlink" title="doubleWrite的保护机制"></a>doubleWrite的保护机制</h5><p>下面来看下在不同的写入阶段，操作系统crash后，double write带来的保护机制：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/10.png" alt=""></p>
+<p><img src="/images/img/mysql/10.png" alt=""></p>
 <p>阶段一：copy过程中，操作系统crash，重启之后，脏页未刷到磁盘，但更早的数据并没有发生损坏，重新写入即可阶段二：write到共享表空间过程中，操作系统crash，重启之后，脏页未刷到磁盘，但更早的数据并没有发生损坏，重新写入即可阶段三：write到独立表空间过程中，操作系统crash，重启之后，发现：（1）数据文件内的页损坏：头尾checksum值不匹配（即出现了partial page write的问题）。从共享表空间中的doublewrite segment内恢复该页的一个副本到数据文件，再应用redo log；（2）若页自身的checksum匹配，但与doublewrite segment中对应页的checksum不匹配，则统一可以通过apply redo log来恢复。）阶段X：recover过程中，操作系统crash，重启之后，innodb面对的情况同阶段三一样（数据文件损坏，但共享表空间内有副本），再次应用redo log即可。</p>
 <h5 id="doubleWrite对性能的影响"><a href="#doubleWrite对性能的影响" class="headerlink" title="doubleWrite对性能的影响"></a>doubleWrite对性能的影响</h5><p>系统需要将数据写两份，一般认为，Double Write是会降低系统性能的。peter猜测可能会有5-10%的性能损失，但是因为实现了数据的一致，是值得的。Mark Callaghan认为这应该是存储层面应该解决的问题，放在数据库层面无疑是牺牲了很多性能的。事实上，Double Write对性能影响并没有你想象（写两遍性能应该降低了50%吧？）的那么大。在BP中一次性往往会有很多的Dirty Page同时被flush，Double Write则把这些写操作，由随机写转化为了顺序写。而在Double Write的第二个阶段，因为Double Write Buffer中积累了很多Dirty Page，所以向真正的数据文件中写数据的时候，可能有很多写操作可以合并，这样有可能会降低Fsync的调用次数。基于上面的原因，Double Write并没有想象的那么糟。最后发现打开和关闭Double Write对效率的影响并不大。</p>
 <h4 id="自适应哈希索引"><a href="#自适应哈希索引" class="headerlink" title="自适应哈希索引"></a>自适应哈希索引</h4><p>哈希索引只有Memory, NDB两种引擎支持，Memory引擎默认支持哈希索引，如果多个hash值相同，出现哈希碰撞，那么索引以链表方式存储。但是，Memory引擎表只对能够适合机器的内存切实有限的数据集。要使InnoDB或MyISAM支持哈希索引，可以通过伪哈希索引来实现，但是innodb还实现了一种叫做自适应哈希索引来达到目的。<br>InnoDB存储引擎会监控对表上各索引页的查询。如果观察到建立哈希索引可以带来速度提升，则建立哈希索引，称之为自适应哈希索引(Adaptive Hash Index, AHI)。AHI是通过缓冲池的B+树页构造而来，因此建立的速度很快，而且不需要对整张表构建哈希索引。InnoDB存储引擎会自动根据访问的频率和模式来自动地为某些热点页建立哈希索引。</p>
@@ -101,7 +101,7 @@
 <p>2、通过hash searches、non-hash searches计算自适应hash索引带来的收益以及付出，确定是否开启自适应hash索引</p>
 <h5 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h5><p>　　1、只能用于等值比较，例如=， &lt;=&gt;，in<br>　　2、无法用于排序<br>　　3、有冲突可能<br>　　4、MySQL自动管理，人为无法干预。</p>
 <h5 id="自适应哈希索引的控制"><a href="#自适应哈希索引的控制" class="headerlink" title="自适应哈希索引的控制"></a>自适应哈希索引的控制</h5><p>由于innodb不支持hash索引，但是在某些情况下hash索引的效率很高，于是出现了adaptive hash index功能，但是通过上面的状态监控，可以计算其收益以及付出，控制该功能开启与否。</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/11.png" alt=""></p>
+<p><img src="/images/img/mysql/11.png" alt=""></p>
 <h4 id="其他关键特性"><a href="#其他关键特性" class="headerlink" title="其他关键特性"></a>其他关键特性</h4><h5 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h5><p>为了提高磁盘操作性能，当前的数据库系统都采用异步IO（Asynchronous IO,AIO）的方式来处理磁盘操作。<br>与AIO对应的是 Sync IO，Sync IO每次进行IO操作 需要等到改操作结束才能继续接下来的操作。但是如果用户是一条索引扫描的查询，那么需要扫描索引页，也就是需要进行多次的IO操作。如果是这样的话就没有必要了。</p>
 <p>用户发送一个IO请求就可以发送另一个IO请求，当全部发送完毕，等待所有的IO操作的完成，这就是AIO。<br>AIO的另一个优势 可以进行IO Merge操作，也就是将多个IO何必为一个IO。<br>若通过Linux操作系统下的iostat 命令 可以观察 rrqm/s和wrqm/s。<br>InnoDB 1.1.x 开始（InnoDB Plugin 不支持）提供了内核级别AIO的支持，称为 NatIve AIO。因此编译或者运行该版本MySQL时需要libaio的支持。若没有则会出现如下的提示：</p>
 <p><img src="https://box.kancloud.cn/caa0fef240a025c16fbe4d9d842f0009_846x84.png" alt=""></p>

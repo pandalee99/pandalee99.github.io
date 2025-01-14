@@ -143,7 +143,7 @@
 <li>在AQS中，通过int类型的全局变量state来表示同步状态，即用state来表示锁。ReentrantReadWriteLock也是通过AQS来实现锁的，但是ReentrantReadWriteLock有两把锁：读锁和写锁，它们保护的都是同一个资源，那么如何用一个共享变量来区分锁是写锁还是读锁呢？答案就是按位拆分。</li>
 <li>由于state是int类型的变量，在内存中占用4个字节，也就是32位。将其拆分为两部分：高16位和低16位，其中高16位用来表示读锁状态，低16位用来表示写锁状态。当设置读锁成功时，就将高16位加1，释放读锁时，将高16位减1；当设置写锁成功时，就将低16位加1，释放写锁时，将第16位减1。如下图所示：</li>
 </ul>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/aqs4.jpg" alt="aqs4"></p>
+<p><img src="/images/img/aqs4.jpg" alt="aqs4"></p>
 <ul>
 <li>那么如何根据state的值来判断当前锁的状态时写锁还是读锁呢？</li>
 <li>假设锁当前的状态值为S，将S和16进制数0x0000FFFF进行与运算，即S&amp;0x0000FFFF，运算时会将高16位全置为0，将运算结果记为c，那么c表示的就是写锁的数量。如果c等于0就表示还没有线程获取锁；如果c不等于0，就表示有线程获取到了锁，c等于几就代表写锁重入了几次。</li>

@@ -45,13 +45,13 @@
 
 <p>好了，来测试一下吧。</p>
 <h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>输入地址：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/redis/1.png" alt=""></p>
+<p><img src="/images/img/redis/1.png" alt=""></p>
 <p>回去查看idea：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/redis/2.png" alt=""></p>
+<p><img src="/images/img/redis/2.png" alt=""></p>
 <p>我们可以看到的是，在Controller层进行了访问，然后在Service层进行了访问，这表示是第一次读取这个值，需要访问数据库，并且在放入缓存中。</p>
 <p>那么再多访问几次看看吧。</p>
 <p>连续的页面刷新后，再去idea</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/redis/3.png" alt=""></p>
+<p><img src="/images/img/redis/3.png" alt=""></p>
 <p>我们发现，这只执行到Controller层，而不进行Service层，这表示了我们读取到的是缓存，而不是数据库，因为只执行Controller层便结束了。</p>
 <h3 id="Redis拓展"><a href="#Redis拓展" class="headerlink" title="Redis拓展"></a>Redis拓展</h3><p>我们放入Redis的缓存，在不设置之前，是永久存在的。，如果缓存只会被放入，而不设置过期时间的话，就算有办法取消掉一些缓存，但随着时间的推移，总会有些缓存会被遗忘，一直作为内存的存在Redis当中。这时，就需要深入的配置Redis，让其能够主动的销毁。</p>
 <h4 id="设置缓存过期时间"><a href="#设置缓存过期时间" class="headerlink" title="设置缓存过期时间"></a>设置缓存过期时间</h4><p>加入configuration：</p>
@@ -59,10 +59,10 @@
 
 <p>configuration会全局识别为SpringBoot的配置文件，使用@Bean注解，去把这个容器注入到SpringBoot中。</p>
 <p>再去测试一下：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/redis/5.png" alt=""></p>
+<p><img src="/images/img/redis/5.png" alt=""></p>
 <p>我这里是每15秒进行一次访问，可以发现，缓存都在10后会自动过期，都需要重新从数据库读取。</p>
 <p>我们可以使用RedisDesktop去查看Redis到底存放了些什么：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/redis/4.png" alt=""></p>
+<p><img src="/images/img/redis/4.png" alt=""></p>
 <p>项目地址：<a href="https://github.com/Antarctica000/SpringBoot/tree/master/redis">https://github.com/Antarctica000/SpringBoot/tree/master/redis</a></p>
 </div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/18/spring3/"><i class="fa fa-chevron-left">  </i><span>REST风格</span></a></div><div class="next-post pull-right"><a href="/2020/01/14/spring1/"><span>SpringBoot整合MyBatis框架</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2025 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')

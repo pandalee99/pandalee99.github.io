@@ -52,33 +52,33 @@
 
 <p>前端会使用post方法，去请求后端，执行方法。</p>
 <h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>这是数据库库存：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/1.png" alt=""></p>
+<p><img src="/images/img/designshop/1.png" alt=""></p>
 <p>在网页输入 <a href="http://localhost:8888/test" target="_blank" rel="noopener">http://localhost:8888/test</a></p>
 <p>测试结果：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/3.png" alt=""></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/2.png" alt=""></p>
+<p><img src="/images/img/designshop/3.png" alt=""></p>
+<p><img src="/images/img/designshop/2.png" alt=""></p>
 <p>抢购成功！</p>
 <p>回看数据库：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/4.png" alt=""></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/5.png" alt=""></p>
+<p><img src="/images/img/designshop/4.png" alt=""></p>
+<p><img src="/images/img/designshop/5.png" alt=""></p>
 <h3 id="高并发情况下"><a href="#高并发情况下" class="headerlink" title="高并发情况下"></a>高并发情况下</h3><h4 id="500次抢购"><a href="#500次抢购" class="headerlink" title="500次抢购"></a>500次抢购</h4><p>上面的例子仅仅是在一个单例进行的测试，那么，在高并发情况下，有着很多很多的请求呢？</p>
 <p>我们假设有300的库存：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/6.png" alt=""></p>
+<p><img src="/images/img/designshop/6.png" alt=""></p>
 <p>在html页面设置 500次抢购：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">for (var i=1; i<span class="tag">&lt;<span class="name">=500;</span> <span class="attr">i</span>++) &#123;</span></span><br><span class="line"><span class="tag">    <span class="attr">var</span> <span class="attr">params</span> = <span class="string">&#123;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">userId</span> <span class="attr">:</span> <span class="attr">1</span>,</span></span><br><span class="line"><span class="tag">        <span class="attr">productId</span> <span class="attr">:</span> <span class="attr">1</span>,</span></span><br><span class="line"><span class="tag">        <span class="attr">quantity</span> <span class="attr">:</span> <span class="attr">1</span></span></span><br><span class="line"><span class="tag">    &#125;;</span></span><br><span class="line"><span class="tag">    // 通过<span class="attr">POST</span>请求后端,这里的<span class="attr">JavaScript</span>会采用异步请求</span></span><br><span class="line"><span class="tag">    $<span class="attr">.post</span>("<span class="attr">.</span>/<span class="attr">purchase</span>", <span class="attr">params</span>, <span class="attr">function</span>(<span class="attr">result</span>) &#123;</span></span><br><span class="line"><span class="tag">    &#125;);</span></span><br><span class="line"><span class="tag">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>再次输入  <a href="http://localhost:8888/test" target="_blank" rel="noopener">http://localhost:8888/test</a> 进行测试：</p>
 <p>结果：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/7.png" alt=""></p>
+<p><img src="/images/img/designshop/7.png" alt=""></p>
 <p>？？？？   -5？</p>
 <p>为什么会有这样数据，我们再看看订单表：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/8.png" alt=""></p>
+<p><img src="/images/img/designshop/8.png" alt=""></p>
 <p>确实有着305条订单，显然，数据库事务的读写级别虽然达到了一致性，却没有达到原子性。面对这种情况，根据我们所学的知识，在并发编程里，可以使用<strong>锁</strong>去完成。</p>
 <h4 id="使用悲观锁"><a href="#使用悲观锁" class="headerlink" title="使用悲观锁"></a>使用悲观锁</h4><p>在这样的高并发情况下，最简单粗暴的解决方法就是加锁，下面我们为数据库加一条锁，在xml 加入 for update 。就使用了悲观锁，当前的SQL被执行时，不允许其他线程执行该SQL。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"getProduct"</span> <span class="attr">parameterType</span>=<span class="string">"long"</span> <span class="attr">resultType</span>=<span class="string">"product"</span>&gt;</span></span><br><span class="line">	select id, product_name as productName,</span><br><span class="line">	stock, price, version, note from t_product</span><br><span class="line">	where id=#&#123;id&#125; for update </span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>再打开 <a href="http://localhost:8888/test" target="_blank" rel="noopener">http://localhost:8888/test</a>  进行测试：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/9.png" alt=""></p>
+<p><img src="/images/img/designshop/9.png" alt=""></p>
 <p>我们发现，成功保持了只有300条的订单。但是，在使用这样悲观锁的前提下，数据库的性能会变成很差，效率也就变的缓慢。所以，我们开始引入乐观锁。</p>
 <h4 id="使用乐观锁"><a href="#使用乐观锁" class="headerlink" title="使用乐观锁"></a>使用乐观锁</h4><p>乐观锁是一种不使用数据库锁和不阻塞线程并发的方案。就是一个线程一开始先读取商品库存数据，保存起来，我们把这些旧数据称之为旧值，然后执行一定的业务逻辑，等到需要对共享数据做修改时，会事先将保存的旧值库存与当前数据库的库存进行比较，如果旧值与当前库存一致，它就认为数据没有被修改过，否则就认为数据已经被修改过，当前计算将不被信任，所以就不再修改任何数据。</p>
 <p>这就是多线程的概念 :CAS</p>
@@ -100,10 +100,10 @@
 
 <p>我们看到，我们每次执行都会去数据库读取版本号，如果一致则版本号+1，并且修改，否则则返回false。</p>
 <p>再次测试：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/10.png" alt=""></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/11.png" alt=""></p>
+<p><img src="/images/img/designshop/10.png" alt=""></p>
+<p><img src="/images/img/designshop/11.png" alt=""></p>
 <p>居然还有库存？？？</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/12.png" alt=""></p>
+<p><img src="/images/img/designshop/12.png" alt=""></p>
 <p>显然，大量的请求得到了大量的失败，这就导致了我们500次的读取却只有84次是成功的。</p>
 <p>为了解决这个问题，乐观锁还可以引入重入机制，就是一旦更新失败，就重新做一次，而不是结束请求。</p>
 <h5 id="按时间戳重入"><a href="#按时间戳重入" class="headerlink" title="按时间戳重入"></a>按时间戳重入</h5><p>但是这样又引入了其他问题，比如，SQL被执行的次数总数恐怕达到了上千次。为了克服这个问题，我们引入时间戳的方法来试试重入机制。</p>
@@ -112,8 +112,8 @@
 
 <p>这里将一个请求限制为100ms的生存期，如果在100ms内发生版本号冲突而不能更新的，则重新尝试，否则请求失败。</p>
 <p>开始测试：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/13.png" alt=""></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/14.png" alt=""></p>
+<p><img src="/images/img/designshop/13.png" alt=""></p>
+<p><img src="/images/img/designshop/14.png" alt=""></p>
 <p>可以看到，测试成功了。</p>
 <p>但是按照时间戳重入也有一个弊端，那就是系统会随着自身的忙碌而大大减少重入次数，因此有时候也会采用按次数重入的机制。</p>
 <h5 id="按次数重入"><a href="#按次数重入" class="headerlink" title="按次数重入"></a>按次数重入</h5><p>服务层</p>
@@ -163,18 +163,18 @@
 
 <p>最后注意记得删除mapper中的version判定。</p>
 <h5 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h5><p>在Redis输入：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/15.png" alt=""></p>
+<p><img src="/images/img/designshop/15.png" alt=""></p>
 <p>打开 <a href="http://localhost:8888/test" target="_blank" rel="noopener">http://localhost:8888/test</a> 测试：</p>
 <p>查看Redis:</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/16.png" alt=""></p>
+<p><img src="/images/img/designshop/16.png" alt=""></p>
 <p>发现多了这些键，这正是我们在业务层定义的键，查看键里包含的值：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/17.png" alt=""></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/19.png" alt=""></p>
+<p><img src="/images/img/designshop/17.png" alt=""></p>
+<p><img src="/images/img/designshop/19.png" alt=""></p>
 <p>发现Redis存储了这次数据库执行的结果，但是还没有写入数据库。在实际应用中，我们可以让Redis在一个夜深人静的夜晚，再缓慢的写回数据库。时间使用@Scheduled定义。</p>
 <p>等时间到了，IDEA会出现这段文字：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/18.png" alt=""></p>
+<p><img src="/images/img/designshop/18.png" alt=""></p>
 <p>再去查看数据库，发现成功写回了：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/designshop/13.png" alt=""></p>
+<p><img src="/images/img/designshop/13.png" alt=""></p>
 <p>项目地址：<a href="https://github.com/Antarctica000/SpringBoot/tree/master/designshop">https://github.com/Antarctica000/SpringBoot/tree/master/designshop</a></p>
 </div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/Redis/">Redis</a><a class="post-meta__tags" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">定时任务</a><a class="post-meta__tags" href="/tags/%E9%A1%B9%E7%9B%AE/">项目</a><a class="post-meta__tags" href="/tags/MyBtis/">MyBtis</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/21/spring6/"><i class="fa fa-chevron-left">  </i><span>SpringBoot整合Thymeleaf</span></a></div><div class="next-post pull-right"><a href="/2020/01/19/spring4/"><span>SpringBoot整合RabbitMQ</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2025 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')

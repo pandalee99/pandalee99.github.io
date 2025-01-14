@@ -14,7 +14,7 @@
 <p>但是也会诞生一个问题，比如你的订单编号一直都是以1、2、3、4、5、6这样的方式增长的话，那么别人也很容易猜到你当前的订单编号，而且如果把它作为一个奖券编号的话，那就很没逻辑性了。</p>
 <p>所以，我想引入时间戳的方式，拼串，诞生一个全局唯一的ID，不过偶然间看到了Twitter上的雪花算法，便觉得很有意思，于是乎便拿来使用了。</p>
 <h3 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h3><p>雪花算法并不复杂，它的本体是一个64bit：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/sonw.jpeg" alt=""></p>
+<p><img src="/images/img/mysql/sonw.jpeg" alt=""></p>
 <h4 id="组成结构："><a href="#组成结构：" class="headerlink" title="组成结构："></a>组成结构：</h4><ul>
 <li>1位，不用。二进制中最高位为1的都是负数，但是我们生成的id一般都使用整数，所以这个最高位固定是0</li>
 <li>41位，用来记录时间戳（毫秒）。<ul>

@@ -31,7 +31,7 @@
 <h4 id="隔离性（Isolation）"><a href="#隔离性（Isolation）" class="headerlink" title="隔离性（Isolation）"></a><strong>隔离性（Isolation）</strong></h4><p>针对多个用户同时操作，主要是排除其他事务对本次事务的影响。就比如多个事务同时进行，存在ABCD互相转账，要根据实际情况来进行数据的隔离。</p>
 <h3 id="隔离的级别"><a href="#隔离的级别" class="headerlink" title="隔离的级别"></a>隔离的级别</h3><h4 id="未提交读（Read-uncommitted）"><a href="#未提交读（Read-uncommitted）" class="headerlink" title="未提交读（Read uncommitted）"></a>未提交读（Read uncommitted）</h4><p>未提交读是最低的隔离级别，但这种隔离级别有着最高的效率，在这种情况允许一个未提交的事务去读取另一个未提交的事务，可以让一个事务被数据库处理之前，已经把两个事务应该处理的数据处理完毕。</p>
 <p>但是如此高效率的处理方式，容易引起一个糟糕的现象，叫做脏读：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/1.png" alt=""></p>
+<p><img src="/images/img/mysql/1.png" alt=""></p>
 <p>在T3时刻，事务2去读取了事务1的数据，并进行了处理，然后提交。但是这个时候，如果发生了因为第一类丢失更新而导致的回滚，（第一类丢失更新是指在高并发情况下产生的数据丢不一致，但现已经被克服，所以会产生回滚），但是因为数据是在事务2被处理完成的，如果将事务1进行回滚，将不会回滚为2，而是直接为0。这样会导致最后的订单数少于总库存量。</p>
 <p>还有一种情况下：</p>
 <ul>
@@ -47,14 +47,14 @@
 <p>在高并发情况下，很容易会发生第一类丢失更新，这个时候，事务1执行过程中修改了数据X，在未提交前，事务2读取了X，而事务1却回滚了，这样事务2就形成了脏读。也就是说，当前事务读到的数据是别的事务想要修改成为的但是没有修改成功的数据。</p>
 <h4 id="读写提交（Read-committed）"><a href="#读写提交（Read-committed）" class="headerlink" title="读写提交（Read committed）"></a>读写提交（Read committed）</h4><p>是指一个事务只能读取到另外一个事务已经提交的数据。</p>
 <p>就以上述例子而言，因为总是读取到尚未提交的数据，才导致的数据不一致，那么，就只读取已经提交的数据便可以的，如此克服脏读：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/2.png" alt=""></p>
+<p><img src="/images/img/mysql/2.png" alt=""></p>
 <p>但是读写提交也会导致下面的问题：那就是当我们事务2读取到了库存之后，事务1马上提交事务，导致事务2读取到的库存是脏的、错误的库存。</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/3.png" alt=""></p>
+<p><img src="/images/img/mysql/3.png" alt=""></p>
 <p>T3时刻读取到库存为1，由于事务尚未提交，所以就导致了事务2误以为还能够进行减库存，但随之事务1便进行了提交，最后发现减库存失败的现象，这种现象会导致订单的数量多于商品的库存量。</p>
 <h4 id="可重复读（Repeatable-Read）"><a href="#可重复读（Repeatable-Read）" class="headerlink" title="可重复读（Repeatable Read）"></a>可重复读（Repeatable Read）</h4><p><strong>这正是 MySQL InnoDB 的默认事务隔离级别</strong><br>它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行。同时也克服了不可重读的场景：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/4.png" alt=""></p>
+<p><img src="/images/img/mysql/4.png" alt=""></p>
 <p>此级别可能出现的问题——幻读（Phantom Read）：当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影” 行：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/5.png" alt=""></p>
+<p><img src="/images/img/mysql/5.png" alt=""></p>
 <p>很多人容易搞混不可重复读和幻读，确实这两者有些相似。但不可重复读重点在于 update 和 delete，而幻读的重点在于 insert。</p>
 <p>InnoDB 存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题</p>
 <h4 id="可串行化（Serializable）"><a href="#可串行化（Serializable）" class="headerlink" title="可串行化（Serializable）"></a>可串行化（Serializable）</h4><ul>
@@ -62,7 +62,7 @@
 <li>它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简言之,它是在每个读的数据行上加上共享锁。</li>
 <li>在这个级别，可能导致大量的超时现象和锁竞争</li>
 </ul>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/mysql/6.png" alt=""></p>
+<p><img src="/images/img/mysql/6.png" alt=""></p>
 <p>InnoDB 实现方式：这种事务的隔离级别下，所有 select 语句都会被隐式的转化为 select … in share mode。</p>
 <p><strong>首先这些读数据读错了，但是不管脏读，不可重复读，还是幻读，都是读操作似乎不会对数据库的数据造成影响，但是我们代码里面有后续的操作，一般都要用读出来的值进行对数据加工处理，然后就会对数据造成影响。</strong></p>
 <p>在SpingBoot中，可以通过application.yml来统一设置事务的隔离级别，也可以在方法上使用@Translational（isolation=isolation.Serializable），指定事务的隔离级别。</p>

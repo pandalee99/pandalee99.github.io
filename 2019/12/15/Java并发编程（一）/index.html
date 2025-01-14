@@ -29,7 +29,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程1</span></span><br><span class="line">i = <span class="number">0</span>;</span><br><span class="line">i = <span class="number">2</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//线程2</span></span><br><span class="line">j = i;</span><br></pre></td></tr></table></figure>
 
 <p>在线程1和线程2一起运行之时，你并不能确定，此时的j到底取值是多少，因为此时的i是在两个线程之间共享的，它可以是0，也可以是2，这样对我们并不可见。但我们也可以深挖其中的原理。</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/kjx.jpg" alt="可见性"></p>
+<p><img src="/images/img/kjx.jpg" alt="可见性"></p>
 <p>先看图示，我们的在定义了值为0之后，就会被写入到主内存，而我们在多个线程取i的值的时候，首先会把i加入到本地的缓存当中，读取值就从缓存中读取，因为这样多个线程就不会总从主内存读取，从而提高读取的效率，但是我们在更改了i的值的时候因为有一个线程嗅探的机制，一旦改了i的值，比如a线程修改了i的值后，就会向所有的线程发出一个警告，告诉所有线程i的值已经被更改了，需要重新从主内存中读取。但是呢，发出这样一个信息也是需要时间的，线程b也会因为时间差的关系导致了不能及时获得最新的值。</p>
 <h5 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h5><p>这里会讲到一个新的概念，叫<strong>指令重排</strong>，意思就是程序在实际运行的时候，代码段运行的顺序会和你写的顺序不一样。</p>
 <p>像下面这段代码，可能会出现一个问题，那就是先执行a=3再去执行a=1，这样会造成了最终结果不太一样，不过没关系，这种情况在串行条件下不会发生。</p>

@@ -34,13 +34,13 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:8888&#x2F;swagger-ui.html#&#x2F;</span><br></pre></td></tr></table></figure>
 
 <p>可以得到一个Swagger页面：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/3.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/3.png" alt=""></p>
 <p>然后点击controller的一个方法，进行测试：</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/1.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/1.png" alt=""></p>
 <p>还能够看到各种状态信息</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/4.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/4.png" alt=""></p>
 <p>也可以选择各种的测试</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/5.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/5.png" alt=""></p>
 <h3 id="Druid数据源"><a href="#Druid数据源" class="headerlink" title="Druid数据源"></a>Druid数据源</h3><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>druid，阿里巴巴数据库事业部出品，为监控而生的数据库连接池 。</p>
 <p>它包括三部分： </p>
 <ul>
@@ -329,7 +329,7 @@
 <p>@EnableConfigurationProperties：用于导入上一步的Druid配置信息</p>
 <p> public ServletRegistrationBean<Servlet> druidServlet()：相当于Web Servlet配置</p>
 <p>public FilterRegistrationBean<Filter> filterRegistrationBean()：相当于Web Filter配置</p>
-<h5 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h5><p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/2.png" alt=""></p>
+<h5 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h5><p><img src="/images/img/swaggeranddruid/2.png" alt=""></p>
 <p>我们发现，编译出现了错误，根据错误信息，发现缺少了log4j依赖。</p>
 <p>log4j</p>
 <p><strong>简介</strong></p>
@@ -387,11 +387,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:8888&#x2F;druid&#x2F;login.html</span><br></pre></td></tr></table></figure>
 
 <p>用户名和密码均为admin，登录</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/6.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/6.png" alt=""></p>
 <p>打开数据源页，可以看到数据源的配置信息</p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/7.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/7.png" alt=""></p>
 <p>再输入<a href="http://localhost:8888/user/findAll，进行访问后，打开SQL监控页面：" target="_blank" rel="noopener">http://localhost:8888/user/findAll，进行访问后，打开SQL监控页面：</a></p>
-<p><img src="https://gitee.com/antarctica/img_sotre/raw/img/img/swaggeranddruid/8.png" alt=""></p>
+<p><img src="/images/img/swaggeranddruid/8.png" alt=""></p>
 <p>我们可以从这里监控到每一次的SQL读取。</p>
 <p>Druid除了拥有更好的性能之外，还能对SQL语句的进行进行更好的监控和管理。</p>
 </div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%92%E9%94%99%E6%8C%87%E5%8D%97/">排错指南</a><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/Swagger/">Swagger</a><a class="post-meta__tags" href="/tags/Druid/">Druid</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/02/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F1/"><i class="fa fa-chevron-left">  </i><span>设计模式六大原则</span></a></div><div class="next-post pull-right"><a href="/2020/02/03/docker1/"><span>Docker部署MySQL</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(http://bbsfiles.vivo.com.cn/vivobbs/attachment/forum/201706/23/120105q39c9ql9syl7b4ye.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2019 - 2025 By 攀</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
